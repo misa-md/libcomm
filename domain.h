@@ -1,5 +1,6 @@
 //
 // Created by baihe back to 2016-12-22.
+// refactored by genshen on 2018-12-31.
 //
 
 #ifndef CRYSTAL_MD_DOMAIN_DECOMPOSITION_H
@@ -8,6 +9,7 @@
 #include <mpi.h>
 #include <vector>
 #include <array>
+#include <utils/mpi_utils.h>
 
 #include "types/pre_define.h"
 #include "region.hpp"
@@ -108,13 +110,14 @@ public:
 
     /*lattice boundary of local sub-box and ghost, but, the Coordinate System is still the global box.*/
     /**
-     * lower and upper boundary of lattice coordinate of current local sub-box at each dimension
+     * lower and upper boundary(not included) of lattice coordinate of current local sub-box at each dimension
      * in global coordinate system(GCY).
+     *
      */
     const Region<_type_lattice_coord> &lattice_coord_sub_box_region;
 
     /**
-     * lower and upper boundary of lattice coordinate in ghost area of current sub-box area
+     * lower and upper boundary(not included) of lattice coordinate in ghost area of current sub-box area
      * at each dimension in global coordinate system(GCY)
      */
     const Region<_type_lattice_coord> &lattice_coord_ghost_region;
@@ -126,12 +129,12 @@ public:
      *  |-------------------------------|---------...---------------------|-----------------------------|
      */
     /**
-     * lower and upper boundary of lattice coordinate of local sub-box
+     * lower and upper boundary(not included) of lattice coordinate of local sub-box
      * at each dimension in local coordinate system(LCY).
      */
     const Region<_type_lattice_coord> &local_sub_box_lattice_coord_region;
 
-    // lower and upper boundary of lattice coordinate in ghost area of current sub-box area
+    // lower and upper boundary(not included) of lattice coordinate in ghost area of current sub-box area
     // at each dimension in local coordinate system(LCY).
     const Region<_type_lattice_coord> &local_ghost_lattice_coord_region;
 
@@ -168,6 +171,14 @@ private:
 public:
     class Builder {
     public:
+        /**
+         * set mpi rank and communications
+         * @param mpi_process current MPI rank id, the ranks in current communicator and communicator
+         * @param comm the new communicator after decomposition.
+         * @return
+         */
+        Builder &setComm(kiwi::mpi_process mpi_process, MPI_Comm *comm);
+
         Builder &setPhaseSpace(const int64_t phaseSpace[DIMENSION]);
 
         Builder &setLatticeConst(const double latticeConst);
@@ -181,6 +192,8 @@ public:
         Domain *build();
 
     private:
+        kiwi::mpi_process _mpi_pro;
+        MPI_Comm *_p_comm;
         double _cutoff_radius_factor;
         double _lattice_const;
         std::array<u_int64_t, DIMENSION> _phase_space;
@@ -214,17 +227,12 @@ public:
          * in above figure, |  :  | represents a lattice length.
          *
          */
-        void createSubBoxDomain(Domain &domain);
-
-        /**
-         * set lattice coordinate boundary of current sub-box in global coordinate system(GCY).
-         */
-        void buildSubBoxDomainGCS(Domain &domain);
+        void buildLatticeDomain(Domain &domain);
 
         /**
          * set lattice coordinate boundary of current sub-box in local coordinate system(LCY).
          */
-        void buildSubBoxDomainLCS(Domain &domain); // todo test.
+        void buildMeasuredDomain(Domain &domain); // todo test.
     };
 };
 

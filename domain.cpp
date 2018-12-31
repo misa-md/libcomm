@@ -1,4 +1,9 @@
+// Created by baihe back to 2016-12-22.
+// refactored by genshen on 2018-12-31.
+
+#include <algorithm>
 #include <logs/logs.h>
+
 #include "domain.h"
 #include "utils/mpi_domain.h"
 #include "utils/mpi_data_types.h"
@@ -45,11 +50,17 @@ Domain::Builder &Domain::Builder::setCutoffRadius(const double cutoff_radius_fac
     return *this;
 }
 
+Domain::Builder &Domain::Builder::setComm(kiwi::mpi_process mpi_process, MPI_Comm *comm) {
+    _mpi_pro = mpi_process;
+    _p_comm = comm;
+    return *this;
+}
+
 void Domain::Builder::decomposition(Domain &domain) {
     // Assume N can be decomposed as N = N_x * N_y * N_z,
     // then we have: _grid_size[0] = N_x, _grid_size[1] = N_y, _grid_size[1] = N_z.
     // Fill in the _grid_size array such that the product of _grid_size[i] for i=0 to DIMENSION-1 equals N.
-    MPI_Dims_create(MPIDomain::sim_processor.all_ranks, DIMENSION,
+    MPI_Dims_create(_mpi_pro.all_ranks, DIMENSION,
                     domain._grid_size); // fixme origin code: (int *) &domain._grid_size
     kiwi::logs::i(MASTER_PROCESSOR, "decomposition", "MPI grid dimensions: {0},{1},{2}\n",
                   domain._grid_size[0], domain._grid_size[1], domain._grid_size[2]);
@@ -61,22 +72,17 @@ void Domain::Builder::decomposition(Domain &domain) {
     }
     // sort the processors to fit 3D cartesian topology.
     // the rank id may change.
-    MPI_Comm _comm;
-    int _debug_old_rank = MPIDomain::sim_processor.own_rank;
-    MPI_Cart_create(MPI_COMM_WORLD, DIMENSION, domain._grid_size, period, true, &_comm);
-    kiwi::mpiUtils::onGlobalCommChanged(_comm);
-    MPIDomain::sim_processor = kiwi::mpiUtils::global_process; // set new domain.
+    MPI_Cart_create(_mpi_pro.comm, DIMENSION, domain._grid_size, period, true, _p_comm);
 
+    kiwi::RID new_rank;
+    MPI_Comm_rank(*_p_comm, &new_rank);
     // get cartesian coordinate of current processor.
-    MPI_Cart_coords(MPIDomain::sim_processor.comm, MPIDomain::sim_processor.own_rank, DIMENSION,
+    MPI_Cart_coords(*_p_comm, new_rank, DIMENSION,
                     domain._grid_coord_sub_box);
-    kiwi::logs::d("decomposition", "old_rank_id: {0}, MPI coordinate of current process: x:{1},y{2},z{3}\n",
-                  _debug_old_rank, domain._grid_coord_sub_box[0], domain._grid_coord_sub_box[1],
-                  domain._grid_coord_sub_box[2]);
 
     // get the rank ids of contiguous processors of current processor.
     for (int d = 0; d < DIMENSION; d++) {
-        MPI_Cart_shift(_comm, d, 1, &domain._rank_id_neighbours[d][LOWER], &domain._rank_id_neighbours[d][HIGHER]);
+        MPI_Cart_shift(*_p_comm, d, 1, &domain._rank_id_neighbours[d][LOWER], &domain._rank_id_neighbours[d][HIGHER]);
     }
 }
 
@@ -89,75 +95,46 @@ void Domain::Builder::createGlobalDomain(Domain &domain) {
     }
 }
 
-void Domain::Builder::createSubBoxDomain(Domain &domain) {
-    // calculate measured length in each dimension.
+void Domain::Builder::buildLatticeDomain(Domain &domain) {
+    // set lattice size of sub-box.
     for (int d = 0; d < DIMENSION; d++) {
-        // the lower and upper bounding of current sub-box.
-        domain._meas_sub_box_region.low[d] = domain._meas_global_box_coord_region.low[d] +
-                                             domain._grid_coord_sub_box[d] *
-                                             (domain._meas_global_length[d] / domain._grid_size[d]);
-        domain._meas_sub_box_region.high[d] = domain._meas_global_box_coord_region.low[d] +
-                                              (domain._grid_coord_sub_box[d] + 1) *
-                                              (domain._meas_global_length[d] / domain._grid_size[d]);
-
-        domain._meas_ghost_length[d] = _cutoff_radius_factor * _lattice_const; // ghost length todo
-
-        domain._meas_ghost_region.low[d] = domain._meas_sub_box_region.low[d] - domain._meas_ghost_length[d];
-        domain._meas_ghost_region.high[d] = domain._meas_sub_box_region.high[d] + domain._meas_ghost_length[d];
+        domain._lattice_sub_box_size[d] = _phase_space[d] / domain._grid_size[d] +
+                                          (domain._grid_coord_sub_box[d] < (_phase_space[d] % domain._grid_size[d])
+                                           ? 1 : 0);
     }
+    // todo double x    domain._lattice_sub_box_size[0] *= 2;
 
-    // set lattice size of local sub-box.
-    for (int d = 0; d < DIMENSION; d++) {
-        domain._lattice_sub_box_size[d] = (domain._grid_coord_sub_box[d] + 1) * _phase_space[d] / domain._grid_size[d] -
-                                          (domain._grid_coord_sub_box[d]) * _phase_space[d] / domain._grid_size[d];
-    }
-    domain._lattice_sub_box_size[0] *= 2;
-
-    /*
-    nghostx = p_domain->getSubBoxLatticeSize(0) + 2 * 2 * ( ceil( cutoffRadius / _latticeconst ) + 1 );
-    nghosty = p_domain->getSubBoxLatticeSize(1) + 2 * ( ceil( cutoffRadius / _latticeconst ) + 1 );
-    nghostz = p_domain->getSubBoxLatticeSize(2) + 2 * ( ceil( cutoffRadius / _latticeconst ) + 1 );
-    */
     // set ghost lattice size.
     for (int d = 0; d < DIMENSION; d++) {
         // i * ceil(x) >= ceil(i*x) for all x ∈ R and i ∈ Z
-        domain._lattice_size_ghost[d] = (d == 0) ? 2 * ceil(_cutoff_radius_factor) : ceil(_cutoff_radius_factor);
+        domain._lattice_size_ghost[d] = ceil(_cutoff_radius_factor);
+//       domain._lattice_size_ghost[d] = (d == 0) ? 2 * ceil(_cutoff_radius_factor) : ceil(_cutoff_radius_factor); // todo double x
         domain._lattice_size_ghost_extended[d] = domain._lattice_sub_box_size[d] + 2 * domain._lattice_size_ghost[d];
     }
 
-    // set lattice coordinate boundary in global and local coordinate system(GCS and LCS).
-    buildSubBoxDomainGCS(domain);
-    buildSubBoxDomainLCS(domain);
-}
-
-void Domain::Builder::buildSubBoxDomainGCS(Domain &domain) {
     // set lattice coordinate boundary of sub-box.
     for (int d = 0; d < DIMENSION; d++) {
         // floor equals to "/" if all operation number >=0.
-        domain._lattice_coord_sub_box_region.low[d] = domain._grid_coord_sub_box[d] * _phase_space[d] /
-                                                      domain._grid_size[d]; // todo set measure coord = lower*lattice_const.
+        domain._lattice_coord_sub_box_region.low[d] =
+                domain._grid_coord_sub_box[d] * (_phase_space[d] / domain._grid_size[d]) +
+                std::min(domain._grid_coord_sub_box[d], static_cast<int>(_phase_space[d]) % domain._grid_size[d]);
+        // todo set measure coord = lower*lattice_const.
         domain._lattice_coord_sub_box_region.high[d] =
-                (domain._grid_coord_sub_box[d] + 1) * _phase_space[d] / domain._grid_size[d];
+                domain._lattice_coord_sub_box_region.low[d] + domain._lattice_sub_box_size[d];
+        // (domain._grid_coord_sub_box[d] + 1) * _phase_space[d] / domain._grid_size[d];
     }
-    domain._lattice_coord_sub_box_region.x_low *= 2;
-    domain._lattice_coord_sub_box_region.x_high *= 2;
+//    domain._lattice_coord_sub_box_region.x_low *= 2; // todo double x
+//    domain._lattice_coord_sub_box_region.x_high *= 2;// todo double x
 
-    /*
-   loghostx = p_domain->getSubBoxLatticeCoordLower(0) - 2 * ( ceil( cutoffRadius / _latticeconst ) + 1 );
-   loghosty = p_domain->getSubBoxLatticeCoordLower(1) - ( ceil( cutoffRadius / _latticeconst ) + 1 );
-   loghostz = p_domain->getGlobalSubBoxLatticeCoordLower(2) - ( ceil( cutoffRadius / _latticeconst ) + 1 );
-   */
     // set lattice coordinate boundary for ghost.
     for (int d = 0; d < DIMENSION; d++) {
-        // todo too integer minus, cut too many??
         domain._lattice_coord_ghost_region.low[d] = domain._lattice_coord_sub_box_region.low[d] -
                                                     domain._lattice_size_ghost[d];
         domain._lattice_coord_ghost_region.high[d] = domain._lattice_coord_sub_box_region.high[d] +
                                                      domain._lattice_size_ghost[d];
     }
-}
 
-void Domain::Builder::buildSubBoxDomainLCS(Domain &domain) {
+    // set local lattice coordinate.
     for (int d = 0; d < DIMENSION; d++) {
         domain._local_ghost_lattice_coord_region.low[d] = 0;
         domain._local_ghost_lattice_coord_region.high[d] = domain._lattice_size_ghost_extended[d];
@@ -167,10 +144,27 @@ void Domain::Builder::buildSubBoxDomainLCS(Domain &domain) {
     }
 }
 
+void Domain::Builder::buildMeasuredDomain(Domain &domain) {
+    // calculate measured length in each dimension.
+    for (int d = 0; d < DIMENSION; d++) {
+        // the lower and upper bounding of current sub-box.
+        domain._meas_sub_box_region.low[d] = domain._meas_global_box_coord_region.low[d] +
+                                             domain._lattice_coord_sub_box_region.low[d] * _lattice_const;
+        domain._meas_sub_box_region.high[d] = domain._meas_global_box_coord_region.low[d] +
+                                              domain._lattice_coord_sub_box_region.high[d] * _lattice_const;
+
+        domain._meas_ghost_length[d] = _cutoff_radius_factor * _lattice_const; // ghost length todo
+
+        domain._meas_ghost_region.low[d] = domain._meas_sub_box_region.low[d] - domain._meas_ghost_length[d];
+        domain._meas_ghost_region.high[d] = domain._meas_sub_box_region.high[d] + domain._meas_ghost_length[d];
+    }
+}
+
 Domain *Domain::Builder::build() {
-    Domain *p_domain = new Domain(_phase_space, _lattice_const, _cutoff_radius_factor); // todo
+    Domain *p_domain = new Domain(_phase_space, _lattice_const, _cutoff_radius_factor);
     decomposition(*p_domain);
     createGlobalDomain(*p_domain);
-    createSubBoxDomain(*p_domain);
+    buildLatticeDomain(*p_domain);
+    buildMeasuredDomain(*p_domain);
     return p_domain;
 }
