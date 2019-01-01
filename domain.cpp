@@ -13,7 +13,7 @@
 Domain::Domain(const std::array<u_int64_t, DIMENSION> _phase_space,
                const double _lattice_const, const double _cutoff_radius_factor)
         : lattice_const(_lattice_const), cutoff_radius_factor(_cutoff_radius_factor),
-          phase_space(_phase_space),
+          cut_lattice(static_cast<int>(ceil(_cutoff_radius_factor))), phase_space(_phase_space),
 //      todo _grid_size(0),
 //      todo _meas_global_length(0.0),
         /**initialize following references */
@@ -31,7 +31,14 @@ Domain::Domain(const std::array<u_int64_t, DIMENSION> _phase_space,
           lattice_coord_sub_box_region(_lattice_coord_sub_box_region),
           lattice_coord_ghost_region(_lattice_coord_ghost_region),
           local_sub_box_lattice_coord_region(_local_sub_box_lattice_coord_region),
-          local_ghost_lattice_coord_region(_local_ghost_lattice_coord_region) {}
+          local_ghost_lattice_coord_region(_local_ghost_lattice_coord_region),
+          dbx_lattice_size_sub_box(_dbx_lattice_sub_box_size),
+          dbx_lattice_size_ghost_extended(_dbx_lattice_size_ghost_extended),
+          dbx_lattice_size_ghost(_dbx_lattice_size_ghost),
+          dbx_lattice_coord_sub_box_region(_dbx_lattice_coord_sub_box_region),
+          dbx_lattice_coord_ghost_region(_dbx_lattice_coord_ghost_region),
+          dbx_local_sub_box_lattice_coord_region(_dbx_local_sub_box_lattice_coord_region),
+          dbx_local_ghost_lattice_coord_region(_dbx_local_ghost_lattice_coord_region) {}
 
 Domain::Builder &Domain::Builder::setPhaseSpace(const int64_t phaseSpace[DIMENSION]) {
     for (int i = 0; i < DIMENSION; i++) {
@@ -106,7 +113,7 @@ void Domain::Builder::buildLatticeDomain(Domain &domain) {
     // set ghost lattice size.
     for (int d = 0; d < DIMENSION; d++) {
         // i * ceil(x) >= ceil(i*x) for all x ∈ R and i ∈ Z
-        domain._lattice_size_ghost[d] = ceil(_cutoff_radius_factor);
+        domain._lattice_size_ghost[d] = domain.cut_lattice;
         domain._lattice_size_ghost_extended[d] = domain._lattice_sub_box_size[d] + 2 * domain._lattice_size_ghost[d];
     }
 
@@ -138,18 +145,47 @@ void Domain::Builder::buildLatticeDomain(Domain &domain) {
         domain._local_sub_box_lattice_coord_region.high[d] =
                 domain._lattice_size_ghost[d] + domain._lattice_sub_box_size[d];
     }
+
     // todo double x
-    domain._lattice_sub_box_size[0] *= 2;
-    domain._lattice_size_ghost[0] *= 2;
-    domain._lattice_size_ghost_extended[0] *= 2;
-    domain._lattice_coord_sub_box_region.x_low *= 2;
-    domain._lattice_coord_sub_box_region.x_high *= 2;
-    domain._lattice_coord_ghost_region.x_low *= 2;
-    domain._lattice_coord_ghost_region.x_high *= 2;
-    domain._local_ghost_lattice_coord_region.x_low *= 2;
-    domain._local_ghost_lattice_coord_region.x_high *= 2;
-    domain._local_sub_box_lattice_coord_region.x_low *= 2;
-    domain._local_sub_box_lattice_coord_region.x_high *= 2;
+    domain._dbx_lattice_sub_box_size[0] = 2 * domain._lattice_sub_box_size[0];
+    domain._dbx_lattice_sub_box_size[1] = domain._lattice_sub_box_size[1];
+    domain._dbx_lattice_sub_box_size[2] = domain._lattice_sub_box_size[2];
+
+    domain._dbx_lattice_size_ghost[0] = 2 * domain._lattice_size_ghost[0];
+    domain._dbx_lattice_size_ghost[1] = domain._lattice_size_ghost[1];
+    domain._dbx_lattice_size_ghost[2] = domain._lattice_size_ghost[2];
+
+    domain._dbx_lattice_size_ghost_extended[0] = 2 * domain._lattice_size_ghost_extended[0];
+    domain._dbx_lattice_size_ghost_extended[1] = domain._lattice_size_ghost_extended[1];
+    domain._dbx_lattice_size_ghost_extended[2] = domain._lattice_size_ghost_extended[2];
+
+    domain._dbx_lattice_coord_sub_box_region.x_low = 2 * domain._lattice_coord_sub_box_region.x_low;
+    domain._dbx_lattice_coord_sub_box_region.y_low = domain._lattice_coord_sub_box_region.y_low;
+    domain._dbx_lattice_coord_sub_box_region.z_low = domain._lattice_coord_sub_box_region.z_low;
+    domain._dbx_lattice_coord_sub_box_region.x_high = 2 * domain._lattice_coord_sub_box_region.x_high;
+    domain._dbx_lattice_coord_sub_box_region.y_high = domain._lattice_coord_sub_box_region.y_high;
+    domain._dbx_lattice_coord_sub_box_region.z_high = domain._lattice_coord_sub_box_region.z_high;
+
+    domain._dbx_lattice_coord_ghost_region.x_low = 2 * domain._lattice_coord_ghost_region.x_low;
+    domain._dbx_lattice_coord_ghost_region.y_low = domain._lattice_coord_ghost_region.y_low;
+    domain._dbx_lattice_coord_ghost_region.z_low = domain._lattice_coord_ghost_region.z_low;
+    domain._dbx_lattice_coord_ghost_region.x_high = 2 * domain._lattice_coord_ghost_region.x_high;
+    domain._dbx_lattice_coord_ghost_region.y_high = domain._lattice_coord_ghost_region.y_high;
+    domain._dbx_lattice_coord_ghost_region.z_high = domain._lattice_coord_ghost_region.z_high;
+
+    domain._dbx_local_ghost_lattice_coord_region.x_low = 2 * domain._local_ghost_lattice_coord_region.x_low;
+    domain._dbx_local_ghost_lattice_coord_region.y_low = domain._local_ghost_lattice_coord_region.y_low;
+    domain._dbx_local_ghost_lattice_coord_region.z_low = domain._local_ghost_lattice_coord_region.z_low;
+    domain._dbx_local_ghost_lattice_coord_region.x_high = 2 * domain._local_ghost_lattice_coord_region.x_high;
+    domain._dbx_local_ghost_lattice_coord_region.y_high = domain._local_ghost_lattice_coord_region.y_high;
+    domain._dbx_local_ghost_lattice_coord_region.z_high = domain._local_ghost_lattice_coord_region.z_high;
+
+    domain._dbx_local_sub_box_lattice_coord_region.x_low = 2 * domain._local_sub_box_lattice_coord_region.x_low;
+    domain._dbx_local_sub_box_lattice_coord_region.y_low = domain._local_sub_box_lattice_coord_region.y_low;
+    domain._dbx_local_sub_box_lattice_coord_region.z_low = domain._local_sub_box_lattice_coord_region.z_low;
+    domain._dbx_local_sub_box_lattice_coord_region.x_high = 2 * domain._local_sub_box_lattice_coord_region.x_high;
+    domain._dbx_local_sub_box_lattice_coord_region.y_high = domain._local_sub_box_lattice_coord_region.y_high;
+    domain._dbx_local_sub_box_lattice_coord_region.z_high = domain._local_sub_box_lattice_coord_region.z_high;
 }
 
 void Domain::Builder::buildMeasuredDomain(Domain &domain) {

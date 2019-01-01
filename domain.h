@@ -48,6 +48,8 @@ class Domain {
 public:
     const double lattice_const;
     const double cutoff_radius_factor;
+    // cut off lattice size.
+    const _type_lattice_size cut_lattice;
     const std::array<u_int64_t, DIMENSION> phase_space;
     /**
      * global measured length of the simulation box at each dimension.
@@ -97,16 +99,19 @@ public:
      * lattice count in local sub-box area at each dimension (upper boundary - lower boundary).
      */
     const _type_lattice_size (&lattice_size_sub_box)[DIMENSION];
+    const _type_lattice_size (&dbx_lattice_size_sub_box)[DIMENSION];
     /**
      * lattice count in ghost area plus sub-box area at each dimension (upper boundary - lower boundary).
      * which  @var _lattice_size_ghost_extended[d] = @var _lattice_size_sub_box[d] + 2 * @var_ lattice_size_ghost[d];
      * and also equals to _lattice_coord_ghost_region.high[d] - _lattice_coord_ghost_region.low[d]
      */
     const _type_lattice_size (&lattice_size_ghost_extended)[DIMENSION];
+    const _type_lattice_size (&dbx_lattice_size_ghost_extended)[DIMENSION];
     /**
      * purge ghost size, just lattice count in ghost area.
      */
     const _type_lattice_size (&lattice_size_ghost)[DIMENSION];
+    const _type_lattice_size (&dbx_lattice_size_ghost)[DIMENSION];
 
     /*lattice boundary of local sub-box and ghost, but, the Coordinate System is still the global box.*/
     /**
@@ -115,12 +120,14 @@ public:
      *
      */
     const Region<_type_lattice_coord> &lattice_coord_sub_box_region;
+    const Region<_type_lattice_coord> &dbx_lattice_coord_sub_box_region;
 
     /**
      * lower and upper boundary(not included) of lattice coordinate in ghost area of current sub-box area
      * at each dimension in global coordinate system(GCY)
      */
     const Region<_type_lattice_coord> &lattice_coord_ghost_region;
+    const Region<_type_lattice_coord> &dbx_lattice_coord_ghost_region;
 
     /*
      * lattice boundary of local sub-box and ghost, this is in local box Coordinate System(not global box.).
@@ -133,10 +140,12 @@ public:
      * at each dimension in local coordinate system(LCY).
      */
     const Region<_type_lattice_coord> &local_sub_box_lattice_coord_region;
+    const Region<_type_lattice_coord> &dbx_local_sub_box_lattice_coord_region;
 
     // lower and upper boundary(not included) of lattice coordinate in ghost area of current sub-box area
     // at each dimension in local coordinate system(LCY).
     const Region<_type_lattice_coord> &local_ghost_lattice_coord_region;
+    const Region<_type_lattice_coord> &dbx_local_ghost_lattice_coord_region;
 
 private:
 
@@ -161,9 +170,18 @@ private:
     _type_lattice_size _lattice_size_ghost[DIMENSION];
     Region<_type_lattice_coord> _lattice_coord_sub_box_region;
     Region<_type_lattice_coord> _lattice_coord_ghost_region;
-
     Region<_type_lattice_coord> _local_sub_box_lattice_coord_region;
     Region<_type_lattice_coord> _local_ghost_lattice_coord_region;
+
+    // double x
+    _type_lattice_size _dbx_lattice_sub_box_size[DIMENSION];
+    _type_lattice_size _dbx_lattice_size_ghost_extended[DIMENSION];
+    _type_lattice_size _dbx_lattice_size_ghost[DIMENSION];
+    Region<_type_lattice_coord> _dbx_lattice_coord_sub_box_region;
+    Region<_type_lattice_coord> _dbx_lattice_coord_ghost_region;
+
+    Region<_type_lattice_coord> _dbx_local_sub_box_lattice_coord_region;
+    Region<_type_lattice_coord> _dbx_local_ghost_lattice_coord_region;
 
     Domain(const std::array<u_int64_t, DIMENSION> _phase_space,
            const double _lattice_const, const double _cutoff_radius_factor);
