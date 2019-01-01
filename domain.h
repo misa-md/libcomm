@@ -201,13 +201,20 @@ public:
 
         Builder &setLatticeConst(const double latticeConst);
 
-        Builder &setCutoffRadius(const double cutoffRadius);
+        Builder &setCutoffRadius(const double cutoff_radius_factor);
 
         /**
          * remember to delete it when it is used
          * @return pointer to domain.
          */
         Domain *build();
+
+        /** local builder can build domain for one processor, without connection to other processors.
+         * @param _grid_size user defined grid size of decomposition.
+         * @param _grid_coord the grid coordinate of current local domain/sub-box.
+         * @return pointer to the Domain of sub-box.
+         */
+        Domain *localBuild(const int _grid_size[DIMENSION], const int _grid_coord[DIMENSION]);
 
     private:
         kiwi::mpi_process _mpi_pro;
