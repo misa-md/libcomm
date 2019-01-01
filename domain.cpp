@@ -102,13 +102,11 @@ void Domain::Builder::buildLatticeDomain(Domain &domain) {
                                           (domain._grid_coord_sub_box[d] < (_phase_space[d] % domain._grid_size[d])
                                            ? 1 : 0);
     }
-    // todo double x    domain._lattice_sub_box_size[0] *= 2;
 
     // set ghost lattice size.
     for (int d = 0; d < DIMENSION; d++) {
         // i * ceil(x) >= ceil(i*x) for all x ∈ R and i ∈ Z
         domain._lattice_size_ghost[d] = ceil(_cutoff_radius_factor);
-//       domain._lattice_size_ghost[d] = (d == 0) ? 2 * ceil(_cutoff_radius_factor) : ceil(_cutoff_radius_factor); // todo double x
         domain._lattice_size_ghost_extended[d] = domain._lattice_sub_box_size[d] + 2 * domain._lattice_size_ghost[d];
     }
 
@@ -123,8 +121,6 @@ void Domain::Builder::buildLatticeDomain(Domain &domain) {
                 domain._lattice_coord_sub_box_region.low[d] + domain._lattice_sub_box_size[d];
         // (domain._grid_coord_sub_box[d] + 1) * _phase_space[d] / domain._grid_size[d];
     }
-//    domain._lattice_coord_sub_box_region.x_low *= 2; // todo double x
-//    domain._lattice_coord_sub_box_region.x_high *= 2;// todo double x
 
     // set lattice coordinate boundary for ghost.
     for (int d = 0; d < DIMENSION; d++) {
@@ -142,6 +138,18 @@ void Domain::Builder::buildLatticeDomain(Domain &domain) {
         domain._local_sub_box_lattice_coord_region.high[d] =
                 domain._lattice_size_ghost[d] + domain._lattice_sub_box_size[d];
     }
+    // todo double x
+    domain._lattice_sub_box_size[0] *= 2;
+    domain._lattice_size_ghost[0] *= 2;
+    domain._lattice_size_ghost_extended[0] *= 2;
+    domain._lattice_coord_sub_box_region.x_low *= 2;
+    domain._lattice_coord_sub_box_region.x_high *= 2;
+    domain._lattice_coord_ghost_region.x_low *= 2;
+    domain._lattice_coord_ghost_region.x_high *= 2;
+    domain._local_ghost_lattice_coord_region.x_low *= 2;
+    domain._local_ghost_lattice_coord_region.x_high *= 2;
+    domain._local_sub_box_lattice_coord_region.x_low *= 2;
+    domain._local_sub_box_lattice_coord_region.x_high *= 2;
 }
 
 void Domain::Builder::buildMeasuredDomain(Domain &domain) {

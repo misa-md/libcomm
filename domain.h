@@ -100,7 +100,7 @@ public:
     /**
      * lattice count in ghost area plus sub-box area at each dimension (upper boundary - lower boundary).
      * which  @var _lattice_size_ghost_extended[d] = @var _lattice_size_sub_box[d] + 2 * @var_ lattice_size_ghost[d];
-     * and also equals to _lattice_coord_sub_box_lower[d] - _lattice_coord_ghost_lower[d]
+     * and also equals to _lattice_coord_ghost_region.high[d] - _lattice_coord_ghost_region.low[d]
      */
     const _type_lattice_size (&lattice_size_ghost_extended)[DIMENSION];
     /**
