@@ -1,4 +1,5 @@
 set(HEADER_FILES
+        types_define.h
         domain/domain.h
         domain/region.hpp
         )
