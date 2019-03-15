@@ -29,7 +29,6 @@ endif ()
 ## const ##
 #############
 set(COMM_LIB_NAME ${ProjectName}) # todo use PARENT_SCOPE to modify globle variable.
-set(COMM_EXECUTE_BIN_NAME "${ProjectName}-run")
 
 # test
 set(COMM_UINT_TEST_NAME "unit-test")
