@@ -6,11 +6,13 @@ configure_file(
 
 set(TEST_HEADER_FILES
         test_config.h
+        domain/domain_test_utils.h
         )
 
 set(TEST_SOURCE_FILES
         main.cpp
-        app_test.cpp
+        domain/domain_test.cpp
+        domain/domain_test_utils.cpp
         )
 
 # set binary path and lib storage path wile compiling process.
