@@ -2,8 +2,8 @@
 // Created by genshen back to 2018-12-30.
 //
 
-#ifndef CRYSTAL_MD_DOMAIN_REGION_H
-#define CRYSTAL_MD_DOMAIN_REGION_H
+#ifndef COMM_DOMAIN_REGION_H
+#define COMM_DOMAIN_REGION_H
 
 template<typename T>
 struct Region {
@@ -18,4 +18,4 @@ struct Region {
     T &z_high = high[2];
 };
 
-#endif // CRYSTAL_MD_DOMAIN_REGION_H
+#endif // COMM_DOMAIN_REGION_H

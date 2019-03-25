@@ -17,11 +17,8 @@
 #define LOWER  0
 #define HIGHER 1
 
-// domain
-#define COORDINATE_ATOM_OUT_BOX (-100)
-
 namespace comm {
-    const static int MASTER_PROCESSOR = 0;
+    const static int COMM_MASTER = 0;
 
     typedef int _type_lattice_size;
     typedef _type_lattice_size _type_lattice_coord;

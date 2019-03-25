@@ -53,7 +53,7 @@ namespace comm {
          * the count of processors at each dimension.
          * Or we can say the decomposed grid size at each dimension.
          */
-        const int (&grid_size)[DIMENSION] = {0};
+        const int (&grid_size)[DIMENSION];
 
         /**
          * the measured coordinate of lower and upper boundary of global simulation box.
@@ -69,7 +69,7 @@ namespace comm {
         /**
          * the rank ids of contiguous processors in space.
          */
-        const int (&rank_id_neighbours)[DIMENSION][2];
+        const _MPI_Rank (&rank_id_neighbours)[DIMENSION][2];
 
         /** boundary of local sub-box  **/
         /**
@@ -149,7 +149,7 @@ namespace comm {
         Region<double> _meas_global_box_coord_region;
 
         int _grid_coord_sub_box[DIMENSION];
-        int _rank_id_neighbours[DIMENSION][2];
+        _MPI_Rank _rank_id_neighbours[DIMENSION][2];
 
         /**
          * the measured lower bound of current sub-box at a dimension

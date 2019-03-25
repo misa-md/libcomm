@@ -26,12 +26,12 @@ TEST(domain_test_decomposition, domain_test) {
     MPI_Comm_size(MPI_COMM_WORLD, &m_process.all_ranks);
     MPI_Comm_rank(MPI_COMM_WORLD, &m_process.own_rank);
 
-    MPI_Reduce(local_grid, grid_sum, 3, MPI_INT, MPI_SUM, comm::MASTER_PROCESSOR, MPI_COMM_WORLD);
+    MPI_Reduce(local_grid, grid_sum, 3, MPI_INT, MPI_SUM, comm::COMM_MASTER, MPI_COMM_WORLD);
 
     grid_sum[0] /= m_process.all_ranks / _domain->grid_size[0];
     grid_sum[1] /= m_process.all_ranks / _domain->grid_size[1];
     grid_sum[2] /= m_process.all_ranks / _domain->grid_size[2];
-    if (m_process.own_rank == comm::MASTER_PROCESSOR) {
+    if (m_process.own_rank == comm::COMM_MASTER) {
         EXPECT_EQ(grid_sum[0], space[0]);
         EXPECT_EQ(grid_sum[1], space[1]);
         EXPECT_EQ(grid_sum[2], space[2]);
