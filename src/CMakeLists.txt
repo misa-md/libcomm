@@ -1,11 +1,14 @@
 set(HEADER_FILES
-        types_define.h
         domain/domain.h
         domain/region.hpp
+        comm.hpp 
+        packer.h
+        types_define.h
         )
 
 set(SOURCE_FILES
         domain/domain.cpp
+        comm.inl
         )
 
 # set(MAIN_FILE main.cpp)
@@ -46,6 +49,7 @@ install(DIRECTORY "./"
         FILES_MATCHING
         PATTERN "*.h"
         PATTERN "*.hpp"
+        PATTERN "*.inl"
         )
 
 # install export target and config for find_package
