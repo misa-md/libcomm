@@ -12,17 +12,21 @@ namespace comm {
     /**
      *
      * \brief communicate with its neighbour processes to exchange data.
+     * This function communicate at x dimension, then y dimension, at last z dimension.
      * \tparam T type used in \param packer; the data type to be packed/unpacked.
      * \param packer packer pointer which does pack and unpack data.
      * \param processes the MPI rank and communicator in process.
      * \param data_type the MPI DataType used in communication.
      * \param neighbours_rank the rank id of all neighbour processes.
+     * \param reversed the order of dimension loop will be z,y,x if \param reversed is true.
+     * otherwise the loop order will be x,y,z. Default value is false (order: x,y,z)
      */
     template<typename T>
     void neiSendReceive(Packer<T> *packer,
                         const mpi_process processes,
                         const MPI_Datatype data_type,
-                        const _MPI_Rank (&neighbours_rank)[DIMENSION][2]);
+                        const _MPI_Rank (&neighbours_rank)[DIMENSION][2],
+                        const bool reversed = false);
 
     /**
      *
@@ -33,8 +37,9 @@ namespace comm {
      */
     template<typename T, MPI_Datatype DT>
     inline void neiSendReceive(Packer<T> *packer, const mpi_process processes,
-                               const _MPI_Rank (&neighbours_rank)[DIMENSION][2]) {
-        neiSendReceive(packer, processes, DT, neighbours_rank);
+                               const _MPI_Rank (&neighbours_rank)[DIMENSION][2],
+                               const bool reversed = false) {
+        neiSendReceive(packer, processes, DT, neighbours_rank, reversed);
     }
 };
 

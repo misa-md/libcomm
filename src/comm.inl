@@ -8,7 +8,8 @@ template<typename T>
 void comm::neiSendReceive(Packer<T> *packer,
                           const mpi_process processes,
                           const MPI_Datatype data_type,
-                          const _MPI_Rank (&neighbours_rank)[DIMENSION][2]) {
+                          const _MPI_Rank (&neighbours_rank)[DIMENSION][2],
+                          const bool reversed) {
     unsigned int num_send[DIMENSION][2];
     unsigned int num_receive[DIMENSION][2];
     T *send_buff[2];
@@ -20,38 +21,46 @@ void comm::neiSendReceive(Packer<T> *packer,
     MPI_Request send_requests[DIMENSION][2];
     MPI_Request recv_requests[DIMENSION][2];
 
-    int direction;
+    // if dimension loop is reversed, the loop order will be z,y,x.
+    // otherwise the loop order will be x,y,z.
     for (int d = 0; d < DIMENSION; d++) {
-        for (direction = LOWER; direction <= HIGHER; direction++) {
-            num_send[d][direction] = packer->sendLength(d, direction);
-            assert(num_send[d][direction] >= 0); // todo remove
-            send_buff[direction] = new T[num_send[d][direction]];
-            packer->onSend(send_buff[direction], num_send[d][direction], d, direction);
+        int dimension;
+        if (reversed) {
+            dimension = DIMENSION - d;
+        } else {
+            dimension = d;
         }
-        for (direction = LOWER; direction <= HIGHER; direction++) {
-            unsigned int &numsend = num_send[d][direction];
+
+        for (int direction = LOWER; direction <= HIGHER; direction++) {
+            num_send[dimension][direction] = packer->sendLength(dimension, direction);
+            assert(num_send[dimension][direction] >= 0); // todo remove
+            send_buff[direction] = new T[num_send[dimension][direction]];
+            packer->onSend(send_buff[direction], num_send[dimension][direction], dimension, direction);
+        }
+        for (int direction = LOWER; direction <= HIGHER; direction++) {
+            unsigned int &numsend = num_send[dimension][direction];
             int numrecv = 0;
 
             MPI_Isend(send_buff[direction], numsend, data_type,
-                      neighbours_rank[d][direction], 99,
-                      processes.comm, &send_requests[d][direction]);
+                      neighbours_rank[dimension][direction], 99,
+                      processes.comm, &send_requests[dimension][direction]);
             // test the status of neighbor process.
-            MPI_Probe(neighbours_rank[d][(direction + 1) % 2], 99, processes.comm, &status);
+            MPI_Probe(neighbours_rank[dimension][(direction + 1) % 2], 99, processes.comm, &status);
             // test the data length to be received.
             MPI_Get_count(&status, data_type, &numrecv);
             // initialize receive buffer via receiving size.
             // the receiving length is get bt MPI_Probe from its neighbour process.
             assert(numrecv >= 0);  // todo remove
             receive_buff[direction] = new T[numrecv];
-            num_receive[d][direction] = numrecv;
+            num_receive[dimension][direction] = numrecv;
             MPI_Irecv(receive_buff[direction], numrecv, data_type,
-                      neighbours_rank[d][(direction + 1) % 2], 99,
-                      processes.comm, &recv_requests[d][direction]);
+                      neighbours_rank[dimension][(direction + 1) % 2], 99,
+                      processes.comm, &recv_requests[dimension][direction]);
         }
-        for (direction = LOWER; direction <= HIGHER; direction++) {
-            MPI_Wait(&send_requests[d][direction], &send_statuses[d][direction]);
-            MPI_Wait(&recv_requests[d][direction], &recv_statuses[d][direction]);
-            packer->onReceive(receive_buff[direction], num_receive[d][direction], d, direction);
+        for (int direction = LOWER; direction <= HIGHER; direction++) {
+            MPI_Wait(&send_requests[dimension][direction], &send_statuses[dimension][direction]);
+            MPI_Wait(&recv_requests[dimension][direction], &recv_statuses[dimension][direction]);
+            packer->onReceive(receive_buff[direction], num_receive[dimension][direction], dimension, direction);
             // release buffer
             delete[] send_buff[direction];
             delete[] receive_buff[direction];
