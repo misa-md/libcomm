@@ -1,9 +1,14 @@
 set(HEADER_FILES
-        app.h
+        domain/domain.h
+        domain/region.hpp
+        comm.hpp 
+        packer.h
+        types_define.h
         )
 
 set(SOURCE_FILES
-        app.cpp
+        domain/domain.cpp
+        comm.inl
         )
 
 # set(MAIN_FILE main.cpp)
@@ -20,11 +25,6 @@ target_include_directories(
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         $<INSTALL_INTERFACE:include>
 )
-
-# make binary
-add_executable(${COMM_EXECUTE_BIN_NAME} main.cpp)
-
-target_link_libraries(${COMM_EXECUTE_BIN_NAME} ${COMM_LIB_NAME} ${EXTRA_LIBS}) # extra lib
 
 ##########################
 ##### install files
@@ -49,6 +49,7 @@ install(DIRECTORY "./"
         FILES_MATCHING
         PATTERN "*.h"
         PATTERN "*.hpp"
+        PATTERN "*.inl"
         )
 
 # install export target and config for find_package
