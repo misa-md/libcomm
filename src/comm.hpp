@@ -25,7 +25,7 @@ namespace comm {
     void neiSendReceive(Packer<T> *packer,
                         const mpi_process processes,
                         const MPI_Datatype data_type,
-                        const _MPI_Rank (&neighbours_rank)[DIMENSION][2],
+                        const _MPI_Rank (&neighbours_rank)[DIMENSION_SIZE][2],
                         const bool reversed = false);
 
     /**
@@ -37,7 +37,7 @@ namespace comm {
      */
     template<typename T, MPI_Datatype DT>
     inline void neiSendReceive(Packer<T> *packer, const mpi_process processes,
-                               const _MPI_Rank (&neighbours_rank)[DIMENSION][2],
+                               const _MPI_Rank (&neighbours_rank)[DIMENSION_SIZE][2],
                                const bool reversed = false) {
         neiSendReceive(packer, processes, DT, neighbours_rank, reversed);
     }
