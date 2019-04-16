@@ -10,7 +10,12 @@
 // some constant value definition here.
 namespace comm {
     const static int COMM_MASTER = 0;
+
     const int DIMENSION_SIZE = 3;
+    const int DIM_X = 0;
+    const int DIM_Y = 1;
+    const int DIM_Z = 2;
+
     const int DIR_LOWER = 0;
     const int DIR_HIGHER = 1;
 
