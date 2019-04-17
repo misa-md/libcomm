@@ -75,3 +75,73 @@ comm::Region<comm::_type_lattice_size> comm::fwCommLocalRegion(
             assert(false);
     }
 }
+
+comm::Region<double> comm::fwCommLocalMeaRegion(
+        const comm::Domain *p_domain, const int dimension, const int direction) {
+    switch (dimension << 2 | direction) {
+        case DIM_X << 2 | DIR_LOWER: { // x dimension, lower direction
+            return Region<double>(
+                    p_domain->meas_sub_box_region.x_low,
+                    p_domain->meas_sub_box_region.x_low + p_domain->meas_ghost_length[dimension],
+                    p_domain->meas_sub_box_region.y_low,
+                    p_domain->meas_sub_box_region.y_high,
+                    p_domain->meas_sub_box_region.z_low,
+                    p_domain->meas_sub_box_region.z_high
+            );
+        }
+        case DIM_X << 2 | DIR_HIGHER: { // x dimension, higher direction
+            return Region<double>(
+                    p_domain->meas_sub_box_region.x_high - p_domain->meas_ghost_length[dimension],
+                    p_domain->meas_sub_box_region.x_high,
+                    p_domain->meas_sub_box_region.y_low,
+                    p_domain->meas_sub_box_region.y_high,
+                    p_domain->meas_sub_box_region.z_low,
+                    p_domain->meas_sub_box_region.z_high
+            );
+        }
+        case DIM_Y << 2 | DIR_LOWER: { // y dimension, lower direction
+            return Region<double>(
+                    p_domain->meas_ghost_region.x_low,
+                    p_domain->meas_sub_box_region.y_low,
+                    p_domain->meas_sub_box_region.z_low,
+                    p_domain->meas_ghost_region.x_high,
+                    p_domain->meas_sub_box_region.y_low + p_domain->meas_ghost_length[dimension],
+                    p_domain->meas_sub_box_region.z_high
+            );
+        }
+        case DIM_Y << 2 | DIR_HIGHER: { // y dimension, higher direction
+            return Region<double>(
+                    p_domain->meas_ghost_region.x_low,
+                    p_domain->meas_sub_box_region.y_high - p_domain->meas_ghost_length[dimension],
+                    p_domain->meas_sub_box_region.z_low,
+                    p_domain->meas_ghost_region.x_high,
+                    p_domain->meas_sub_box_region.y_high,
+                    p_domain->meas_sub_box_region.z_high
+            );
+        }
+        case DIM_Z << 2 | DIR_LOWER: { // z dimension, lower direction
+            return Region<double>(
+                    p_domain->meas_ghost_region.x_low,
+                    p_domain->meas_ghost_region.y_low,
+                    p_domain->meas_sub_box_region.z_low,
+                    p_domain->meas_ghost_region.x_high,
+                    p_domain->meas_ghost_region.y_high,
+                    p_domain->meas_sub_box_region.z_low + p_domain->meas_ghost_length[dimension]
+            );
+        }
+        case DIM_Z << 2 | DIR_HIGHER: { // z dimension, higher direction
+            return Region<double>(
+                    p_domain->meas_ghost_region.x_low,
+                    p_domain->meas_ghost_region.y_low,
+                    p_domain->meas_sub_box_region.z_high - p_domain->meas_ghost_length[dimension],
+                    p_domain->meas_ghost_region.x_high,
+                    p_domain->meas_ghost_region.y_high,
+                    p_domain->meas_sub_box_region.z_high
+            );
+        }
+        default:
+            // this case is not allowed.
+            assert(false);
+    }
+
+}

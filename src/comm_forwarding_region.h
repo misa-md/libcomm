@@ -27,6 +27,17 @@ namespace comm {
      * \note: the region in x dimension in return value is double due to BCC lattice structure.
      */
     Region<_type_lattice_size> fwCommLocalRegion(const Domain *p_domain, const int dimension, const int direction);
+
+    /**
+     * This function returns communication region when performing communication forwarding.
+     * The unit is measure length, not lattice size as above function.
+     * \param p_domain pointer to the domain.
+     * \param dimension dimension for communication, 0 for x dimension, 1 for y dimension, 2 for z dimension
+     * \param direction direction for communication, values: DIR_LOWER or DIR_HIGHER.
+     * \return region for communication forwarding, unit: measured length, which is double.
+     */
+    Region<double> fwCommLocalMeaRegion(const Domain *p_domain, const int dimension, const int direction);
+
 }
 
 #endif //COMM_COMM_FORWARDING_REGION_H

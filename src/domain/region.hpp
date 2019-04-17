@@ -33,6 +33,14 @@ namespace comm {
          */
         Region(const T x_start, const T y_start, const T z_start,
                const T x_end, const T y_end, const T z_end);
+
+        /**
+         * \param x,y,z a coordinate point.
+         * \return return true if the coordinate \param x,y,z is in this region
+         */
+        inline bool isIn(const T x, const T y, const T z) const {
+            return x > x_low && x < x_high && y > y_low && y < y_high && z > z_low && z < z_high;;
+        }
     };
 
 #include "region.inl"
