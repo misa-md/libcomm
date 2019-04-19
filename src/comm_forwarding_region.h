@@ -1,0 +1,43 @@
+//
+// Created by genshen on 2019-04-15.
+//
+
+#ifndef COMM_COMM_FORWARDING_REGION_H
+#define COMM_COMM_FORWARDING_REGION_H
+
+#include <cassert>
+#include "domain/region.hpp"
+#include "domain/domain.h"
+
+/**
+ * this header file describes the communication region
+ * when performing communication forwarding in x,y,z dimension.
+ *
+ */
+namespace comm {
+    /**
+     * This function returns communication region when performing communication forwarding.
+     * The region is the area belongs to current process,
+     * but has contribution to its corresponding neighbour processes.
+     *
+     * \param p_domain pointer to the domain.
+     * \param dimension dimension for communication, 0 for x dimension, 1 for y dimension, 2 for z dimension
+     * \param direction direction for communication, values: DIR_LOWER or DIR_HIGHER.
+     * \return region for communication forwarding, unit: lattice size.
+     * \note: the region in x dimension in return value is double due to BCC lattice structure.
+     */
+    Region<_type_lattice_size> fwCommLocalRegion(const Domain *p_domain, const int dimension, const int direction);
+
+    /**
+     * This function returns communication region when performing communication forwarding.
+     * The unit is measure length, not lattice size as above function.
+     * \param p_domain pointer to the domain.
+     * \param dimension dimension for communication, 0 for x dimension, 1 for y dimension, 2 for z dimension
+     * \param direction direction for communication, values: DIR_LOWER or DIR_HIGHER.
+     * \return region for communication forwarding, unit: measured length, which is double.
+     */
+    Region<double> fwCommLocalMeaRegion(const Domain *p_domain, const int dimension, const int direction);
+
+}
+
+#endif //COMM_COMM_FORWARDING_REGION_H

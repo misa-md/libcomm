@@ -1,14 +1,17 @@
 set(HEADER_FILES
         domain/domain.h
         domain/region.hpp
-        comm.hpp 
+        comm.hpp
+        comm_forwarding_region.h
         packer.h
         types_define.h
         )
 
 set(SOURCE_FILES
-        domain/domain.cpp
+        domain/domain.cc
+        domain/region.inl
         comm.inl
+        comm_forwarding_region.cc
         )
 
 # set(MAIN_FILE main.cpp)

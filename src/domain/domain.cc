@@ -7,7 +7,7 @@
 #include "domain.h"
 
 
-comm::Domain::Domain(const std::array<u_int64_t, DIMENSION> _phase_space,
+comm::Domain::Domain(const std::array<u_int64_t, DIMENSION_SIZE> _phase_space,
                      const double _lattice_const, const double _cutoff_radius_factor)
         : lattice_const(_lattice_const), cutoff_radius_factor(_cutoff_radius_factor),
           cut_lattice(static_cast<int>(ceil(_cutoff_radius_factor))), phase_space(_phase_space),
@@ -37,8 +37,8 @@ comm::Domain::Domain(const std::array<u_int64_t, DIMENSION> _phase_space,
           dbx_local_sub_box_lattice_coord_region(_dbx_local_sub_box_lattice_coord_region),
           dbx_local_ghost_lattice_coord_region(_dbx_local_ghost_lattice_coord_region) {}
 
-comm::Domain::Builder &comm::Domain::Builder::setPhaseSpace(const int64_t phaseSpace[DIMENSION]) {
-    for (int i = 0; i < DIMENSION; i++) {
+comm::Domain::Builder &comm::Domain::Builder::setPhaseSpace(const int64_t phaseSpace[DIMENSION_SIZE]) {
+    for (int i = 0; i < DIMENSION_SIZE; i++) {
         _phase_space[i] = phaseSpace[i]; // todo type not match
     }
     return *this;
@@ -63,32 +63,32 @@ comm::Domain::Builder &comm::Domain::Builder::setComm(comm::mpi_process mpi_proc
 void comm::Domain::Builder::decomposition(comm::Domain &domain) {
     // Assume N can be decomposed as N = N_x * N_y * N_z,
     // then we have: _grid_size[0] = N_x, _grid_size[1] = N_y, _grid_size[1] = N_z.
-    // Fill in the _grid_size array such that the product of _grid_size[i] for i=0 to DIMENSION-1 equals N.
-    MPI_Dims_create(_mpi_pro.all_ranks, DIMENSION, domain._grid_size);
+    // Fill in the _grid_size array such that the product of _grid_size[i] for i=0 to DIMENSION_SIZE-1 equals N.
+    MPI_Dims_create(_mpi_pro.all_ranks, DIMENSION_SIZE, domain._grid_size);
 
-    int period[DIMENSION];
+    int period[DIMENSION_SIZE];
     // 3维拓扑
-    for (int d = 0; d < DIMENSION; d++) {
+    for (int d = 0; d < DIMENSION_SIZE; d++) {
         period[d] = 1;
     }
     // sort the processors to fit 3D cartesian topology.
     // the rank id may change.
-    MPI_Cart_create(_mpi_pro.comm, DIMENSION, domain._grid_size, period, true, _p_comm);
+    MPI_Cart_create(_mpi_pro.comm, DIMENSION_SIZE, domain._grid_size, period, true, _p_comm);
 
     comm::_MPI_Rank new_rank;
     MPI_Comm_rank(*_p_comm, &new_rank);
     // get cartesian coordinate of current processor.
-    MPI_Cart_coords(*_p_comm, new_rank, DIMENSION,
+    MPI_Cart_coords(*_p_comm, new_rank, DIMENSION_SIZE,
                     domain._grid_coord_sub_box);
 
     // get the rank ids of contiguous processors of current processor.
-    for (int d = 0; d < DIMENSION; d++) {
-        MPI_Cart_shift(*_p_comm, d, 1, &domain._rank_id_neighbours[d][LOWER], &domain._rank_id_neighbours[d][HIGHER]);
+    for (int d = 0; d < DIMENSION_SIZE; d++) {
+        MPI_Cart_shift(*_p_comm, d, 1, &domain._rank_id_neighbours[d][DIR_LOWER], &domain._rank_id_neighbours[d][DIR_HIGHER]);
     }
 }
 
 void comm::Domain::Builder::createGlobalDomain(comm::Domain &domain) {
-    for (int d = 0; d < DIMENSION; d++) {
+    for (int d = 0; d < DIMENSION_SIZE; d++) {
         //phaseSpace个单位长度(单位长度即latticeconst)
         domain._meas_global_length[d] = _phase_space[d] * _lattice_const;
         domain._meas_global_box_coord_region.low[d] = 0; // lower bounding is set to 0 by default.
@@ -98,21 +98,21 @@ void comm::Domain::Builder::createGlobalDomain(comm::Domain &domain) {
 
 void comm::Domain::Builder::buildLatticeDomain(comm::Domain &domain) {
     // set lattice size of sub-box.
-    for (int d = 0; d < DIMENSION; d++) {
+    for (int d = 0; d < DIMENSION_SIZE; d++) {
         domain._lattice_sub_box_size[d] = _phase_space[d] / domain._grid_size[d] +
                                           (domain._grid_coord_sub_box[d] < (_phase_space[d] % domain._grid_size[d])
                                            ? 1 : 0);
     }
 
     // set ghost lattice size.
-    for (int d = 0; d < DIMENSION; d++) {
+    for (int d = 0; d < DIMENSION_SIZE; d++) {
         // i * ceil(x) >= ceil(i*x) for all x ∈ R and i ∈ Z
         domain._lattice_size_ghost[d] = domain.cut_lattice;
         domain._lattice_size_ghost_extended[d] = domain._lattice_sub_box_size[d] + 2 * domain._lattice_size_ghost[d];
     }
 
     // set lattice coordinate boundary of sub-box.
-    for (int d = 0; d < DIMENSION; d++) {
+    for (int d = 0; d < DIMENSION_SIZE; d++) {
         // floor equals to "/" if all operation number >=0.
         domain._lattice_coord_sub_box_region.low[d] =
                 domain._grid_coord_sub_box[d] * (_phase_space[d] / domain._grid_size[d]) +
@@ -124,7 +124,7 @@ void comm::Domain::Builder::buildLatticeDomain(comm::Domain &domain) {
     }
 
     // set lattice coordinate boundary for ghost.
-    for (int d = 0; d < DIMENSION; d++) {
+    for (int d = 0; d < DIMENSION_SIZE; d++) {
         domain._lattice_coord_ghost_region.low[d] = domain._lattice_coord_sub_box_region.low[d] -
                                                     domain._lattice_size_ghost[d];
         domain._lattice_coord_ghost_region.high[d] = domain._lattice_coord_sub_box_region.high[d] +
@@ -132,7 +132,7 @@ void comm::Domain::Builder::buildLatticeDomain(comm::Domain &domain) {
     }
 
     // set local lattice coordinate.
-    for (int d = 0; d < DIMENSION; d++) {
+    for (int d = 0; d < DIMENSION_SIZE; d++) {
         domain._local_ghost_lattice_coord_region.low[d] = 0;
         domain._local_ghost_lattice_coord_region.high[d] = domain._lattice_size_ghost_extended[d];
         domain._local_sub_box_lattice_coord_region.low[d] = domain._lattice_size_ghost[d];
@@ -184,7 +184,7 @@ void comm::Domain::Builder::buildLatticeDomain(comm::Domain &domain) {
 
 void comm::Domain::Builder::buildMeasuredDomain(comm::Domain &domain) {
     // calculate measured length in each dimension.
-    for (int d = 0; d < DIMENSION; d++) {
+    for (int d = 0; d < DIMENSION_SIZE; d++) {
         // the lower and upper bounding of current sub-box.
         domain._meas_sub_box_region.low[d] = domain._meas_global_box_coord_region.low[d] +
                                              domain._lattice_coord_sub_box_region.low[d] * _lattice_const;
@@ -207,7 +207,7 @@ comm::Domain *comm::Domain::Builder::build() {
     return p_domain;
 }
 
-comm::Domain *comm::Domain::Builder::localBuild(const int _grid_size[DIMENSION], const int _grid_coord[DIMENSION]) {
+comm::Domain *comm::Domain::Builder::localBuild(const int _grid_size[DIMENSION_SIZE], const int _grid_coord[DIMENSION_SIZE]) {
     Domain *p_domain = new Domain(_phase_space, _lattice_const, _cutoff_radius_factor);
     for (int i = 0; i < 3; i++) {
         p_domain->_grid_size[i] = _grid_size[i];
