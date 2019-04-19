@@ -1,5 +1,6 @@
 set(HEADER_FILES
         domain/domain.h
+        domain/builder.h
         domain/region.hpp
         comm.hpp
         comm_forwarding_region.h
@@ -9,6 +10,7 @@ set(HEADER_FILES
 
 set(SOURCE_FILES
         domain/domain.cc
+        domain/builder.inl
         domain/region.inl
         comm.inl
         comm_forwarding_region.cc
