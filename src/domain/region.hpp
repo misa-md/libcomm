@@ -35,11 +35,15 @@ namespace comm {
                const T x_end, const T y_end, const T z_end);
 
         /**
+         * Given a point (x,y,z), if x belongs to set [x_low, x_high), y belongs to set [y_low, y_high),
+         * and z belongs to set [z_low, z_high),
+         * this function will return true, otherwise, false will be returned.
+         *
          * \param x,y,z a coordinate point.
          * \return return true if the coordinate \param x,y,z is in this region
          */
         inline bool isIn(const T x, const T y, const T z) const {
-            return x > x_low && x < x_high && y > y_low && y < y_high && z > z_low && z < z_high;;
+            return x >= x_low && x < x_high && y >= y_low && y < y_high && z >= z_low && z < z_high;;
         }
     };
 
