@@ -14,6 +14,7 @@ set(TEST_SOURCE_FILES
         domain/domain_test.cpp
         domain/domain_test_utils.cpp
         domain/region_test.cpp
+        domain/bcc_domain_test.cpp
         )
 
 # set binary path and lib storage path wile compiling process.

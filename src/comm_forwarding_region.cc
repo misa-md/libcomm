@@ -2,13 +2,13 @@
 // Created by genshen on 2019-04-16.
 //
 
+#include "domain/bcc_domain.h"
 #include "domain/region.hpp"
-#include "domain/domain.h"
 #include "types_define.h"
 #include "comm_forwarding_region.h"
 
 comm::Region<comm::_type_lattice_size> comm::fwCommLocalRegion(
-        const comm::Domain *p_domain, const int dimension, const int direction) {
+        const comm::BccDomain *p_domain, const int dimension, const int direction) {
     switch (dimension << 2 | direction) {
         case DIM_X << 2 | DIR_LOWER: { // x dimension, lower direction
             _type_lattice_size xstart = p_domain->dbx_lattice_size_ghost[0];

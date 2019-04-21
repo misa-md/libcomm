@@ -115,47 +115,6 @@ void Builder<B, D>::buildLatticeDomain(D &domain) {
         domain._local_sub_box_lattice_coord_region.high[d] =
                 domain._lattice_size_ghost[d] + domain._lattice_sub_box_size[d];
     }
-
-    // todo double x
-    domain._dbx_lattice_sub_box_size[0] = 2 * domain._lattice_sub_box_size[0];
-    domain._dbx_lattice_sub_box_size[1] = domain._lattice_sub_box_size[1];
-    domain._dbx_lattice_sub_box_size[2] = domain._lattice_sub_box_size[2];
-
-    domain._dbx_lattice_size_ghost[0] = 2 * domain._lattice_size_ghost[0];
-    domain._dbx_lattice_size_ghost[1] = domain._lattice_size_ghost[1];
-    domain._dbx_lattice_size_ghost[2] = domain._lattice_size_ghost[2];
-
-    domain._dbx_lattice_size_ghost_extended[0] = 2 * domain._lattice_size_ghost_extended[0];
-    domain._dbx_lattice_size_ghost_extended[1] = domain._lattice_size_ghost_extended[1];
-    domain._dbx_lattice_size_ghost_extended[2] = domain._lattice_size_ghost_extended[2];
-
-    domain._dbx_lattice_coord_sub_box_region.x_low = 2 * domain._lattice_coord_sub_box_region.x_low;
-    domain._dbx_lattice_coord_sub_box_region.y_low = domain._lattice_coord_sub_box_region.y_low;
-    domain._dbx_lattice_coord_sub_box_region.z_low = domain._lattice_coord_sub_box_region.z_low;
-    domain._dbx_lattice_coord_sub_box_region.x_high = 2 * domain._lattice_coord_sub_box_region.x_high;
-    domain._dbx_lattice_coord_sub_box_region.y_high = domain._lattice_coord_sub_box_region.y_high;
-    domain._dbx_lattice_coord_sub_box_region.z_high = domain._lattice_coord_sub_box_region.z_high;
-
-    domain._dbx_lattice_coord_ghost_region.x_low = 2 * domain._lattice_coord_ghost_region.x_low;
-    domain._dbx_lattice_coord_ghost_region.y_low = domain._lattice_coord_ghost_region.y_low;
-    domain._dbx_lattice_coord_ghost_region.z_low = domain._lattice_coord_ghost_region.z_low;
-    domain._dbx_lattice_coord_ghost_region.x_high = 2 * domain._lattice_coord_ghost_region.x_high;
-    domain._dbx_lattice_coord_ghost_region.y_high = domain._lattice_coord_ghost_region.y_high;
-    domain._dbx_lattice_coord_ghost_region.z_high = domain._lattice_coord_ghost_region.z_high;
-
-    domain._dbx_local_ghost_lattice_coord_region.x_low = 2 * domain._local_ghost_lattice_coord_region.x_low;
-    domain._dbx_local_ghost_lattice_coord_region.y_low = domain._local_ghost_lattice_coord_region.y_low;
-    domain._dbx_local_ghost_lattice_coord_region.z_low = domain._local_ghost_lattice_coord_region.z_low;
-    domain._dbx_local_ghost_lattice_coord_region.x_high = 2 * domain._local_ghost_lattice_coord_region.x_high;
-    domain._dbx_local_ghost_lattice_coord_region.y_high = domain._local_ghost_lattice_coord_region.y_high;
-    domain._dbx_local_ghost_lattice_coord_region.z_high = domain._local_ghost_lattice_coord_region.z_high;
-
-    domain._dbx_local_sub_box_lattice_coord_region.x_low = 2 * domain._local_sub_box_lattice_coord_region.x_low;
-    domain._dbx_local_sub_box_lattice_coord_region.y_low = domain._local_sub_box_lattice_coord_region.y_low;
-    domain._dbx_local_sub_box_lattice_coord_region.z_low = domain._local_sub_box_lattice_coord_region.z_low;
-    domain._dbx_local_sub_box_lattice_coord_region.x_high = 2 * domain._local_sub_box_lattice_coord_region.x_high;
-    domain._dbx_local_sub_box_lattice_coord_region.y_high = domain._local_sub_box_lattice_coord_region.y_high;
-    domain._dbx_local_sub_box_lattice_coord_region.z_high = domain._local_sub_box_lattice_coord_region.z_high;
 }
 
 template<typename B, typename D>

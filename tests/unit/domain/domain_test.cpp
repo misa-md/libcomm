@@ -6,6 +6,7 @@
 #include <iostream>
 #include <cmath>
 #include <mpi.h>
+#include <domain/bcc_domain.h>
 
 #include "domain_test_utils.h"
 
@@ -103,6 +104,16 @@ TEST(domain_local_lattice_coord, domain_test) {
               _domain->local_ghost_lattice_coord_region.y_high - _domain->local_ghost_lattice_coord_region.y_low);
     EXPECT_EQ(_domain->lattice_size_ghost_extended[2],
               _domain->local_ghost_lattice_coord_region.z_high - _domain->local_ghost_lattice_coord_region.z_low);
+
+}
+
+// @MPI
+TEST(bcc_domain_local_lattice_coord, bcc_domain_test) {
+    int64_t space[3] = {50, 60, 72};
+    double lattice_const = 0.86;
+    double cutoff_radius_factor = 1.1421;
+    comm::BccDomain *_domain = getBccDomainInstance(space, lattice_const, cutoff_radius_factor);
+
     // test double x dalta values
     EXPECT_EQ(_domain->dbx_lattice_size_sub_box[0],
               _domain->dbx_local_sub_box_lattice_coord_region.x_high -
@@ -123,7 +134,6 @@ TEST(domain_local_lattice_coord, domain_test) {
     EXPECT_EQ(_domain->dbx_lattice_size_ghost_extended[2],
               _domain->dbx_local_ghost_lattice_coord_region.z_high -
               _domain->dbx_local_ghost_lattice_coord_region.z_low);
-
 }
 
 // @MPI

@@ -62,14 +62,14 @@ namespace comm {
          * It first divide the simulation box into N pieces(sub-box) (N is the count of all processors).
          * And each processor will be bound to a sub-box, and tagged with a cartesian coordinate(x,y,z).
          */
-        void decomposition(D &domain);
+        virtual void decomposition(D &domain);
 
         /**
          * set length of global simulation box.
          * and set upper and lower bound of global simulation box.
          * @param domain reference to domain
          */
-        void createGlobalDomain(D &domain);
+        virtual void createGlobalDomain(D &domain);
 
         /**
          * set boundary for current sub-box.
@@ -85,12 +85,12 @@ namespace comm {
          * in above figure, |  :  | represents a lattice length.
          *
          */
-        void buildLatticeDomain(D &domain);
+        virtual void buildLatticeDomain(D &domain);
 
         /**
          * set lattice coordinate boundary of current sub-box in local coordinate system(LCY).
          */
-        void buildMeasuredDomain(D &domain); // todo test.
+        virtual void buildMeasuredDomain(D &domain); // todo test.
     };
 
 #include "builder.inl"
