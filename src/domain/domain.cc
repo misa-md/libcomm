@@ -107,7 +107,8 @@ void comm::Domain::Builder::buildLatticeDomain(comm::Domain &domain) {
     // set ghost lattice size.
     for (int d = 0; d < DIMENSION_SIZE; d++) {
         // i * ceil(x) >= ceil(i*x) for all x ∈ R and i ∈ Z
-        domain._lattice_size_ghost[d] = domain.cut_lattice;
+        // add additional one lattice to make all neighbours can be fount in ghost area.
+        domain._lattice_size_ghost[d] = domain.cut_lattice + 1;
         domain._lattice_size_ghost_extended[d] = domain._lattice_sub_box_size[d] + 2 * domain._lattice_size_ghost[d];
     }
 
@@ -191,7 +192,7 @@ void comm::Domain::Builder::buildMeasuredDomain(comm::Domain &domain) {
         domain._meas_sub_box_region.high[d] = domain._meas_global_box_coord_region.low[d] +
                                               domain._lattice_coord_sub_box_region.high[d] * _lattice_const;
 
-        domain._meas_ghost_length[d] = _cutoff_radius_factor * _lattice_const; // ghost length todo
+        domain._meas_ghost_length[d] = domain._lattice_size_ghost[d] * _lattice_const; // ghost length fixme
 
         domain._meas_ghost_region.low[d] = domain._meas_sub_box_region.low[d] - domain._meas_ghost_length[d];
         domain._meas_ghost_region.high[d] = domain._meas_sub_box_region.high[d] + domain._meas_ghost_length[d];
