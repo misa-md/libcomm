@@ -67,9 +67,9 @@ TEST(domain_ghost_lattice_size, domain_test) {
     double cutoff_radius_factor = 1.1421;
     comm::Domain *_domain = getDomainInstance(space, lattice_const, cutoff_radius_factor);
     // ceil(_domain->meas_ghost_length[0] / lattice_const) equals to ceil(_cutoff_radius_factor)
-    EXPECT_EQ(_domain->lattice_size_ghost[0], ceil(cutoff_radius_factor));
-    EXPECT_EQ(_domain->lattice_size_ghost[1], ceil(cutoff_radius_factor));
-    EXPECT_EQ(_domain->lattice_size_ghost[2], ceil(cutoff_radius_factor));
+    EXPECT_EQ(_domain->lattice_size_ghost[0], ceil(cutoff_radius_factor) + 1);
+    EXPECT_EQ(_domain->lattice_size_ghost[1], ceil(cutoff_radius_factor) + 1);
+    EXPECT_EQ(_domain->lattice_size_ghost[2], ceil(cutoff_radius_factor) + 1);
 
     int nghostx = _domain->lattice_size_sub_box[0] + 2 * ceil(_domain->meas_ghost_length[0] / lattice_const);
     int nghosty = _domain->lattice_size_sub_box[1] + 2 * ceil(_domain->meas_ghost_length[1] / lattice_const);
@@ -169,18 +169,18 @@ TEST(domain_ghost_lattice_coord, domain_test) {
     comm::Domain *_domain = getDomainInstance(space, lattice_const, cutoff_radius_factor);
 
     // lower boundary of lattice coordinate of ghost
-    int loghostx = _domain->lattice_coord_sub_box_region.x_low - ceil(cutoff_radius_factor / lattice_const);
-    int loghosty = _domain->lattice_coord_sub_box_region.y_low - ceil(cutoff_radius_factor / lattice_const);
-    int loghostz = _domain->lattice_coord_sub_box_region.z_low - ceil(cutoff_radius_factor / lattice_const);
+    int loghostx = _domain->lattice_coord_sub_box_region.x_low - ceil(cutoff_radius_factor) - 1;
+    int loghosty = _domain->lattice_coord_sub_box_region.y_low - ceil(cutoff_radius_factor) - 1;
+    int loghostz = _domain->lattice_coord_sub_box_region.z_low - ceil(cutoff_radius_factor) - 1;
 
     EXPECT_EQ(loghostx, _domain->lattice_coord_ghost_region.x_low);
     EXPECT_EQ(loghosty, _domain->lattice_coord_ghost_region.y_low);
     EXPECT_EQ(loghostz, _domain->lattice_coord_ghost_region.z_low);
 
     // upper boundary of lattice coordinate of ghost
-    int upghostx = _domain->lattice_coord_sub_box_region.x_high + ceil(cutoff_radius_factor / lattice_const);
-    int upghosty = _domain->lattice_coord_sub_box_region.y_high + ceil(cutoff_radius_factor / lattice_const);
-    int upghostz = _domain->lattice_coord_sub_box_region.z_high + ceil(cutoff_radius_factor / lattice_const);
+    int upghostx = _domain->lattice_coord_sub_box_region.x_high + ceil(cutoff_radius_factor) + 1;
+    int upghosty = _domain->lattice_coord_sub_box_region.y_high + ceil(cutoff_radius_factor) + 1;
+    int upghostz = _domain->lattice_coord_sub_box_region.z_high + ceil(cutoff_radius_factor) + 1;
 
     EXPECT_EQ(upghostx, _domain->lattice_coord_ghost_region.x_high);
     EXPECT_EQ(upghosty, _domain->lattice_coord_ghost_region.y_high);
