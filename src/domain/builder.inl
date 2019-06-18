@@ -20,8 +20,18 @@ B &Builder<B, D>::setLatticeConst(const double latticeConst) {
 }
 
 template<typename B, typename D>
+B &Builder<B, D>::setGhostSize(const unsigned int ghost_size) {
+    _ghost_size = ghost_size;
+    return *static_cast<B *>(this);
+}
+
+template<typename B, typename D>
 B &Builder<B, D>::setCutoffRadius(const double cutoff_radius_factor) {
     _cutoff_radius_factor = cutoff_radius_factor;
+    if (_ghost_size == 0) {
+        // if ghost size not set, we set it as cut_lattice
+        _ghost_size = static_cast<int>(ceil(_cutoff_radius_factor));
+    }
     return *static_cast<B *>(this);
 }
 
@@ -84,7 +94,7 @@ void Builder<B, D>::buildLatticeDomain(D &domain) {
     for (int d = 0; d < DIMENSION_SIZE; d++) {
         // i * ceil(x) >= ceil(i*x) for all x ∈ R and i ∈ Z
         // add additional one lattice to make all neighbours can be fount in ghost area.
-        domain._lattice_size_ghost[d] = domain.cut_lattice + 1;
+        domain._lattice_size_ghost[d] = _ghost_size;
         domain._lattice_size_ghost_extended[d] = domain._lattice_sub_box_size[d] + 2 * domain._lattice_size_ghost[d];
     }
 

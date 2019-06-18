@@ -7,6 +7,7 @@
 
 #include <array>
 #include <mpi.h>
+#include <cmath>
 //#include <utils/mpi_utils.h>
 
 #include "types_define.h"
@@ -33,6 +34,14 @@ namespace comm {
 
         B &setLatticeConst(const double latticeConst);
 
+        /**
+         * set ghost size
+         * \param ghost_size the size of ghost size, unit: lattice, default cut_lattice
+         * (should set cut_lattice before setting ghost size).
+         * \return reference of Builder.
+         */
+        B &setGhostSize(const unsigned int ghost_size);
+
         B &setCutoffRadius(const double cutoff_radius_factor);
 
         /**
@@ -54,6 +63,7 @@ namespace comm {
         MPI_Comm *_p_comm;
         double _cutoff_radius_factor;
         double _lattice_const;
+        int _ghost_size;
         std::array<u_int64_t, DIMENSION_SIZE> _phase_space;
 
         /**

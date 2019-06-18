@@ -11,6 +11,9 @@
 // create normal domain
 comm::Domain *getDomainInstance(int64_t space[3], double lattice_const, double cutoff_radius);
 
+comm::Domain *getDomainInstance(int64_t space[3], const int ghost_size,
+                                double lattice_const, double cutoff_radius);
+
 // create bcc domain
 comm::BccDomain *getBccDomainInstance(int64_t space[3], double lattice_const, double cutoff_radius);
 
