@@ -50,7 +50,7 @@ namespace comm {
         const double cutoff_radius_factor;
         // cut off lattice size.
         const _type_lattice_size cut_lattice;
-        const std::array<u_int64_t, DIMENSION_SIZE> phase_space;
+        const std::array<uint64_t, DIMENSION_SIZE> phase_space;
         /**
          * global measured length of the simulation box at each dimension.
          */
@@ -143,7 +143,7 @@ namespace comm {
         const Region<_type_lattice_coord> &local_ghost_lattice_coord_region = _local_ghost_lattice_coord_region;
 
     protected:
-        Domain(const std::array<u_int64_t, DIMENSION_SIZE> _phase_space,
+        Domain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space,
                const double _lattice_const, const double _cutoff_radius_factor);
 
         /** the private variables are referenced in preview public filed.*/

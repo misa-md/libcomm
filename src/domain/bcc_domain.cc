@@ -5,7 +5,7 @@
 #include "bcc_domain.h"
 
 
-comm::BccDomain::BccDomain(const std::array<u_int64_t, 3> _phase_space, const double _lattice_const,
+comm::BccDomain::BccDomain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space, const double _lattice_const,
                            const double _cutoff_radius_factor)
         : Domain(_phase_space, _lattice_const, _cutoff_radius_factor) {}
 

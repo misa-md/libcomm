@@ -7,7 +7,7 @@
 #include "domain.h"
 
 
-comm::Domain::Domain(const std::array<u_int64_t, DIMENSION_SIZE> _phase_space,
+comm::Domain::Domain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space,
                      const double _lattice_const, const double _cutoff_radius_factor)
         : lattice_const(_lattice_const), cutoff_radius_factor(_cutoff_radius_factor),
           cut_lattice(static_cast<int>(ceil(_cutoff_radius_factor))), phase_space(_phase_space) {}

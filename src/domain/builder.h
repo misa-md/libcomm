@@ -64,7 +64,7 @@ namespace comm {
         double _cutoff_radius_factor;
         double _lattice_const;
         int _ghost_size;
-        std::array<u_int64_t, DIMENSION_SIZE> _phase_space;
+        std::array<uint64_t, DIMENSION_SIZE> _phase_space;
 
         /**
          * In this method, each processor will be bound to a cartesian coordinate.
