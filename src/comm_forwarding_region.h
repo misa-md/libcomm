@@ -7,7 +7,7 @@
 
 #include <cassert>
 #include "domain/region.hpp"
-#include "domain/domain.h"
+#include "domain/bcc_domain.h"
 
 /**
  * this header file describes the communication region
@@ -26,11 +26,12 @@ namespace comm {
      * \return region for communication forwarding, unit: lattice size.
      * \note: the region in x dimension in return value is double due to BCC lattice structure.
      */
-    Region<_type_lattice_size> fwCommLocalRegion(const Domain *p_domain, const int dimension, const int direction);
+    Region<_type_lattice_size> fwCommLocalRegion(const BccDomain *p_domain, const int dimension, const int direction);
 
     /**
      * This function returns communication region when performing communication forwarding.
      * The unit is measure length, not lattice size as above function.
+     * \deprecated do not use measured length to pack atoms for communication
      * \param p_domain pointer to the domain.
      * \param dimension dimension for communication, 0 for x dimension, 1 for y dimension, 2 for z dimension
      * \param direction direction for communication, values: DIR_LOWER or DIR_HIGHER.

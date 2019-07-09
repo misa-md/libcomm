@@ -6,6 +6,7 @@
 #include <iostream>
 #include <cmath>
 #include <mpi.h>
+#include <domain/bcc_domain.h>
 
 #include "domain_test_utils.h"
 
@@ -61,7 +62,8 @@ TEST(domain_local_lattice_size, domain_test) {
 }
 
 // @MPI
-TEST(domain_ghost_lattice_size, domain_test) {
+// test default ghost size
+TEST(domain_ghost_lattice_size_default, domain_test) {
     int64_t space[3] = {50, 60, 72};
     double lattice_const = 0.86;
     double cutoff_radius_factor = 1.1421;
@@ -103,6 +105,16 @@ TEST(domain_local_lattice_coord, domain_test) {
               _domain->local_ghost_lattice_coord_region.y_high - _domain->local_ghost_lattice_coord_region.y_low);
     EXPECT_EQ(_domain->lattice_size_ghost_extended[2],
               _domain->local_ghost_lattice_coord_region.z_high - _domain->local_ghost_lattice_coord_region.z_low);
+
+}
+
+// @MPI
+TEST(bcc_domain_local_lattice_coord, bcc_domain_test) {
+    int64_t space[3] = {50, 60, 72};
+    double lattice_const = 0.86;
+    double cutoff_radius_factor = 1.1421;
+    comm::BccDomain *_domain = getBccDomainInstance(space, lattice_const, cutoff_radius_factor);
+
     // test double x dalta values
     EXPECT_EQ(_domain->dbx_lattice_size_sub_box[0],
               _domain->dbx_local_sub_box_lattice_coord_region.x_high -
@@ -123,7 +135,6 @@ TEST(domain_local_lattice_coord, domain_test) {
     EXPECT_EQ(_domain->dbx_lattice_size_ghost_extended[2],
               _domain->dbx_local_ghost_lattice_coord_region.z_high -
               _domain->dbx_local_ghost_lattice_coord_region.z_low);
-
 }
 
 // @MPI
@@ -169,18 +180,18 @@ TEST(domain_ghost_lattice_coord, domain_test) {
     comm::Domain *_domain = getDomainInstance(space, lattice_const, cutoff_radius_factor);
 
     // lower boundary of lattice coordinate of ghost
-    int loghostx = _domain->lattice_coord_sub_box_region.x_low - ceil(cutoff_radius_factor / lattice_const);
-    int loghosty = _domain->lattice_coord_sub_box_region.y_low - ceil(cutoff_radius_factor / lattice_const);
-    int loghostz = _domain->lattice_coord_sub_box_region.z_low - ceil(cutoff_radius_factor / lattice_const);
+    int loghostx = _domain->lattice_coord_sub_box_region.x_low - ceil(cutoff_radius_factor);
+    int loghosty = _domain->lattice_coord_sub_box_region.y_low - ceil(cutoff_radius_factor);
+    int loghostz = _domain->lattice_coord_sub_box_region.z_low - ceil(cutoff_radius_factor);
 
     EXPECT_EQ(loghostx, _domain->lattice_coord_ghost_region.x_low);
     EXPECT_EQ(loghosty, _domain->lattice_coord_ghost_region.y_low);
     EXPECT_EQ(loghostz, _domain->lattice_coord_ghost_region.z_low);
 
     // upper boundary of lattice coordinate of ghost
-    int upghostx = _domain->lattice_coord_sub_box_region.x_high + ceil(cutoff_radius_factor / lattice_const);
-    int upghosty = _domain->lattice_coord_sub_box_region.y_high + ceil(cutoff_radius_factor / lattice_const);
-    int upghostz = _domain->lattice_coord_sub_box_region.z_high + ceil(cutoff_radius_factor / lattice_const);
+    int upghostx = _domain->lattice_coord_sub_box_region.x_high + ceil(cutoff_radius_factor);
+    int upghosty = _domain->lattice_coord_sub_box_region.y_high + ceil(cutoff_radius_factor);
+    int upghostz = _domain->lattice_coord_sub_box_region.z_high + ceil(cutoff_radius_factor);
 
     EXPECT_EQ(upghostx, _domain->lattice_coord_ghost_region.x_high);
     EXPECT_EQ(upghosty, _domain->lattice_coord_ghost_region.y_high);
@@ -194,6 +205,38 @@ TEST(domain_ghost_lattice_coord, domain_test) {
     EXPECT_EQ(_domain->lattice_size_ghost_extended[2],
               _domain->lattice_coord_ghost_region.z_high - _domain->lattice_coord_ghost_region.z_low);
     delete _domain;
+}
+
+// @MPI
+// test setting ghost size in builder.
+TEST(domain_set_ghost_size, domain_test) {
+    int64_t space[3] = {50, 60, 72};
+    double lattice_const = 0.86;
+    double cutoff_radius_factor = 1.1421;
+    comm::Domain *_domain = getDomainInstance(space, static_cast<int>(ceil(cutoff_radius_factor) + 1),
+                                              lattice_const, cutoff_radius_factor);
+
+    EXPECT_EQ(_domain->lattice_size_ghost[0], ceil(cutoff_radius_factor) + 1);
+    EXPECT_EQ(_domain->lattice_size_ghost[1], ceil(cutoff_radius_factor) + 1);
+    EXPECT_EQ(_domain->lattice_size_ghost[2], ceil(cutoff_radius_factor) + 1);
+
+    // lower boundary of lattice coordinate of ghost
+    int loghostx = _domain->lattice_coord_sub_box_region.x_low - ceil(cutoff_radius_factor) - 1;
+    int loghosty = _domain->lattice_coord_sub_box_region.y_low - ceil(cutoff_radius_factor) - 1;
+    int loghostz = _domain->lattice_coord_sub_box_region.z_low - ceil(cutoff_radius_factor) - 1;
+
+    EXPECT_EQ(loghostx, _domain->lattice_coord_ghost_region.x_low);
+    EXPECT_EQ(loghosty, _domain->lattice_coord_ghost_region.y_low);
+    EXPECT_EQ(loghostz, _domain->lattice_coord_ghost_region.z_low);
+
+    // upper boundary of lattice coordinate of ghost
+    int upghostx = _domain->lattice_coord_sub_box_region.x_high + ceil(cutoff_radius_factor) + 1;
+    int upghosty = _domain->lattice_coord_sub_box_region.y_high + ceil(cutoff_radius_factor) + 1;
+    int upghostz = _domain->lattice_coord_sub_box_region.z_high + ceil(cutoff_radius_factor) + 1;
+
+    EXPECT_EQ(upghostx, _domain->lattice_coord_ghost_region.x_high);
+    EXPECT_EQ(upghosty, _domain->lattice_coord_ghost_region.y_high);
+    EXPECT_EQ(upghostz, _domain->lattice_coord_ghost_region.z_high);
 }
 
 // @MPI
