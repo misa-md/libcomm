@@ -34,6 +34,8 @@ namespace comm {
         Region(const T x_start, const T y_start, const T z_start,
                const T x_end, const T y_end, const T z_end);
 
+        Region &operator=(const Region &arr);
+
         /**
          * Given a point (x,y,z), if x belongs to set [x_low, x_high), y belongs to set [y_low, y_high),
          * and z belongs to set [z_low, z_high),
