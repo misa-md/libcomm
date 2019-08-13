@@ -19,6 +19,7 @@ namespace comm {
      * Colored domain is usually used in parallel KMC sub-lattice or synchronous parallel KMC algorithm.
      */
     class ColoredDomain : public Domain {
+    public:
         class Builder;
 
     public:
