@@ -1,6 +1,7 @@
 set(HEADER_FILES
         domain/domain.h
         domain/bcc_domain.h
+        domain/colored_domain.h
         domain/builder.h
         domain/region.hpp
         comm.hpp
@@ -12,6 +13,7 @@ set(HEADER_FILES
 set(SOURCE_FILES
         domain/domain.cc
         domain/bcc_domain.cc
+        domain/colored_domain.cc
         domain/builder.inl
         domain/region.inl
         comm.inl
