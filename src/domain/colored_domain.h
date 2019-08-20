@@ -46,7 +46,7 @@ namespace comm {
          * For example, a 8*8*8 sub-box with ghost size 3, a sector whose coordinate is (0,1,0) will
          * have region x from 0 to 10 (3+8/2+3=10) and y from 4 (3+8/2-3=4) to 14 (3+8+3=14), and z from 0 to 10.
          */
-        std::array<Region<_type_lattice_size>, 8> local_sector_ghost_region;
+        std::array<Region<_type_lattice_size>, 8> local_ghost_ext_sector_region;
 
         /**
          * construct colored domain.

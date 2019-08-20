@@ -122,12 +122,12 @@ void comm::ColoredDomain::splitSector(const comm::Domain &domain) {
 
     // extend local index region of 8 sectors with its ghost area.
     for (unsigned int i = (X_LOW | Y_LOW | Z_LOW); i <= (X_HIGH | Y_HIGH | Z_HIGH); i++) {
-        local_sector_ghost_region[i].x_low = local_sector_region[i].x_low - lattice_size_ghost[0];
-        local_sector_ghost_region[i].y_low = local_sector_region[i].y_low - lattice_size_ghost[1];
-        local_sector_ghost_region[i].z_low = local_sector_region[i].z_low - lattice_size_ghost[2];
-        local_sector_ghost_region[i].x_high = local_sector_region[i].x_high + lattice_size_ghost[0];
-        local_sector_ghost_region[i].y_high = local_sector_region[i].y_high + lattice_size_ghost[1];
-        local_sector_ghost_region[i].z_high = local_sector_region[i].z_high + lattice_size_ghost[2];
+        local_ghost_ext_sector_region[i].x_low = local_sector_region[i].x_low - lattice_size_ghost[0];
+        local_ghost_ext_sector_region[i].y_low = local_sector_region[i].y_low - lattice_size_ghost[1];
+        local_ghost_ext_sector_region[i].z_low = local_sector_region[i].z_low - lattice_size_ghost[2];
+        local_ghost_ext_sector_region[i].x_high = local_sector_region[i].x_high + lattice_size_ghost[0];
+        local_ghost_ext_sector_region[i].y_high = local_sector_region[i].y_high + lattice_size_ghost[1];
+        local_ghost_ext_sector_region[i].z_high = local_sector_region[i].z_high + lattice_size_ghost[2];
     }
 }
 
