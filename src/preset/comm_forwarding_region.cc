@@ -101,41 +101,41 @@ comm::Region<double> comm::fwCommLocalMeaRegion(
         }
         case DIM_Y << 2 | DIR_LOWER: { // y dimension, lower direction
             return Region<double>(
-                    p_domain->meas_ghost_region.x_low,
+                    p_domain->meas_ghost_ext_region.x_low,
                     p_domain->meas_sub_box_region.y_low,
                     p_domain->meas_sub_box_region.z_low,
-                    p_domain->meas_ghost_region.x_high,
+                    p_domain->meas_ghost_ext_region.x_high,
                     p_domain->meas_sub_box_region.y_low + p_domain->meas_ghost_length[dimension],
                     p_domain->meas_sub_box_region.z_high
             );
         }
         case DIM_Y << 2 | DIR_HIGHER: { // y dimension, higher direction
             return Region<double>(
-                    p_domain->meas_ghost_region.x_low,
+                    p_domain->meas_ghost_ext_region.x_low,
                     p_domain->meas_sub_box_region.y_high - p_domain->meas_ghost_length[dimension],
                     p_domain->meas_sub_box_region.z_low,
-                    p_domain->meas_ghost_region.x_high,
+                    p_domain->meas_ghost_ext_region.x_high,
                     p_domain->meas_sub_box_region.y_high,
                     p_domain->meas_sub_box_region.z_high
             );
         }
         case DIM_Z << 2 | DIR_LOWER: { // z dimension, lower direction
             return Region<double>(
-                    p_domain->meas_ghost_region.x_low,
-                    p_domain->meas_ghost_region.y_low,
+                    p_domain->meas_ghost_ext_region.x_low,
+                    p_domain->meas_ghost_ext_region.y_low,
                     p_domain->meas_sub_box_region.z_low,
-                    p_domain->meas_ghost_region.x_high,
-                    p_domain->meas_ghost_region.y_high,
+                    p_domain->meas_ghost_ext_region.x_high,
+                    p_domain->meas_ghost_ext_region.y_high,
                     p_domain->meas_sub_box_region.z_low + p_domain->meas_ghost_length[dimension]
             );
         }
         case DIM_Z << 2 | DIR_HIGHER: { // z dimension, higher direction
             return Region<double>(
-                    p_domain->meas_ghost_region.x_low,
-                    p_domain->meas_ghost_region.y_low,
+                    p_domain->meas_ghost_ext_region.x_low,
+                    p_domain->meas_ghost_ext_region.y_low,
                     p_domain->meas_sub_box_region.z_high - p_domain->meas_ghost_length[dimension],
-                    p_domain->meas_ghost_region.x_high,
-                    p_domain->meas_ghost_region.y_high,
+                    p_domain->meas_ghost_ext_region.x_high,
+                    p_domain->meas_ghost_ext_region.y_high,
                     p_domain->meas_sub_box_region.z_high
             );
         }

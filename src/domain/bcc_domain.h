@@ -45,7 +45,6 @@ namespace comm {
 
         /**
          * create bcc domain from existed normal domain.
-         * \note if construct bcc domain from this func, the measured length value may be not as expected.
          * \param domain ref of normal domain.
          */
         explicit BccDomain(const Domain &domain);

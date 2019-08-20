@@ -5,12 +5,12 @@
 #include "colored_domain.h"
 
 void comm::ColoredDomain::splitSector(const comm::Domain &domain) {
-    const _type_lattice_size sector_size_x_low = domain.lattice_size_sub_box[0] / 2;
-    const _type_lattice_size sector_size_x_high = domain.lattice_size_sub_box[0] - domain.lattice_size_sub_box[0] / 2;
-    const _type_lattice_size sector_size_y_low = domain.lattice_size_sub_box[1] / 2;
-    const _type_lattice_size sector_size_y_high = domain.lattice_size_sub_box[1] - domain.lattice_size_sub_box[1] / 2;
-    const _type_lattice_size sector_size_z_low = domain.lattice_size_sub_box[2] / 2;
-    const _type_lattice_size sector_size_z_high = domain.lattice_size_sub_box[2] - domain.lattice_size_sub_box[2] / 2;
+    const _type_lattice_size sector_size_x_low = domain.sub_box_lattice_size[0] / 2;
+    const _type_lattice_size sector_size_x_high = domain.sub_box_lattice_size[0] - domain.sub_box_lattice_size[0] / 2;
+    const _type_lattice_size sector_size_y_low = domain.sub_box_lattice_size[1] / 2;
+    const _type_lattice_size sector_size_y_high = domain.sub_box_lattice_size[1] - domain.sub_box_lattice_size[1] / 2;
+    const _type_lattice_size sector_size_z_low = domain.sub_box_lattice_size[2] / 2;
+    const _type_lattice_size sector_size_z_high = domain.sub_box_lattice_size[2] - domain.sub_box_lattice_size[2] / 2;
 
     // todo refactor: better implementation
     // set sector size in x direction for 8 sectors.
@@ -56,7 +56,7 @@ void comm::ColoredDomain::splitSector(const comm::Domain &domain) {
     local_sector_region[X_HIGH | Y_LOW | Z_LOW] = Region<_type_lattice_size>{
             sector_lattice_size[X_LOW | Y_LOW | Z_LOW][0],
             0, 0,
-            domain.lattice_size_sub_box[0],
+            domain.sub_box_lattice_size[0],
             sector_lattice_size[X_LOW | Y_LOW | Z_LOW][1],
             sector_lattice_size[X_LOW | Y_LOW | Z_LOW][2],
     };
@@ -65,15 +65,15 @@ void comm::ColoredDomain::splitSector(const comm::Domain &domain) {
             sector_lattice_size[X_LOW | Y_LOW | Z_LOW][1],
             0,
             sector_lattice_size[X_LOW | Y_LOW | Z_LOW][0],
-            domain.lattice_size_sub_box[1],
+            domain.sub_box_lattice_size[1],
             sector_lattice_size[X_LOW | Y_LOW | Z_LOW][2],
     };
     local_sector_region[X_HIGH | Y_HIGH | Z_LOW] = Region<_type_lattice_size>{
             sector_lattice_size[X_LOW | Y_LOW | Z_LOW][0],
             sector_lattice_size[X_LOW | Y_LOW | Z_LOW][1],
             0,
-            domain.lattice_size_sub_box[0],
-            domain.lattice_size_sub_box[1],
+            domain.sub_box_lattice_size[0],
+            domain.sub_box_lattice_size[1],
             sector_lattice_size[X_LOW | Y_LOW | Z_LOW][2],
     };
 
@@ -82,31 +82,31 @@ void comm::ColoredDomain::splitSector(const comm::Domain &domain) {
             sector_lattice_size[X_LOW | Y_LOW | Z_LOW][2],
             sector_lattice_size[X_LOW | Y_LOW | Z_LOW][0],
             sector_lattice_size[X_LOW | Y_LOW | Z_LOW][1],
-            domain.lattice_size_sub_box[2],
+            domain.sub_box_lattice_size[2],
     };
     local_sector_region[X_HIGH | Y_LOW | Z_HIGH] = Region<_type_lattice_size>{
             sector_lattice_size[X_LOW | Y_LOW | Z_LOW][0],
             0,
             sector_lattice_size[X_LOW | Y_LOW | Z_LOW][2],
-            domain.lattice_size_sub_box[0],
+            domain.sub_box_lattice_size[0],
             sector_lattice_size[X_LOW | Y_LOW | Z_LOW][1],
-            domain.lattice_size_sub_box[2],
+            domain.sub_box_lattice_size[2],
     };
     local_sector_region[X_LOW | Y_HIGH | Z_HIGH] = Region<_type_lattice_size>{
             0,
             sector_lattice_size[X_LOW | Y_LOW | Z_LOW][1],
             sector_lattice_size[X_LOW | Y_LOW | Z_LOW][2],
             sector_lattice_size[X_LOW | Y_LOW | Z_LOW][0],
-            domain.lattice_size_sub_box[1],
-            domain.lattice_size_sub_box[2],
+            domain.sub_box_lattice_size[1],
+            domain.sub_box_lattice_size[2],
     };
     local_sector_region[X_HIGH | Y_HIGH | Z_HIGH] = Region<_type_lattice_size>{
             sector_lattice_size[X_LOW | Y_LOW | Z_LOW][0],
             sector_lattice_size[X_LOW | Y_LOW | Z_LOW][1],
             sector_lattice_size[X_LOW | Y_LOW | Z_LOW][2],
-            domain.lattice_size_sub_box[0],
-            domain.lattice_size_sub_box[1],
-            domain.lattice_size_sub_box[2],
+            domain.sub_box_lattice_size[0],
+            domain.sub_box_lattice_size[1],
+            domain.sub_box_lattice_size[2],
     };
     // add additional ghost offset to local_sector_region.
     // convert [0, sub_box_size/2) to [ghost_size, ghost_size + sub_box_size/2) or
@@ -153,7 +153,7 @@ comm::ColoredDomain *comm::ColoredDomain::Builder::localBuild(const int *_grid_s
     ColoredDomain *p_domain = new ColoredDomain(_phase_space, _lattice_const, _cutoff_radius_factor);
     for (int i = 0; i < 3; i++) {
         p_domain->_grid_size[i] = _grid_size[i];
-        p_domain->_grid_coord_sub_box[i] = _grid_coord[i];
+        p_domain->_grid_coord[i] = _grid_coord[i];
     }
     createGlobalDomain(*p_domain);
     buildLatticeDomain(*p_domain);
