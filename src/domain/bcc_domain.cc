@@ -14,45 +14,45 @@ comm::BccDomain::BccDomain(const comm::Domain &domain) : Domain(domain) {
 }
 
 void comm::BccDomain::rescale(const comm::Domain &domain) {
-    _dbx_lattice_sub_box_size[0] = 2 * domain.sub_box_lattice_size[0];
-    _dbx_lattice_sub_box_size[1] = domain.sub_box_lattice_size[1];
-    _dbx_lattice_sub_box_size[2] = domain.sub_box_lattice_size[2];
+    _dbx_sub_box_lattice_size[0] = 2 * domain.sub_box_lattice_size[0];
+    _dbx_sub_box_lattice_size[1] = domain.sub_box_lattice_size[1];
+    _dbx_sub_box_lattice_size[2] = domain.sub_box_lattice_size[2];
 
     _dbx_lattice_size_ghost[0] = 2 * domain.lattice_size_ghost[0];
     _dbx_lattice_size_ghost[1] = domain.lattice_size_ghost[1];
     _dbx_lattice_size_ghost[2] = domain.lattice_size_ghost[2];
 
-    _dbx_lattice_size_ghost_extended[0] = 2 * domain.ghost_extended_lattice_size[0];
-    _dbx_lattice_size_ghost_extended[1] = domain.ghost_extended_lattice_size[1];
-    _dbx_lattice_size_ghost_extended[2] = domain.ghost_extended_lattice_size[2];
+    _dbx_ghost_extended_lattice_size[0] = 2 * domain.ghost_extended_lattice_size[0];
+    _dbx_ghost_extended_lattice_size[1] = domain.ghost_extended_lattice_size[1];
+    _dbx_ghost_extended_lattice_size[2] = domain.ghost_extended_lattice_size[2];
 
-    _dbx_lattice_coord_sub_box_region.x_low = 2 * domain.sub_box_lattice_region.x_low;
-    _dbx_lattice_coord_sub_box_region.y_low = domain.sub_box_lattice_region.y_low;
-    _dbx_lattice_coord_sub_box_region.z_low = domain.sub_box_lattice_region.z_low;
-    _dbx_lattice_coord_sub_box_region.x_high = 2 * domain.sub_box_lattice_region.x_high;
-    _dbx_lattice_coord_sub_box_region.y_high = domain.sub_box_lattice_region.y_high;
-    _dbx_lattice_coord_sub_box_region.z_high = domain.sub_box_lattice_region.z_high;
+    _dbx_sub_box_lattice_region.x_low = 2 * domain.sub_box_lattice_region.x_low;
+    _dbx_sub_box_lattice_region.y_low = domain.sub_box_lattice_region.y_low;
+    _dbx_sub_box_lattice_region.z_low = domain.sub_box_lattice_region.z_low;
+    _dbx_sub_box_lattice_region.x_high = 2 * domain.sub_box_lattice_region.x_high;
+    _dbx_sub_box_lattice_region.y_high = domain.sub_box_lattice_region.y_high;
+    _dbx_sub_box_lattice_region.z_high = domain.sub_box_lattice_region.z_high;
 
-    _dbx_lattice_coord_ghost_region.x_low = 2 * domain.ghost_ext_lattice_region.x_low;
-    _dbx_lattice_coord_ghost_region.y_low = domain.ghost_ext_lattice_region.y_low;
-    _dbx_lattice_coord_ghost_region.z_low = domain.ghost_ext_lattice_region.z_low;
-    _dbx_lattice_coord_ghost_region.x_high = 2 * domain.ghost_ext_lattice_region.x_high;
-    _dbx_lattice_coord_ghost_region.y_high = domain.ghost_ext_lattice_region.y_high;
-    _dbx_lattice_coord_ghost_region.z_high = domain.ghost_ext_lattice_region.z_high;
+    _dbx_ghost_ext_lattice_region.x_low = 2 * domain.ghost_ext_lattice_region.x_low;
+    _dbx_ghost_ext_lattice_region.y_low = domain.ghost_ext_lattice_region.y_low;
+    _dbx_ghost_ext_lattice_region.z_low = domain.ghost_ext_lattice_region.z_low;
+    _dbx_ghost_ext_lattice_region.x_high = 2 * domain.ghost_ext_lattice_region.x_high;
+    _dbx_ghost_ext_lattice_region.y_high = domain.ghost_ext_lattice_region.y_high;
+    _dbx_ghost_ext_lattice_region.z_high = domain.ghost_ext_lattice_region.z_high;
 
-    _dbx_local_ghost_lattice_coord_region.x_low = 2 * domain.local_ghost_ext_lattice_region.x_low;
-    _dbx_local_ghost_lattice_coord_region.y_low = domain.local_ghost_ext_lattice_region.y_low;
-    _dbx_local_ghost_lattice_coord_region.z_low = domain.local_ghost_ext_lattice_region.z_low;
-    _dbx_local_ghost_lattice_coord_region.x_high = 2 * domain.local_ghost_ext_lattice_region.x_high;
-    _dbx_local_ghost_lattice_coord_region.y_high = domain.local_ghost_ext_lattice_region.y_high;
-    _dbx_local_ghost_lattice_coord_region.z_high = domain.local_ghost_ext_lattice_region.z_high;
+    _dbx_local_ghost_ext_lattice_region.x_low = 2 * domain.local_ghost_ext_lattice_region.x_low;
+    _dbx_local_ghost_ext_lattice_region.y_low = domain.local_ghost_ext_lattice_region.y_low;
+    _dbx_local_ghost_ext_lattice_region.z_low = domain.local_ghost_ext_lattice_region.z_low;
+    _dbx_local_ghost_ext_lattice_region.x_high = 2 * domain.local_ghost_ext_lattice_region.x_high;
+    _dbx_local_ghost_ext_lattice_region.y_high = domain.local_ghost_ext_lattice_region.y_high;
+    _dbx_local_ghost_ext_lattice_region.z_high = domain.local_ghost_ext_lattice_region.z_high;
 
-    _dbx_local_sub_box_lattice_coord_region.x_low = 2 * domain.local_sub_box_lattice_region.x_low;
-    _dbx_local_sub_box_lattice_coord_region.y_low = domain.local_sub_box_lattice_region.y_low;
-    _dbx_local_sub_box_lattice_coord_region.z_low = domain.local_sub_box_lattice_region.z_low;
-    _dbx_local_sub_box_lattice_coord_region.x_high = 2 * domain.local_sub_box_lattice_region.x_high;
-    _dbx_local_sub_box_lattice_coord_region.y_high = domain.local_sub_box_lattice_region.y_high;
-    _dbx_local_sub_box_lattice_coord_region.z_high = domain.local_sub_box_lattice_region.z_high;
+    _dbx_local_sub_box_lattice_region.x_low = 2 * domain.local_sub_box_lattice_region.x_low;
+    _dbx_local_sub_box_lattice_region.y_low = domain.local_sub_box_lattice_region.y_low;
+    _dbx_local_sub_box_lattice_region.z_low = domain.local_sub_box_lattice_region.z_low;
+    _dbx_local_sub_box_lattice_region.x_high = 2 * domain.local_sub_box_lattice_region.x_high;
+    _dbx_local_sub_box_lattice_region.y_high = domain.local_sub_box_lattice_region.y_high;
+    _dbx_local_sub_box_lattice_region.z_high = domain.local_sub_box_lattice_region.z_high;
 }
 
 comm::BccDomain *comm::BccDomain::Builder::build() {

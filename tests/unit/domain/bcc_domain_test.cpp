@@ -51,27 +51,27 @@ TEST(bcc_domain_test_dbx, bcc_domain_test) {
     for (int d = 0; d < comm::DIMENSION_SIZE; d++) {
         int times = d == 0 ? 2 : 1;
         EXPECT_EQ(p_bcc_domain.dbx_lattice_size_ghost[d], times * p_domain->lattice_size_ghost[d]);
-        EXPECT_EQ(p_bcc_domain.dbx_lattice_size_ghost_extended[d], times * p_domain->ghost_extended_lattice_size[d]);
-        EXPECT_EQ(p_bcc_domain.dbx_lattice_size_sub_box[d], times * p_domain->sub_box_lattice_size[d]);
+        EXPECT_EQ(p_bcc_domain.dbx_ghost_extended_lattice_size[d], times * p_domain->ghost_extended_lattice_size[d]);
+        EXPECT_EQ(p_bcc_domain.dbx_sub_box_lattice_size[d], times * p_domain->sub_box_lattice_size[d]);
 
-        EXPECT_EQ(p_bcc_domain.dbx_lattice_coord_ghost_region.low[d],
+        EXPECT_EQ(p_bcc_domain.dbx_ghost_ext_lattice_region.low[d],
                   times * p_domain->ghost_ext_lattice_region.low[d]);
-        EXPECT_EQ(p_bcc_domain.dbx_lattice_coord_ghost_region.high[d],
+        EXPECT_EQ(p_bcc_domain.dbx_ghost_ext_lattice_region.high[d],
                   times * p_domain->ghost_ext_lattice_region.high[d]);
 
-        EXPECT_EQ(p_bcc_domain.dbx_local_ghost_lattice_coord_region.low[d],
+        EXPECT_EQ(p_bcc_domain.dbx_local_ghost_ext_lattice_region.low[d],
                   times * p_domain->local_ghost_ext_lattice_region.low[d]);
-        EXPECT_EQ(p_bcc_domain.dbx_local_ghost_lattice_coord_region.high[d],
+        EXPECT_EQ(p_bcc_domain.dbx_local_ghost_ext_lattice_region.high[d],
                   times * p_domain->local_ghost_ext_lattice_region.high[d]);
 
-        EXPECT_EQ(p_bcc_domain.dbx_local_sub_box_lattice_coord_region.low[d],
+        EXPECT_EQ(p_bcc_domain.dbx_local_sub_box_lattice_region.low[d],
                   times * p_domain->local_sub_box_lattice_region.low[d]);
-        EXPECT_EQ(p_bcc_domain.dbx_local_sub_box_lattice_coord_region.high[d],
+        EXPECT_EQ(p_bcc_domain.dbx_local_sub_box_lattice_region.high[d],
                   times * p_domain->local_sub_box_lattice_region.high[d]);
 
-        EXPECT_EQ(p_bcc_domain.dbx_lattice_coord_sub_box_region.low[d],
+        EXPECT_EQ(p_bcc_domain.dbx_sub_box_lattice_region.low[d],
                   times * p_domain->sub_box_lattice_region.low[d]);
-        EXPECT_EQ(p_bcc_domain.dbx_lattice_coord_sub_box_region.high[d],
+        EXPECT_EQ(p_bcc_domain.dbx_sub_box_lattice_region.high[d],
                   times * p_domain->sub_box_lattice_region.high[d]);
 
     }

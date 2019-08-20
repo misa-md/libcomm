@@ -116,25 +116,25 @@ TEST(bcc_domain_local_lattice_coord, bcc_domain_test) {
     comm::BccDomain *_domain = getBccDomainInstance(space, lattice_const, cutoff_radius_factor);
 
     // test double x dalta values
-    EXPECT_EQ(_domain->dbx_lattice_size_sub_box[0],
-              _domain->dbx_local_sub_box_lattice_coord_region.x_high -
-              _domain->dbx_local_sub_box_lattice_coord_region.x_low);
-    EXPECT_EQ(_domain->dbx_lattice_size_sub_box[1],
-              _domain->dbx_local_sub_box_lattice_coord_region.y_high -
-              _domain->dbx_local_sub_box_lattice_coord_region.y_low);
-    EXPECT_EQ(_domain->dbx_lattice_size_sub_box[2],
-              _domain->dbx_local_sub_box_lattice_coord_region.z_high -
-              _domain->dbx_local_sub_box_lattice_coord_region.z_low);
+    EXPECT_EQ(_domain->dbx_sub_box_lattice_size[0],
+              _domain->dbx_local_sub_box_lattice_region.x_high -
+              _domain->dbx_local_sub_box_lattice_region.x_low);
+    EXPECT_EQ(_domain->dbx_sub_box_lattice_size[1],
+              _domain->dbx_local_sub_box_lattice_region.y_high -
+              _domain->dbx_local_sub_box_lattice_region.y_low);
+    EXPECT_EQ(_domain->dbx_sub_box_lattice_size[2],
+              _domain->dbx_local_sub_box_lattice_region.z_high -
+              _domain->dbx_local_sub_box_lattice_region.z_low);
 
-    EXPECT_EQ(_domain->dbx_lattice_size_ghost_extended[0],
-              _domain->dbx_local_ghost_lattice_coord_region.x_high -
-              _domain->dbx_local_ghost_lattice_coord_region.x_low);
-    EXPECT_EQ(_domain->dbx_lattice_size_ghost_extended[1],
-              _domain->dbx_local_ghost_lattice_coord_region.y_high -
-              _domain->dbx_local_ghost_lattice_coord_region.y_low);
-    EXPECT_EQ(_domain->dbx_lattice_size_ghost_extended[2],
-              _domain->dbx_local_ghost_lattice_coord_region.z_high -
-              _domain->dbx_local_ghost_lattice_coord_region.z_low);
+    EXPECT_EQ(_domain->dbx_ghost_extended_lattice_size[0],
+              _domain->dbx_local_ghost_ext_lattice_region.x_high -
+              _domain->dbx_local_ghost_ext_lattice_region.x_low);
+    EXPECT_EQ(_domain->dbx_ghost_extended_lattice_size[1],
+              _domain->dbx_local_ghost_ext_lattice_region.y_high -
+              _domain->dbx_local_ghost_ext_lattice_region.y_low);
+    EXPECT_EQ(_domain->dbx_ghost_extended_lattice_size[2],
+              _domain->dbx_local_ghost_ext_lattice_region.z_high -
+              _domain->dbx_local_ghost_ext_lattice_region.z_low);
 }
 
 // @MPI
