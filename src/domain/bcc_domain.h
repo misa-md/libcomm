@@ -19,17 +19,17 @@ namespace comm {
         class Builder;
 
     public:
-        const Region<_type_lattice_coord> &dbx_local_ghost_lattice_coord_region = _dbx_local_ghost_lattice_coord_region;
+        const Region<_type_lattice_coord> &dbx_local_ghost_ext_lattice_region = _dbx_local_ghost_ext_lattice_region;
 
-        const Region<_type_lattice_coord> &dbx_local_sub_box_lattice_coord_region = _dbx_local_sub_box_lattice_coord_region;
+        const Region<_type_lattice_coord> &dbx_local_sub_box_lattice_region = _dbx_local_sub_box_lattice_region;
 
-        const Region<_type_lattice_coord> &dbx_lattice_coord_ghost_region = _dbx_lattice_coord_ghost_region;
+        const Region<_type_lattice_coord> &dbx_ghost_ext_lattice_region = _dbx_ghost_ext_lattice_region;
 
-        const Region<_type_lattice_coord> &dbx_lattice_coord_sub_box_region = _dbx_lattice_coord_sub_box_region;
+        const Region<_type_lattice_coord> &dbx_sub_box_lattice_region = _dbx_sub_box_lattice_region;
 
-        const _type_lattice_size (&dbx_lattice_size_sub_box)[DIMENSION_SIZE] = _dbx_lattice_sub_box_size;
+        const _type_lattice_size (&dbx_sub_box_lattice_size)[DIMENSION_SIZE] = _dbx_sub_box_lattice_size;
 
-        const _type_lattice_size (&dbx_lattice_size_ghost_extended)[DIMENSION_SIZE] = _dbx_lattice_size_ghost_extended;
+        const _type_lattice_size (&dbx_ghost_extended_lattice_size)[DIMENSION_SIZE] = _dbx_ghost_extended_lattice_size;
 
         const _type_lattice_size (&dbx_lattice_size_ghost)[DIMENSION_SIZE] = _dbx_lattice_size_ghost;
 
@@ -45,7 +45,6 @@ namespace comm {
 
         /**
          * create bcc domain from existed normal domain.
-         * \note if construct bcc domain from this func, the measured length value may be not as expected.
          * \param domain ref of normal domain.
          */
         explicit BccDomain(const Domain &domain);
@@ -57,14 +56,14 @@ namespace comm {
 
     private:
         // doubled x size for BCC lattice.
-        _type_lattice_size _dbx_lattice_sub_box_size[DIMENSION_SIZE];
-        _type_lattice_size _dbx_lattice_size_ghost_extended[DIMENSION_SIZE];
+        _type_lattice_size _dbx_sub_box_lattice_size[DIMENSION_SIZE];
+        _type_lattice_size _dbx_ghost_extended_lattice_size[DIMENSION_SIZE];
         _type_lattice_size _dbx_lattice_size_ghost[DIMENSION_SIZE];
-        Region<_type_lattice_coord> _dbx_lattice_coord_sub_box_region;
-        Region<_type_lattice_coord> _dbx_lattice_coord_ghost_region;
+        Region<_type_lattice_coord> _dbx_sub_box_lattice_region;
+        Region<_type_lattice_coord> _dbx_ghost_ext_lattice_region;
 
-        Region<_type_lattice_coord> _dbx_local_sub_box_lattice_coord_region;
-        Region<_type_lattice_coord> _dbx_local_ghost_lattice_coord_region;
+        Region<_type_lattice_coord> _dbx_local_sub_box_lattice_region;
+        Region<_type_lattice_coord> _dbx_local_ghost_ext_lattice_region;
     };
 
     /**

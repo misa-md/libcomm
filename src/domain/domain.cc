@@ -28,7 +28,7 @@ comm::Domain *comm::Domain::Builder::localBuild(const int _grid_size[DIMENSION_S
     Domain *p_domain = new Domain(_phase_space, _lattice_const, _cutoff_radius_factor);
     for (int i = 0; i < 3; i++) {
         p_domain->_grid_size[i] = _grid_size[i];
-        p_domain->_grid_coord_sub_box[i] = _grid_coord[i];
+        p_domain->_grid_coord[i] = _grid_coord[i];
     }
     createGlobalDomain(*p_domain);
     buildLatticeDomain(*p_domain);
