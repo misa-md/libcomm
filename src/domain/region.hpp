@@ -35,6 +35,8 @@ namespace comm {
         Region(const T x_start, const T y_start, const T z_start,
                const T x_end, const T y_end, const T z_end);
 
+        Region(const Region &region); // copy ctor
+
         Region &operator=(const Region &arr);
 
         /**

@@ -21,6 +21,12 @@ comm::Region<T>::Region(const T x_start, const T y_start, const T z_start,
 }
 
 template<typename T>
+comm::Region<T>::Region(const comm::Region<T> &r):low(&x_low), high(&x_high) {
+    memcpy(this->low, r.low, DIMENSION_SIZE * sizeof(T));
+    memcpy(this->high, r.high, DIMENSION_SIZE * sizeof(T));
+}
+
+template<typename T>
 comm::Region<T> &comm::Region<T>::operator=(const comm::Region<T> &r) {
     memcpy(this->low, r.low, DIMENSION_SIZE * sizeof(T));
     memcpy(this->high, r.high, DIMENSION_SIZE * sizeof(T));
