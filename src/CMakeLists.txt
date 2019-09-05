@@ -1,10 +1,11 @@
 set(HEADER_FILES
         domain/domain.h
         domain/bcc_domain.h
+        domain/colored_domain.h
         domain/builder.h
         domain/region.hpp
         comm.hpp
-        comm_forwarding_region.h
+        preset/comm_forwarding_region.h
         packer.h
         types_define.h
         )
@@ -12,10 +13,11 @@ set(HEADER_FILES
 set(SOURCE_FILES
         domain/domain.cc
         domain/bcc_domain.cc
+        domain/colored_domain.cc
         domain/builder.inl
         domain/region.inl
         comm.inl
-        comm_forwarding_region.cc
+        preset/comm_forwarding_region.cc
         )
 
 # set(MAIN_FILE main.cpp)

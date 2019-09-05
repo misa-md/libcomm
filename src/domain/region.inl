@@ -18,3 +18,10 @@ comm::Region<T>::Region(const T x_start, const T y_start, const T z_start,
     high[1] = y_end;
     high[2] = z_end;
 }
+
+template<typename T>
+comm::Region<T> &comm::Region<T>::operator=(const comm::Region<T> &r) {
+    memcpy(this->low, r.low, DIMENSION_SIZE * sizeof(T));
+    memcpy(this->high, r.high, DIMENSION_SIZE * sizeof(T));
+    return *this;
+}

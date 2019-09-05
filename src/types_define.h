@@ -11,13 +11,14 @@
 namespace comm {
     const static int COMM_MASTER = 0;
 
-    const int DIMENSION_SIZE = 3;
-    const int DIM_X = 0;
-    const int DIM_Y = 1;
-    const int DIM_Z = 2;
+    const unsigned int DIMENSION_SIZE = 3;
 
-    const int DIR_LOWER = 0;
-    const int DIR_HIGHER = 1;
+    const unsigned int DIM_X = 0;
+    const unsigned int DIM_Y = 1;
+    const unsigned int DIM_Z = 2;
+
+    const unsigned int DIR_LOWER = 0;
+    const unsigned int DIR_HIGHER = 1;
 
     typedef int _type_lattice_size;
     typedef _type_lattice_size _type_lattice_coord;
