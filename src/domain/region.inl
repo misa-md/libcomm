@@ -10,13 +10,14 @@ comm::Region<T>::Region() {}
 
 template<typename T>
 comm::Region<T>::Region(const T x_start, const T y_start, const T z_start,
-                        const T x_end, const T y_end, const T z_end) {
-    low[0] = x_start;
-    low[1] = y_start;
-    low[2] = z_start;
-    high[0] = x_end;
-    high[1] = y_end;
-    high[2] = z_end;
+                        const T x_end, const T y_end, const T z_end)
+        :low(&x_low), high(&x_high) {
+    x_low = x_start;
+    y_low = y_start;
+    z_low = z_start;
+    x_high = x_end;
+    y_high = y_end;
+    z_high = z_end;
 }
 
 template<typename T>
