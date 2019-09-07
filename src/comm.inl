@@ -6,6 +6,7 @@
 #include "comm.hpp"
 
 const int DoubleSideForwardingTag = 0x100;
+const int SingleSideForwardingTag = 0x101;
 
 template<typename T>
 void comm::neiSendReceive(Packer<T> *packer,
@@ -70,6 +71,63 @@ void comm::neiSendReceive(Packer<T> *packer,
             delete[] receive_buff[direction];
         }
     }
+    // all finished
+    packer->onFinish();
+}
+
+template<typename T>
+void comm::singleSideForwardComm(Packer<T> *packer,
+                                 const mpi_process processes,
+                                 const MPI_Datatype data_type,
+                                 const unsigned int send_dirs[DIMENSION_SIZE],
+                                 const unsigned int recv_dirs[DIMENSION_SIZE],
+                                 const _MPI_Rank neighbours_rank[DIMENSION_SIZE][2]) {
+    unsigned int num_send[DIMENSION_SIZE];
+    unsigned int num_receive[DIMENSION_SIZE];
+    T *send_buff;
+    T *receive_buff;
+
+    MPI_Status status;
+    MPI_Status send_statuses[DIMENSION_SIZE];
+    MPI_Status recv_statuses[DIMENSION_SIZE];
+    MPI_Request send_requests[DIMENSION_SIZE];
+    MPI_Request recv_requests[DIMENSION_SIZE];
+
+    for (int d = 0; d < DIMENSION_SIZE; d++) {
+        // prepare data
+        num_send[d] = packer->sendLength(d, send_dirs[d]);
+        assert(num_send[d] >= 0); // todo remove
+        send_buff = new T[num_send[d]];
+        packer->onSend(send_buff, num_send[d], d, send_dirs[d]);
+
+        // send and received data.
+        unsigned int &numsend = num_send[d];
+        int numrecv = 0;
+
+        MPI_Isend(send_buff, numsend, data_type, neighbours_rank[d], SingleSideForwardingTag,
+                  processes.comm, &send_requests[d]);
+        // test the status of neighbor process.
+        MPI_Probe(neighbours_rank[d][recv_dirs[d]], SingleSideForwardingTag,
+                  processes.comm, &status);
+        // test the data length to be received.
+        MPI_Get_count(&status, data_type, &numrecv);
+        // initialize receive buffer via receiving size.
+        // the receiving length is get bt MPI_Probe from its neighbour process.
+        assert(numrecv >= 0);  // todo remove
+        receive_buff = new T[numrecv];
+        num_receive[d] = numrecv;
+        MPI_Irecv(receive_buff, numrecv, data_type, neighbours_rank[d][recv_dirs[d]],
+                  SingleSideForwardingTag, processes.comm, &recv_requests[d]);
+
+        // data received.
+        MPI_Wait(&send_requests[d], &send_statuses[d]);
+        MPI_Wait(&recv_requests[d], &recv_statuses[d]);
+        packer->onReceive(receive_buff, num_receive[d], d, recv_dirs[d]);
+        // release buffer
+        delete[] send_buff;
+        delete[] receive_buff;
+    }
+
     // all finished
     packer->onFinish();
 }
