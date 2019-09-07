@@ -10,15 +10,16 @@
 namespace comm {
     template<typename T>
     struct Region {
-        T low[DIMENSION_SIZE];
-        T high[DIMENSION_SIZE];
+        T x_low;
+        T y_low;
+        T z_low;
+        T x_high;
+        T y_high;
+        T z_high;
 
-        T &x_low = low[0];
-        T &y_low = low[1];
-        T &z_low = low[2];
-        T &x_high = high[0];
-        T &y_high = high[1];
-        T &z_high = high[2];
+        T *low = &x_low;
+
+        T *high = &x_high;
 
         explicit Region();
 
@@ -33,6 +34,8 @@ namespace comm {
          */
         Region(const T x_start, const T y_start, const T z_start,
                const T x_end, const T y_end, const T z_end);
+
+        Region(const Region &region); // copy ctor
 
         Region &operator=(const Region &arr);
 
