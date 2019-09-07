@@ -4,8 +4,9 @@ set(HEADER_FILES
         domain/colored_domain.h
         domain/builder.h
         domain/region.hpp
-        comm.hpp
         preset/comm_forwarding_region.h
+        preset/sector_forwarding_region.h
+        comm.hpp
         packer.h
         types_define.h
         )
@@ -16,8 +17,9 @@ set(SOURCE_FILES
         domain/colored_domain.cc
         domain/builder.inl
         domain/region.inl
-        comm.inl
         preset/comm_forwarding_region.cc
+        preset/sector_forwarding_region.cc
+        comm.inl
         )
 
 # set(MAIN_FILE main.cpp)
