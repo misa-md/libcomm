@@ -5,6 +5,8 @@
 #include <cassert>
 #include "comm.hpp"
 
+const int DoubleSideForwardingTag = 0x100;
+
 template<typename T>
 void comm::neiSendReceive(Packer<T> *packer,
                           const mpi_process processes,
@@ -43,10 +45,11 @@ void comm::neiSendReceive(Packer<T> *packer,
             int numrecv = 0;
 
             MPI_Isend(send_buff[direction], numsend, data_type,
-                      neighbours_rank[dimension][direction], 99,
+                      neighbours_rank[dimension][direction], DoubleSideForwardingTag,
                       processes.comm, &send_requests[dimension][direction]);
             // test the status of neighbor process.
-            MPI_Probe(neighbours_rank[dimension][(direction + 1) % 2], 99, processes.comm, &status);
+            MPI_Probe(neighbours_rank[dimension][(direction + 1) % 2],
+                      DoubleSideForwardingTag, processes.comm, &status);
             // test the data length to be received.
             MPI_Get_count(&status, data_type, &numrecv);
             // initialize receive buffer via receiving size.
@@ -55,7 +58,7 @@ void comm::neiSendReceive(Packer<T> *packer,
             receive_buff[direction] = new T[numrecv];
             num_receive[dimension][direction] = numrecv;
             MPI_Irecv(receive_buff[direction], numrecv, data_type,
-                      neighbours_rank[dimension][(direction + 1) % 2], 99,
+                      neighbours_rank[dimension][(direction + 1) % 2], DoubleSideForwardingTag,
                       processes.comm, &recv_requests[dimension][direction]);
         }
         for (int direction = DIR_LOWER; direction <= DIR_HIGHER; direction++) {
