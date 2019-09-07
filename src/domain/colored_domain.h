@@ -39,14 +39,20 @@ namespace comm {
          *  for example, a 8*8*8 sub-box with ghost size 3, a sector whose coordinate is (0,1,0) will
          *  have region x from 3 to 7 (3+8/2=7) and y from 7 to 11 (7+4 =11), and z from 3 to 7.
          */
-        std::array<Region<_type_lattice_size>, 8> local_sector_region;
+        std::array<Region<_type_lattice_coord>, 8> local_sector_region;
 
         /**
          * Regions of 8 sectors plus its ghost area in sub box.
          * For example, a 8*8*8 sub-box with ghost size 3, a sector whose coordinate is (0,1,0) will
          * have region x from 0 to 10 (3+8/2+3=10) and y from 4 (3+8/2-3=4) to 14 (3+8+3=14), and z from 0 to 10.
          */
-        std::array<Region<_type_lattice_size>, 8> local_ghost_ext_sector_region;
+        std::array<Region<_type_lattice_coord>, 8> local_ghost_ext_sector_region;
+
+        /**
+         * @note the start index(zero index) is started from lower ghost boundary of local sub box.
+         * The center coordinate to split 8 sectors.
+         */
+        _type_lattice_coord local_split_coord[DIMENSION_SIZE];
 
         /**
          * construct colored domain.

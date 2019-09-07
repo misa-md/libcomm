@@ -41,6 +41,25 @@ namespace comm {
                                const bool reversed = false) {
         neiSendReceive(packer, processes, DT, neighbours_rank, reversed);
     }
+
+    /**
+     * single side forwarding communication.
+     * \tparam T type of data packer.
+     * \param packer data packer.
+     * \param send_dirs send directions of each dimension.
+     * \param recv_dirs receive directions of each dimension.
+     * \param processes communication domain.
+     * \param data_type mpi data type to be exchanged.
+     * \param neighbours_rank rank ids of neighbour ranks in each dimension.
+     */
+    template<typename T>
+    void singleSideForwardComm(Packer<T> *packer,
+                               const mpi_process processes,
+                               const MPI_Datatype data_type,
+                               const unsigned int send_dirs[DIMENSION_SIZE],
+                               const unsigned int recv_dirs[DIMENSION_SIZE],
+                               const _MPI_Rank neighbours_rank[DIMENSION_SIZE][2]);
+
 };
 
 #include "comm.inl"
