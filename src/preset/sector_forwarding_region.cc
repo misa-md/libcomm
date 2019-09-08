@@ -2,6 +2,7 @@
 // Created by genshen on 2019-08-18.
 //
 
+#include <cassert>
 #include "sector_forwarding_region.h"
 
 // table of sending regions of each sectors in each dimension.
@@ -30,6 +31,7 @@ comm::type_region_array comm::fwCommSectorSendRegion(const unsigned int sector_i
                                    local_box_region.x_high, local_box_region.y_high, local_box_region.z_high);
         default:
             assert(false);
+            return type_region_array{};
     }
 }
 
@@ -58,6 +60,7 @@ comm::type_region_array comm::fwCommSectorRecvRegion(const unsigned int sector_i
                                    local_box_region.x_high, local_box_region.y_high, local_box_region.z_high);
         default:
             assert(false);
+            return type_region_array{};
     }
 }
 
@@ -126,6 +129,7 @@ comm::type_region_array comm::regionsDimXSend(const unsigned int sector_id, cons
             };
         default:
             assert(false);
+            return type_region_array{};
     }
 }
 
@@ -179,6 +183,7 @@ comm::type_region_array comm::regionsDimYSend(const unsigned int sector_id, cons
             };
         default:
             assert(false);
+            return type_region_array{};
     }
 }
 
@@ -223,6 +228,7 @@ comm::type_region_array comm::regionsDimZSend(const unsigned int sector_id, cons
             };
         default:
             assert(false);
+            return type_region_array{};
     }
 }
 
@@ -291,6 +297,7 @@ comm::type_region_array comm::regionsDimXRecv(const unsigned int sector_id, cons
             };
         default:
             assert(false);
+            return type_region_array{};
     }
 }
 
@@ -343,6 +350,7 @@ comm::type_region_array comm::regionsDimYRecv(const unsigned int sector_id, cons
             };
         default:
             assert(false);
+            return type_region_array{};
     }
 }
 
@@ -387,5 +395,6 @@ comm::type_region_array comm::regionsDimZRecv(const unsigned int sector_id, cons
             };
         default:
             assert(false);
+            return type_region_array{};
     }
 }
