@@ -1,9 +1,8 @@
-
-#include "region.hpp"
-
 //
 // Created by genshen on 2019-04-15.
 //
+
+#include <string.h>
 
 template<typename T>
 comm::Region<T>::Region() {}
