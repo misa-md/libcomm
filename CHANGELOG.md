@@ -2,6 +2,32 @@
 ## [Unreleased]
 
 
+<a name="v0.3.1"></a>
+## [v0.3.1] - 2019-10-13
+### Feat
+- **forward-comm:** make single side forwarding accept RegionPacker packer (pack data by regions)
+- **packer:** add packer RegionPacker which can pack data in given regions
+- **region:** add feature of region comparison
+
+### Fix
+- **$compile:** move include"*.inl" macro out of namespace to fix undefined reference of 'memcpy'
+- **$compile:** fix compiling issue of undefined reference of 'memcpy'
+
+### Refactor
+- **packer:** move class Packer to namespace comm
+
+### Test
+- **forward-comm:** add simple test for single side forwarding communication using RegionPacker
+
+### BREAKING CHANGE
+
+class Packer is moved to namespace comm, please use comm::Packer instead.
+
+1. we use RegionPacker as packer parameter instead of Packer; 2. function
+singleSideForwardComm signature changed: remove send_dirs and recv_dirs array, add send_regions and
+recv_regions array; remove neighbours_rank array and add send_ranks and recv_ranks array.
+
+
 <a name="v0.3.0"></a>
 ## [v0.3.0] - 2019-09-08
 ### Docs
@@ -118,7 +144,8 @@ change domain param in comm ::fwCommLocalRegion from comm::Domain to comm::BccDo
 - **domain:** add tests for domain decomposition.
 
 
-[Unreleased]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.3.0...HEAD
+[Unreleased]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.3.1...HEAD
+[v0.3.1]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.3.0...v0.3.1
 [v0.3.0]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.2.0...v0.3.0
 [v0.2.0]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.1.0...v0.2.0
 [v0.1.0]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.1.0-beta...v0.1.0
