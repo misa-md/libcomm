@@ -5,8 +5,11 @@
 #ifndef COMM_COMM_H
 #define COMM_COMM_H
 
+#include <array>
+#include <mpi.h>
 #include "packer.h"
 #include "types_define.h"
+#include "region_packer.h"
 
 namespace comm {
     /**
@@ -45,20 +48,23 @@ namespace comm {
     /**
      * single side forwarding communication.
      * \tparam T type of data packer.
+     * \tparam RT type of region type.
      * \param packer data packer.
-     * \param send_dirs send directions of each dimension.
-     * \param recv_dirs receive directions of each dimension.
      * \param processes communication domain.
+     * \param send_regions send regions used in communication in each dimension.
+     * \param recv_regions receive regions used in communication in each dimension.
      * \param data_type mpi data type to be exchanged.
-     * \param neighbours_rank rank ids of neighbour ranks in each dimension.
+     * \param send_ranks MPI rand id in each dimension for sending communication.
+     * \param recv_ranks MPI rand id in each dimension for receiving communication.
      */
-    template<typename T>
-    void singleSideForwardComm(Packer<T> *packer,
+    template<typename T, typename RT>
+    void singleSideForwardComm(RegionPacker <T, RT> *packer,
                                const mpi_process processes,
                                const MPI_Datatype data_type,
-                               const unsigned int send_dirs[DIMENSION_SIZE],
-                               const unsigned int recv_dirs[DIMENSION_SIZE],
-                               const _MPI_Rank neighbours_rank[DIMENSION_SIZE][2]);
+                               const std::array<std::vector<comm::Region<RT>>, DIMENSION_SIZE> send_regions,
+                               const std::array<std::vector<comm::Region<RT>>, DIMENSION_SIZE> recv_regions,
+                               const std::array<unsigned int, DIMENSION_SIZE> send_ranks,
+                               const std::array<unsigned int, DIMENSION_SIZE> recv_ranks);
 
 };
 
