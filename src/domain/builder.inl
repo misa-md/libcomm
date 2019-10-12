@@ -6,7 +6,7 @@
 
 
 template<typename B, typename D>
-B &Builder<B, D>::setPhaseSpace(const int64_t phaseSpace[DIMENSION_SIZE]) {
+B &comm::Builder<B, D>::setPhaseSpace(const int64_t phaseSpace[DIMENSION_SIZE]) {
     for (int i = 0; i < DIMENSION_SIZE; i++) {
         _phase_space[i] = phaseSpace[i]; // todo type not match
     }
@@ -14,19 +14,19 @@ B &Builder<B, D>::setPhaseSpace(const int64_t phaseSpace[DIMENSION_SIZE]) {
 }
 
 template<typename B, typename D>
-B &Builder<B, D>::setLatticeConst(const double latticeConst) {
+B &comm::Builder<B, D>::setLatticeConst(const double latticeConst) {
     _lattice_const = latticeConst;
     return *static_cast<B *>(this);
 }
 
 template<typename B, typename D>
-B &Builder<B, D>::setGhostSize(const unsigned int ghost_size) {
+B &comm::Builder<B, D>::setGhostSize(const unsigned int ghost_size) {
     _ghost_size = ghost_size;
     return *static_cast<B *>(this);
 }
 
 template<typename B, typename D>
-B &Builder<B, D>::setCutoffRadius(const double cutoff_radius_factor) {
+B &comm::Builder<B, D>::setCutoffRadius(const double cutoff_radius_factor) {
     _cutoff_radius_factor = cutoff_radius_factor;
     if (_ghost_size == 0) {
         // if ghost size not set, we set it as cut_lattice
@@ -36,14 +36,14 @@ B &Builder<B, D>::setCutoffRadius(const double cutoff_radius_factor) {
 }
 
 template<typename B, typename D>
-B &Builder<B, D>::setComm(comm::mpi_process mpi_process, MPI_Comm *comm) {
+B &comm::Builder<B, D>::setComm(comm::mpi_process mpi_process, MPI_Comm *comm) {
     _mpi_pro = mpi_process;
     _p_comm = comm;
     return *static_cast<B *>(this);
 }
 
 template<typename B, typename D>
-void Builder<B, D>::decomposition(D &domain) {
+void comm::Builder<B, D>::decomposition(D &domain) {
     // Assume N can be decomposed as N = N_x * N_y * N_z,
     // then we have: _grid_size[0] = N_x, _grid_size[1] = N_y, _grid_size[1] = N_z.
     // Fill in the _grid_size array such that the product of _grid_size[i] for i=0 to DIMENSION_SIZE-1 equals N.
@@ -72,7 +72,7 @@ void Builder<B, D>::decomposition(D &domain) {
 }
 
 template<typename B, typename D>
-void Builder<B, D>::createGlobalDomain(D &domain) {
+void comm::Builder<B, D>::createGlobalDomain(D &domain) {
     for (int d = 0; d < DIMENSION_SIZE; d++) {
         //phaseSpace个单位长度(单位长度即latticeconst)
         domain._meas_global_length[d] = _phase_space[d] * _lattice_const;
@@ -82,7 +82,7 @@ void Builder<B, D>::createGlobalDomain(D &domain) {
 }
 
 template<typename B, typename D>
-void Builder<B, D>::buildLatticeDomain(D &domain) {
+void comm::Builder<B, D>::buildLatticeDomain(D &domain) {
     // set lattice size of sub-box.
     for (int d = 0; d < DIMENSION_SIZE; d++) {
         domain._sub_box_lattice_size[d] = _phase_space[d] / domain._grid_size[d] +
@@ -129,7 +129,7 @@ void Builder<B, D>::buildLatticeDomain(D &domain) {
 }
 
 template<typename B, typename D>
-void Builder<B, D>::buildMeasuredDomain(D &domain) {
+void comm::Builder<B, D>::buildMeasuredDomain(D &domain) {
     // calculate measured length in each dimension.
     for (int d = 0; d < DIMENSION_SIZE; d++) {
         // the lower and upper bounding of current sub-box.
