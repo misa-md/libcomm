@@ -39,6 +39,15 @@ namespace comm {
 
         Region &operator=(const Region &arr);
 
+        bool operator==(const Region &x) const {
+            return x_low == x.x_low && y_low == x.y_low && z_low == x.z_low &&
+                   x_high == x.x_high && y_high == x.y_high && z_high == x.z_high;
+        }
+
+        bool operator!=(const Region &x) const {
+            return !(*this == x);
+        }
+
         /**
          * Given a point (x,y,z), if x belongs to set [x_low, x_high), y belongs to set [y_low, y_high),
          * and z belongs to set [z_low, z_high),

@@ -8,6 +8,7 @@ set(HEADER_FILES
         preset/sector_forwarding_region.h
         comm.hpp
         packer.h
+        region_packer.h
         types_define.h
         )
 
