@@ -60,9 +60,9 @@ namespace comm {
             return x >= x_low && x < x_high && y >= y_low && y < y_high && z >= z_low && z < z_high;;
         }
     };
+}
 
 #include "region.inl"
 
-}
 
 #endif // COMM_DOMAIN_REGION_HPP

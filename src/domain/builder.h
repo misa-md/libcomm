@@ -102,9 +102,9 @@ namespace comm {
          */
         virtual void buildMeasuredDomain(D &domain); // todo test.
     };
+}
 
 #include "builder.inl"
 
-}
 
 #endif //COMM_BUILDER_H
