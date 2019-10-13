@@ -16,6 +16,7 @@ set(TEST_SOURCE_FILES
         domain/region_test.cpp
         domain/bcc_domain_test.cpp
         domain/colored_domain_test.cpp
+        preset/sector_forwarding_direction_test.cpp
         preset/sector_forwarding_region_test.cpp
         region_packer_test.cpp
         )

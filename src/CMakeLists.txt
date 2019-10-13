@@ -5,6 +5,7 @@ set(HEADER_FILES
         domain/builder.h
         domain/region.hpp
         preset/comm_forwarding_region.h
+        preset/sector_forwarding_direction.h
         preset/sector_forwarding_region.h
         comm.hpp
         packer.h
