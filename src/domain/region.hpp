@@ -49,6 +49,14 @@ namespace comm {
         }
 
         /**
+         * get the volume of region
+         * \return
+         */
+        inline T volume() {
+            return (x_high - x_low) * (y_high - y_low) * (z_high - z_low);
+        }
+
+        /**
          * Given a point (x,y,z), if x belongs to set [x_low, x_high), y belongs to set [y_low, y_high),
          * and z belongs to set [z_low, z_high),
          * this function will return true, otherwise, false will be returned.

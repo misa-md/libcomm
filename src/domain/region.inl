@@ -3,6 +3,8 @@
 //
 
 #include <string.h>
+#include "region.hpp"
+
 
 template<typename T>
 comm::Region<T>::Region() {}
