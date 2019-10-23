@@ -2,9 +2,9 @@
 // Created by genshen on 2019-04-16.
 //
 
-#include "domain/bcc_domain.h"
-#include "domain/region.hpp"
-#include "types_define.h"
+#include "comm/domain/bcc_domain.h"
+#include "comm/domain/region.hpp"
+#include "comm/types_define.h"
 #include "comm_forwarding_region.h"
 
 comm::Region<comm::_type_lattice_size> comm::fwCommLocalRegion(

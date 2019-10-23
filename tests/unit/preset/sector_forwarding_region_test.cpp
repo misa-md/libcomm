@@ -2,8 +2,8 @@
 // Created by genshen on 2019/9/5.
 //
 #include <gtest/gtest.h>
-#include <domain/colored_domain.h>
-#include <preset/sector_forwarding_region.h>
+#include <comm/domain/colored_domain.h>
+#include <comm/preset/sector_forwarding_region.h>
 
 // test region area of forwarding communication of 8 sectors
 TEST(sector_fw_region_area_test, sector_fw_region_test) {

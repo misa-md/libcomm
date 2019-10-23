@@ -3,9 +3,9 @@
 //
 
 #include <array>
-#include <types_define.h>
+#include <comm/types_define.h>
 #include <gtest/gtest.h>
-#include <preset/sector_forwarding_direction.h>
+#include <comm/preset/sector_forwarding_direction.h>
 
 // another implementation of get sending directions
 std::array<unsigned int, comm::DIMENSION_SIZE> test_SSFDCommSendDirs_expected(const comm::_type_sector_id sector_id) {

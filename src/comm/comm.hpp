@@ -60,13 +60,13 @@ namespace comm {
     template<typename T, typename RT>
     void singleSideForwardComm(RegionPacker <T, RT> *packer,
                                const mpi_process processes,
-                               const MPI_Datatype data_type,
+                               const MPI_Datatype data_type, // todo return type in packer
                                const std::array<std::vector<comm::Region<RT>>, DIMENSION_SIZE> send_regions,
                                const std::array<std::vector<comm::Region<RT>>, DIMENSION_SIZE> recv_regions,
                                const std::array<unsigned int, DIMENSION_SIZE> send_ranks,
                                const std::array<unsigned int, DIMENSION_SIZE> recv_ranks);
 
-};
+}
 
 #include "comm.inl"
 

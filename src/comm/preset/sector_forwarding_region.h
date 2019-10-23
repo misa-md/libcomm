@@ -6,8 +6,8 @@
 #define COMM_SECTOR_FORWARDING_REGION_H
 
 
-#include <types_define.h>
-#include <domain/colored_domain.h>
+#include "comm/types_define.h"
+#include "comm/domain/colored_domain.h"
 
 namespace comm {
 

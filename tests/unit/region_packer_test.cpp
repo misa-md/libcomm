@@ -3,8 +3,8 @@
 //
 
 #include <gtest/gtest.h>
-#include <region_packer.h>
-#include <comm.hpp>
+#include <comm/region_packer.h>
+#include <comm/comm.hpp>
 
 class TestRegionPacker : public comm::RegionPacker<int, int> {
 public:

@@ -6,7 +6,7 @@
 #define COMM_SECTOR_FORWARDING_DIRECTION_H
 
 #include <array>
-#include <types_define.h>
+#include "comm/types_define.h"
 
 namespace comm {
     /**

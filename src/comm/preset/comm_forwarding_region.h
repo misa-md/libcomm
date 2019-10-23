@@ -6,8 +6,8 @@
 #define COMM_COMM_FORWARDING_REGION_H
 
 #include <cassert>
-#include "domain/region.hpp"
-#include "domain/bcc_domain.h"
+#include "comm/domain/region.hpp"
+#include "comm/domain/bcc_domain.h"
 
 /**
  * this header file describes the communication region

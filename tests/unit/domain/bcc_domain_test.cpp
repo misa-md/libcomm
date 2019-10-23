@@ -3,8 +3,8 @@
 //
 
 #include <gtest/gtest.h>
-#include <domain/domain.h>
-#include <domain/bcc_domain.h>
+#include <comm/domain/domain.h>
+#include <comm/domain/bcc_domain.h>
 
 TEST(bcc_domain_test_from_domain, bcc_domain_test) {
     const int grid_size[3] = {2, 2, 2};

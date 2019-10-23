@@ -5,7 +5,7 @@
 #ifndef COMM_DOMAIN_REGION_HPP
 #define COMM_DOMAIN_REGION_HPP
 
-#include "../types_define.h"
+#include "comm/types_define.h"
 
 namespace comm {
     template<typename T>

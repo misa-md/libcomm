@@ -3,7 +3,7 @@
 //
 
 #include <gtest/gtest.h>
-#include <domain/colored_domain.h>
+#include <comm/domain/colored_domain.h>
 
 TEST(sector_size_test, colored_domain_test) {
     const int grid_size[3] = {2, 2, 2};

@@ -6,7 +6,7 @@
 #include <iostream>
 #include <cmath>
 #include <mpi.h>
-#include <domain/bcc_domain.h>
+#include <comm/domain/bcc_domain.h>
 
 #include "domain_test_utils.h"
 

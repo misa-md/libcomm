@@ -3,7 +3,7 @@
 //
 
 #include <mpi.h>
-#include <domain/bcc_domain.h>
+#include <comm/domain/bcc_domain.h>
 #include "domain_test_utils.h"
 
 comm::Domain *getDomainInstance(int64_t space[3], double lattice_const, double cutoff_radius) {
