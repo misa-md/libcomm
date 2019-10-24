@@ -8,6 +8,72 @@
 #include "comm_forwarding_region.h"
 
 comm::Region<comm::_type_lattice_size> comm::fwCommLocalRegion(
+        const _type_lattice_size ghost_size[DIMENSION_SIZE],
+        const Region<comm::_type_lattice_coord> local_box_region,
+        const unsigned int dimension, const unsigned int direction) {
+    switch (dimension << 2 | direction) {
+        case DIM_X << 2 | DIR_LOWER: { // x dimension, lower direction
+            _type_lattice_size xstart = local_box_region.x_low;
+            _type_lattice_size ystart = local_box_region.y_low;
+            _type_lattice_size zstart = local_box_region.z_low;
+            _type_lattice_size xstop = local_box_region.x_low + ghost_size[0]; // note: this is ghost lattice size.
+            _type_lattice_size ystop = local_box_region.y_high;
+            _type_lattice_size zstop = local_box_region.z_high;
+
+            return Region<_type_lattice_size>(xstart, ystart, zstart, xstop, ystop, zstop);
+        }
+        case DIM_X << 2 | DIR_HIGHER: { // x dimension, higher direction
+            _type_lattice_size xstart = local_box_region.x_high - ghost_size[0];
+            _type_lattice_size ystart = local_box_region.y_low;
+            _type_lattice_size zstart = local_box_region.z_low;
+            _type_lattice_size xstop = local_box_region.x_high;
+            _type_lattice_size ystop = local_box_region.y_high;
+            _type_lattice_size zstop = local_box_region.z_high;
+            return Region<_type_lattice_size>(xstart, ystart, zstart, xstop, ystop, zstop);
+        }
+        case DIM_Y << 2 | DIR_LOWER: { // y dimension, lower direction
+            _type_lattice_size xstart = local_box_region.x_low - ghost_size[0];
+            _type_lattice_size ystart = local_box_region.y_low;
+            _type_lattice_size zstart = local_box_region.z_low;
+            _type_lattice_size xstop = local_box_region.x_high + ghost_size[0];
+            _type_lattice_size ystop = local_box_region.y_low + ghost_size[1];
+            _type_lattice_size zstop = local_box_region.z_high;
+            return Region<_type_lattice_size>(xstart, ystart, zstart, xstop, ystop, zstop);
+        }
+        case DIM_Y << 2 | DIR_HIGHER: { // y dimension, higher direction
+            _type_lattice_size xstart = local_box_region.x_low - ghost_size[0];
+            _type_lattice_size ystart = local_box_region.y_high - ghost_size[1];
+            _type_lattice_size zstart = local_box_region.z_low;
+            _type_lattice_size xstop = local_box_region.x_high + ghost_size[0];
+            _type_lattice_size ystop = local_box_region.y_high;
+            _type_lattice_size zstop = local_box_region.z_high;
+            return Region<_type_lattice_size>(xstart, ystart, zstart, xstop, ystop, zstop);
+        }
+        case DIM_Z << 2 | DIR_LOWER: { // z dimension, lower direction
+            _type_lattice_size xstart = local_box_region.x_low - ghost_size[0];
+            _type_lattice_size ystart = local_box_region.y_low - ghost_size[1];
+            _type_lattice_size zstart = local_box_region.z_low;
+            _type_lattice_size xstop = local_box_region.x_high + ghost_size[0];
+            _type_lattice_size ystop = local_box_region.y_high + ghost_size[1];
+            _type_lattice_size zstop = local_box_region.z_low + ghost_size[2];
+            return Region<_type_lattice_size>(xstart, ystart, zstart, xstop, ystop, zstop);
+        }
+        case DIM_Z << 2 | DIR_HIGHER: { // z dimension, higher direction
+            _type_lattice_size xstart = local_box_region.x_low - ghost_size[0];
+            _type_lattice_size ystart = local_box_region.y_low - ghost_size[1];
+            _type_lattice_size zstart = local_box_region.z_high - ghost_size[2];
+            _type_lattice_size xstop = local_box_region.x_high + ghost_size[0];
+            _type_lattice_size ystop = local_box_region.y_high + ghost_size[1];
+            _type_lattice_size zstop = local_box_region.z_high;
+            return Region<_type_lattice_size>(xstart, ystart, zstart, xstop, ystop, zstop);
+        }
+        default:
+            // this case is not allowed.
+            assert(false);
+    }
+}
+
+comm::Region<comm::_type_lattice_size> comm::fwCommLocalRegion(
         const comm::BccDomain *p_domain, const unsigned int dimension, const unsigned int direction) {
     switch (dimension << 2 | direction) {
         case DIM_X << 2 | DIR_LOWER: { // x dimension, lower direction
