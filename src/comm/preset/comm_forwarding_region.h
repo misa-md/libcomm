@@ -6,8 +6,8 @@
 #define COMM_COMM_FORWARDING_REGION_H
 
 #include <cassert>
-#include "domain/region.hpp"
-#include "domain/bcc_domain.h"
+#include "comm/domain/region.hpp"
+#include "comm/domain/bcc_domain.h"
 
 /**
  * this header file describes the communication region
@@ -20,6 +20,7 @@ namespace comm {
      * The region is the area belongs to current process,
      * but has contribution to its corresponding neighbour processes.
      *
+     * \deprecated use function without BccDomain below.
      * \param p_domain pointer to the domain.
      * \param dimension dimension for communication, 0 for x dimension, 1 for y dimension, 2 for z dimension
      * \param direction direction for communication, values: DIR_LOWER or DIR_HIGHER.
@@ -28,6 +29,21 @@ namespace comm {
      */
     Region <_type_lattice_size> fwCommLocalRegion(const BccDomain *p_domain, const unsigned int dimension,
                                                   const unsigned int direction);
+
+    /**
+     * \breaf This function returns communication region when performing communication forwarding.
+     * The region is the area belongs to current process,
+     * but has contribution to its corresponding neighbour processes.
+     * \param ghost_size ghost size in each dimension
+     * \param local_box_region local box region
+     * \param dimension dimension for communication
+     * \param direction direction for communication
+     * \return the region to be sent in the specific dimension and direction.
+     */
+    Region <_type_lattice_size> fwCommLocalRegion(
+            const _type_lattice_size ghost_size[DIMENSION_SIZE],
+            const Region <comm::_type_lattice_coord> local_box_region,
+            const unsigned int dimension, const unsigned int direction);
 
     /**
      * This function returns communication region when performing communication forwarding.

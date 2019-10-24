@@ -5,7 +5,7 @@
 #ifndef COMM_DOMAIN_REGION_HPP
 #define COMM_DOMAIN_REGION_HPP
 
-#include "../types_define.h"
+#include "comm/types_define.h"
 
 namespace comm {
     template<typename T>
@@ -46,6 +46,14 @@ namespace comm {
 
         bool operator!=(const Region &x) const {
             return !(*this == x);
+        }
+
+        /**
+         * get the volume of region
+         * \return
+         */
+        inline T volume() {
+            return (x_high - x_low) * (y_high - y_low) * (z_high - z_low);
         }
 
         /**

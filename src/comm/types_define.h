@@ -22,6 +22,7 @@ namespace comm {
 
     typedef int _type_lattice_size;
     typedef _type_lattice_size _type_lattice_coord;
+    typedef unsigned int _type_sector_id;
 
     typedef double _type_atom_mass;
     typedef double _type_atom_location;

@@ -1,26 +1,27 @@
 set(HEADER_FILES
-        domain/domain.h
-        domain/bcc_domain.h
-        domain/colored_domain.h
-        domain/builder.h
-        domain/region.hpp
-        preset/comm_forwarding_region.h
-        preset/sector_forwarding_region.h
-        comm.hpp
-        packer.h
-        region_packer.h
-        types_define.h
+        comm/domain/domain.h
+        comm/domain/bcc_domain.h
+        comm/domain/colored_domain.h
+        comm/domain/builder.h
+        comm/domain/region.hpp
+        comm/preset/comm_forwarding_region.h
+        comm/preset/sector_forwarding_direction.h
+        comm/preset/sector_forwarding_region.h
+        comm/comm.hpp
+        comm/packer.h
+        comm/region_packer.h
+        comm/types_define.h
         )
 
 set(SOURCE_FILES
-        domain/domain.cc
-        domain/bcc_domain.cc
-        domain/colored_domain.cc
-        domain/builder.inl
-        domain/region.inl
-        preset/comm_forwarding_region.cc
-        preset/sector_forwarding_region.cc
-        comm.inl
+        comm/domain/domain.cc
+        comm/domain/bcc_domain.cc
+        comm/domain/colored_domain.cc
+        comm/domain/builder.inl
+        comm/domain/region.inl
+        comm/preset/comm_forwarding_region.cc
+        comm/preset/sector_forwarding_region.cc
+        comm/comm.inl
         )
 
 # set(MAIN_FILE main.cpp)

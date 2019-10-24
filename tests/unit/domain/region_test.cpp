@@ -3,7 +3,7 @@
 //
 
 #include <gtest/gtest.h>
-#include <domain/region.hpp>
+#include <comm/domain/region.hpp>
 
 TEST(region_ref_test, region_test) {
     comm::Region<double> region(-1, -2, -3, 1, 2, 3);

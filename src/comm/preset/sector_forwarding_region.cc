@@ -6,7 +6,7 @@
 #include "sector_forwarding_region.h"
 
 // table of sending regions of each sectors in each dimension.
-comm::type_region_array comm::fwCommSectorSendRegion(const unsigned int sector_id, const unsigned int dim,
+comm::type_region_array comm::fwCommSectorSendRegion(const _type_sector_id sector_id, const unsigned int dim,
                                                      const _type_lattice_size ghost_size[DIMENSION_SIZE],
                                                      const _type_lattice_coord split_coord[DIMENSION_SIZE],
                                                      const Region<comm::_type_lattice_coord> local_box_region) {
@@ -35,7 +35,7 @@ comm::type_region_array comm::fwCommSectorSendRegion(const unsigned int sector_i
     }
 }
 
-comm::type_region_array comm::fwCommSectorRecvRegion(const unsigned int sector_id, const unsigned int dim,
+comm::type_region_array comm::fwCommSectorRecvRegion(const _type_sector_id sector_id, const unsigned int dim,
                                                      const _type_lattice_size ghost_size[DIMENSION_SIZE],
                                                      const _type_lattice_coord split_coord[DIMENSION_SIZE],
                                                      const Region<comm::_type_lattice_coord> local_box_region) {
@@ -64,7 +64,7 @@ comm::type_region_array comm::fwCommSectorRecvRegion(const unsigned int sector_i
     }
 }
 
-comm::type_region_array comm::regionsDimXSend(const unsigned int sector_id, const _type_lattice_size g[DIMENSION_SIZE],
+comm::type_region_array comm::regionsDimXSend(const _type_sector_id sector_id, const _type_lattice_size g[DIMENSION_SIZE],
                                               const _type_lattice_coord xb, const _type_lattice_coord yb,
                                               const _type_lattice_coord zb, const _type_lattice_coord xc,
                                               const _type_lattice_coord yc, const _type_lattice_coord zc,
@@ -133,7 +133,7 @@ comm::type_region_array comm::regionsDimXSend(const unsigned int sector_id, cons
     }
 }
 
-comm::type_region_array comm::regionsDimYSend(const unsigned int sector_id, const _type_lattice_size g[DIMENSION_SIZE],
+comm::type_region_array comm::regionsDimYSend(const _type_sector_id sector_id, const _type_lattice_size g[DIMENSION_SIZE],
                                               const _type_lattice_coord xb, const _type_lattice_coord yb,
                                               const _type_lattice_coord zb, const _type_lattice_coord xc,
                                               const _type_lattice_coord yc, const _type_lattice_coord zc,
@@ -187,7 +187,7 @@ comm::type_region_array comm::regionsDimYSend(const unsigned int sector_id, cons
     }
 }
 
-comm::type_region_array comm::regionsDimZSend(const unsigned int sector_id, const _type_lattice_size g[DIMENSION_SIZE],
+comm::type_region_array comm::regionsDimZSend(const _type_sector_id sector_id, const _type_lattice_size g[DIMENSION_SIZE],
                                               const _type_lattice_coord xb, const _type_lattice_coord yb,
                                               const _type_lattice_coord zb, const _type_lattice_coord xc,
                                               const _type_lattice_coord yc, const _type_lattice_coord zc,
@@ -232,7 +232,7 @@ comm::type_region_array comm::regionsDimZSend(const unsigned int sector_id, cons
     }
 }
 
-comm::type_region_array comm::regionsDimXRecv(const unsigned int sector_id, const _type_lattice_size g[DIMENSION_SIZE],
+comm::type_region_array comm::regionsDimXRecv(const _type_sector_id sector_id, const _type_lattice_size g[DIMENSION_SIZE],
                                               const _type_lattice_coord xb, const _type_lattice_coord yb,
                                               const _type_lattice_coord zb, const _type_lattice_coord xc,
                                               const _type_lattice_coord yc, const _type_lattice_coord zc,
@@ -301,7 +301,7 @@ comm::type_region_array comm::regionsDimXRecv(const unsigned int sector_id, cons
     }
 }
 
-comm::type_region_array comm::regionsDimYRecv(const unsigned int sector_id, const _type_lattice_size g[DIMENSION_SIZE],
+comm::type_region_array comm::regionsDimYRecv(const _type_sector_id sector_id, const _type_lattice_size g[DIMENSION_SIZE],
                                               const _type_lattice_coord xb, const _type_lattice_coord yb,
                                               const _type_lattice_coord zb, const _type_lattice_coord xc,
                                               const _type_lattice_coord yc, const _type_lattice_coord zc,
@@ -354,7 +354,7 @@ comm::type_region_array comm::regionsDimYRecv(const unsigned int sector_id, cons
     }
 }
 
-comm::type_region_array comm::regionsDimZRecv(const unsigned int sector_id, const _type_lattice_size g[DIMENSION_SIZE],
+comm::type_region_array comm::regionsDimZRecv(const _type_sector_id sector_id, const _type_lattice_size g[DIMENSION_SIZE],
                                               const _type_lattice_coord xb, const _type_lattice_coord yb,
                                               const _type_lattice_coord zb, const _type_lattice_coord xc,
                                               const _type_lattice_coord yc, const _type_lattice_coord zc,
