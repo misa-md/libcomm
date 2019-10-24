@@ -2,8 +2,33 @@
 ## [Unreleased]
 
 
+<a name="v0.3.2"></a>
+## [v0.3.2] - 2019-10-24
+### Docs
+- **changelog:** add changelog for v0.3.2
+
+### Feat
+- **forward-comm:** add send and receive directions of each dimension for single side forward comm
+- **forward-comm:** set type of sector_id as "_type_sector_id" in type_define.h
+- **region:** add volume calculation for region
+
+### Refactor
+- **forward-comm:** refactor fwCommLocalRegion (remove BccDomain parameter) to get send region
+
+### Test
+- **forward-comm:** add test for func fwCommLocalRegion whitout BccDomain pointer parameter
+
+### BREAKING CHANGE
+
+the old function fwCommLocalRegion with BccDomain pointer as parameter is now
+deprecated.
+
+
 <a name="v0.3.1"></a>
 ## [v0.3.1] - 2019-10-13
+### Docs
+- **changelog:** add changelog for v0.3.1
+
 ### Feat
 - **forward-comm:** make single side forwarding accept RegionPacker packer (pack data by regions)
 - **packer:** add packer RegionPacker which can pack data in given regions
@@ -144,7 +169,8 @@ change domain param in comm ::fwCommLocalRegion from comm::Domain to comm::BccDo
 - **domain:** add tests for domain decomposition.
 
 
-[Unreleased]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.3.1...HEAD
+[Unreleased]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.3.2...HEAD
+[v0.3.2]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.3.1...v0.3.2
 [v0.3.1]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.3.0...v0.3.1
 [v0.3.0]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.2.0...v0.3.0
 [v0.2.0]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.1.0...v0.2.0
