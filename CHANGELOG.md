@@ -3,11 +3,13 @@
 
 
 <a name="v0.3.2"></a>
-## [v0.3.2] - 2019-10-24
+## [v0.3.2] - 2019-10-25
 ### Docs
+- **changelog:** update changelog
 - **changelog:** add changelog for v0.3.2
 
 ### Feat
+- **forward-comm:** add func fwCommLocalRecvRegion to get receive region in communication forwarding
 - **forward-comm:** add send and receive directions of each dimension for single side forward comm
 - **forward-comm:** set type of sector_id as "_type_sector_id" in type_define.h
 - **region:** add volume calculation for region
@@ -19,6 +21,9 @@
 - **forward-comm:** add test for func fwCommLocalRegion whitout BccDomain pointer parameter
 
 ### BREAKING CHANGE
+
+function name fwCommLocalRegion with parameters (ghost_size, local_box_region,
+dimemsion, direction) is renamed to fwCommLocalSendRegion.
 
 the old function fwCommLocalRegion with BccDomain pointer as parameter is now
 deprecated.
