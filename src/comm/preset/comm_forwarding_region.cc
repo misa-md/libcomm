@@ -7,9 +7,9 @@
 #include "comm/types_define.h"
 #include "comm_forwarding_region.h"
 
-comm::Region<comm::_type_lattice_size> comm::fwCommLocalRegion(
+comm::Region<comm::_type_lattice_size> comm::fwCommLocalSendRegion(
         const _type_lattice_size ghost_size[DIMENSION_SIZE],
-        const Region<comm::_type_lattice_coord> local_box_region,
+        const Region<_type_lattice_coord> local_box_region,
         const unsigned int dimension, const unsigned int direction) {
     switch (dimension << 2 | direction) {
         case DIM_X << 2 | DIR_LOWER: { // x dimension, lower direction
@@ -67,6 +67,28 @@ comm::Region<comm::_type_lattice_size> comm::fwCommLocalRegion(
             _type_lattice_size zstop = local_box_region.z_high;
             return Region<_type_lattice_size>(xstart, ystart, zstart, xstop, ystop, zstop);
         }
+        default:
+            // this case is not allowed.
+            assert(false);
+    }
+}
+
+comm::Region<comm::_type_lattice_size> comm::fwCommLocalRecvRegion(
+        const _type_lattice_size ghost_size[DIMENSION_SIZE],
+        const Region<_type_lattice_coord> local_box_region,
+        const unsigned int dimension, const unsigned int direction) {
+    Region<_type_lattice_size> send_region = fwCommLocalSendRegion(ghost_size, local_box_region, dimension, direction);
+    const _type_lattice_size box_size_dim = local_box_region.high[dimension] - local_box_region.low[dimension];
+    switch (direction) {
+        case DIR_LOWER:
+            // add local box size, based on send region
+            send_region.low[dimension] += box_size_dim;
+            send_region.high[dimension] += box_size_dim;
+            return send_region;
+        case DIR_HIGHER:
+            send_region.low[dimension] -= box_size_dim;
+            send_region.high[dimension] -= box_size_dim;
+            return send_region;
         default:
             // this case is not allowed.
             assert(false);
