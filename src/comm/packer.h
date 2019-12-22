@@ -6,12 +6,15 @@
 #define COMM_PACKER_H
 
 namespace comm {
-/**
- * \brief abstract class for data packer.
- */
+    /**
+    * \tparam RT type of region type
+    * \brief abstract class for data packer.
+    */
     template<typename T>
     class Packer {
     public:
+        typedef T pack_date_type;
+
         /**
          * count the length to be send to neighbour process.
          * \param dimension 0,1,2. the id of dimensions.

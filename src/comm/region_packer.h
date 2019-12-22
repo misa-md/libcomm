@@ -17,6 +17,9 @@ namespace comm {
     template<typename T, typename RT>
     class RegionPacker {
     public:
+        typedef T pack_date_type;
+        typedef RT pack_region_type;
+
         /**
          * count the length to be send to neighbour process.
          * \param send_regions regions to be send in communication.
