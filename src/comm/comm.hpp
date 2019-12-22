@@ -49,6 +49,7 @@ namespace comm {
      * single side forwarding communication.
      * \tparam T type of data packer.
      * \tparam RT type of region type.
+     * \tparam F reversed dimension order
      * \param packer data packer.
      * \param processes communication domain.
      * \param send_regions send regions used in communication in each dimension.
@@ -57,8 +58,8 @@ namespace comm {
      * \param send_ranks MPI rand id in each dimension for sending communication.
      * \param recv_ranks MPI rand id in each dimension for receiving communication.
      */
-    template<typename T, typename RT>
-    void singleSideForwardComm(RegionPacker <T, RT> *packer,
+    template<typename T, typename RT, bool F = false>
+    void singleSideForwardComm(RegionPacker<T, RT> *packer,
                                const mpi_process processes,
                                const MPI_Datatype data_type, // todo return type in packer
                                const std::array<std::vector<comm::Region<RT>>, DIMENSION_SIZE> send_regions,
