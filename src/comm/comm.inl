@@ -8,12 +8,11 @@
 const int DoubleSideForwardingTag = 0x100;
 const int SingleSideForwardingTag = 0x101;
 
-template<typename T>
-void comm::neiSendReceive(Packer<T> *packer,
+template<typename T, bool F>
+void comm::neiSendReceive(Packer <T> *packer,
                           const mpi_process processes,
                           const MPI_Datatype data_type,
-                          const _MPI_Rank (&neighbours_rank)[DIMENSION_SIZE][2],
-                          const bool reversed) {
+                          const _MPI_Rank (&neighbours_rank)[DIMENSION_SIZE][2]) {
     unsigned int num_send[DIMENSION_SIZE][2];
     unsigned int num_receive[DIMENSION_SIZE][2];
     T *send_buff[2];
@@ -28,11 +27,9 @@ void comm::neiSendReceive(Packer<T> *packer,
     // if dimension loop is reversed, the loop order will be z,y,x.
     // otherwise the loop order will be x,y,z.
     for (int d = 0; d < DIMENSION_SIZE; d++) {
-        int dimension;
-        if (reversed) {
+        int dimension = d;
+        if (F) {
             dimension = DIMENSION_SIZE - 1 - d;
-        } else {
-            dimension = d;
         }
 
         for (int direction = DIR_LOWER; direction <= DIR_HIGHER; direction++) {

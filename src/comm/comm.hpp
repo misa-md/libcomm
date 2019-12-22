@@ -17,32 +17,36 @@ namespace comm {
      * \brief communicate with its neighbour processes to exchange data.
      * This function communicate at x dimension, then y dimension, at last z dimension.
      * \tparam T type used in \param packer; the data type to be packed/unpacked.
+     * \tparam F reversed dimension order to z->y->x (not x->y->z),
+     *  the order of dimension loop will be z,y,x if \tparam F is true.
+     *  otherwise the loop order will be x,y,z. Default value is false (order: x,y,z)
      * \param packer packer pointer which does pack and unpack data.
      * \param processes the MPI rank and communicator in process.
      * \param data_type the MPI DataType used in communication.
      * \param neighbours_rank the rank id of all neighbour processes.
-     * \param reversed the order of dimension loop will be z,y,x if \param reversed is true.
-     * otherwise the loop order will be x,y,z. Default value is false (order: x,y,z)
      */
-    template<typename T>
+    template<typename T, bool F = false>
     void neiSendReceive(Packer<T> *packer,
                         const mpi_process processes,
                         const MPI_Datatype data_type,
-                        const _MPI_Rank (&neighbours_rank)[DIMENSION_SIZE][2],
-                        const bool reversed = false);
+                        const _MPI_Rank (&neighbours_rank)[DIMENSION_SIZE][2]);
 
     /**
      *
      * \brief the similar function as above, but the communication DataType is in template param.
      * For some simple type like MPI_DOUBLE (constance, and can be determined at compiling time),
      * can use this function.
+     * \tparam F reversed dimension order to z->y->x (not x->y->z)
      * \tparam data_type the MPI DataType used in communication.
+     * \param packer the data packer
+     * \param processes mpi communication domain
+     * \param neighbours_rank neighbor processes' rank id in each dimension and direction
+     *
      */
-    template<typename T, MPI_Datatype DT>
+    template<typename T, MPI_Datatype DT, bool F = false>
     inline void neiSendReceive(Packer<T> *packer, const mpi_process processes,
-                               const _MPI_Rank (&neighbours_rank)[DIMENSION_SIZE][2],
-                               const bool reversed = false) {
-        neiSendReceive(packer, processes, DT, neighbours_rank, reversed);
+                               const _MPI_Rank (&neighbours_rank)[DIMENSION_SIZE][2]) {
+        neiSendReceive<T, F>(packer, processes, DT, neighbours_rank);
     }
 
     /**
