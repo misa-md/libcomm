@@ -8,12 +8,11 @@
 const int DoubleSideForwardingTag = 0x100;
 const int SingleSideForwardingTag = 0x101;
 
-template<typename T>
-void comm::neiSendReceive(Packer<T> *packer,
+template<typename T, bool F>
+void comm::neiSendReceive(Packer <T> *packer,
                           const mpi_process processes,
                           const MPI_Datatype data_type,
-                          const _MPI_Rank (&neighbours_rank)[DIMENSION_SIZE][2],
-                          const bool reversed) {
+                          const _MPI_Rank (&neighbours_rank)[DIMENSION_SIZE][2]) {
     unsigned int num_send[DIMENSION_SIZE][2];
     unsigned int num_receive[DIMENSION_SIZE][2];
     T *send_buff[2];
@@ -28,11 +27,9 @@ void comm::neiSendReceive(Packer<T> *packer,
     // if dimension loop is reversed, the loop order will be z,y,x.
     // otherwise the loop order will be x,y,z.
     for (int d = 0; d < DIMENSION_SIZE; d++) {
-        int dimension;
-        if (reversed) {
+        int dimension = d;
+        if (F) {
             dimension = DIMENSION_SIZE - 1 - d;
-        } else {
-            dimension = d;
         }
 
         for (int direction = DIR_LOWER; direction <= DIR_HIGHER; direction++) {
@@ -75,7 +72,7 @@ void comm::neiSendReceive(Packer<T> *packer,
     packer->onFinish();
 }
 
-template<typename T, typename RT>
+template<typename T, typename RT, bool F>
 void comm::singleSideForwardComm(RegionPacker <T, RT> *packer,
                                  const mpi_process processes,
                                  const MPI_Datatype data_type,
@@ -95,35 +92,39 @@ void comm::singleSideForwardComm(RegionPacker <T, RT> *packer,
     MPI_Request recv_requests[DIMENSION_SIZE];
 
     for (int d = 0; d < DIMENSION_SIZE; d++) {
+        int dim_id = d;
+        if (F) {
+            dim_id = DIMENSION_SIZE - 1 - d;
+        }
         // prepare data
         // note: the direction in sendLength, onSend and onReceive are not used (ignored).
-        num_send[d] = packer->sendLength(send_regions[d], d, DIR_LOWER);
-        assert(num_send[d] >= 0); // todo remove
-        send_buff = new T[num_send[d]];
-        packer->onSend(send_buff, send_regions[d], num_send[d], d, DIR_LOWER);
+        num_send[dim_id] = packer->sendLength(send_regions[dim_id], dim_id, DIR_LOWER);
+        assert(num_send[dim_id] >= 0); // todo remove
+        send_buff = new T[num_send[dim_id]];
+        packer->onSend(send_buff, send_regions[dim_id], num_send[dim_id], dim_id, DIR_LOWER);
 
         // send and received data.
-        unsigned int &numsend = num_send[d];
+        unsigned int &numsend = num_send[dim_id];
         int numrecv = 0;
 
-        MPI_Isend(send_buff, numsend, data_type, send_ranks[d], SingleSideForwardingTag,
-                  processes.comm, &send_requests[d]);
+        MPI_Isend(send_buff, numsend, data_type, send_ranks[dim_id], SingleSideForwardingTag,
+                  processes.comm, &send_requests[dim_id]);
         // test the status of neighbor process.
-        MPI_Probe(recv_ranks[d], SingleSideForwardingTag, processes.comm, &status);
+        MPI_Probe(recv_ranks[dim_id], SingleSideForwardingTag, processes.comm, &status);
         // test the data length to be received.
         MPI_Get_count(&status, data_type, &numrecv);
         // initialize receive buffer via receiving size.
         // the receiving length is get bt MPI_Probe from its neighbour process.
         assert(numrecv >= 0);  // todo remove
         receive_buff = new T[numrecv];
-        num_receive[d] = numrecv;
-        MPI_Irecv(receive_buff, numrecv, data_type, recv_ranks[d],
-                  SingleSideForwardingTag, processes.comm, &recv_requests[d]);
+        num_receive[dim_id] = numrecv;
+        MPI_Irecv(receive_buff, numrecv, data_type, recv_ranks[dim_id],
+                  SingleSideForwardingTag, processes.comm, &recv_requests[dim_id]);
 
         // data received.
-        MPI_Wait(&send_requests[d], &send_statuses[d]);
-        MPI_Wait(&recv_requests[d], &recv_statuses[d]);
-        packer->onReceive(receive_buff, recv_regions[d], num_receive[d], d, DIR_LOWER);
+        MPI_Wait(&send_requests[dim_id], &send_statuses[dim_id]);
+        MPI_Wait(&recv_requests[dim_id], &recv_statuses[dim_id]);
+        packer->onReceive(receive_buff, recv_regions[dim_id], num_receive[dim_id], dim_id, DIR_LOWER);
         // release buffer
         delete[] send_buff;
         delete[] receive_buff;
