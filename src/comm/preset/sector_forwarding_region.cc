@@ -200,7 +200,7 @@ comm::type_region_array comm::regionsDimZSend(const _type_sector_id sector_id, c
             };
         case 1: //sector 1
             return type_region_array{
-                    {xc - g[0], yc - g[1], ze - g[2], xe + g[0], ye + g[1], ze},
+                    {xc - g[0], yb - g[1], ze - g[2], xe + g[0], yc + g[1], ze},
             };
         case 2: //sector 2
             return type_region_array{
@@ -216,7 +216,7 @@ comm::type_region_array comm::regionsDimZSend(const _type_sector_id sector_id, c
             };
         case 5: //sector 5
             return type_region_array{
-                    {xc - g[0], yc - g[1], zb, xe + g[0], ye + g[1], zb + g[2]},
+                    {xc - g[0], yb - g[1], zb, xe + g[0], yc + g[1], zb + g[2]},
             };
         case 6: //sector 6
             return type_region_array{
@@ -367,7 +367,7 @@ comm::type_region_array comm::regionsDimZRecv(const _type_sector_id sector_id, c
             };
         case 1: //sector 1
             return type_region_array{
-                    {xc - g[0], yc - g[1], zb - g[2], xe + g[0], ye + g[1], zb},
+                    {xc - g[0], yb - g[1], zb - g[2], xe + g[0], yc + g[1], zb},
             };
         case 2: //sector 2
             return type_region_array{
@@ -383,7 +383,7 @@ comm::type_region_array comm::regionsDimZRecv(const _type_sector_id sector_id, c
             };
         case 5: //sector 5
             return type_region_array{
-                    {xc - g[0], yc - g[1], ze, xe + g[0], ye + g[1], ze + g[2]},
+                    {xc - g[0], yb - g[1], ze, xe + g[0], yc + g[1], ze + g[2]},
             };
         case 6: //sector 6
             return type_region_array{
