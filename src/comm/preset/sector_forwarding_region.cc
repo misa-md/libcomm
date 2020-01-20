@@ -290,10 +290,10 @@ comm::type_region_array comm::regionsDimXRecv(const _type_sector_id sector_id, c
             };
         case 7: //sector 7
             return type_region_array{
-                    {xb, yb,        zb,        xb + g[0], yb + g[1], zb + g[2]},
-                    {xb, yb,        zc - g[2], xb + g[0], yb + g[1], ze},
-                    {xb, yc - g[1], zb,        xb + g[0], ye,        zb + g[2]},
-                    {xb, yc - g[1], zc - g[2], xb + g[0], ye,        ze},
+                    {xe, yb,        zb,        xe + g[0], yb + g[1], zb + g[2]},
+                    {xe, yb,        zc - g[2], xe + g[0], yb + g[1], ze},
+                    {xe, yc - g[1], zb,        xe + g[0], ye,        zb + g[2]},
+                    {xe, yc - g[1], zc - g[2], xe + g[0], ye,        ze},
             };
         default:
             assert(false);
