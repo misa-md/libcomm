@@ -48,6 +48,9 @@ set(COMM_LIB_CMAKE_NAMESPACE ${COMM_LIB_NAME}::)
 set(COMM_LIB_CMAKE_CONFIG_IN "${COMM_LIB_NAME}-config.cmake.in")
 set(COMM_LIB_CMAKE_CONFIG_OUT "${CMAKE_CURRENT_BINARY_DIR}/${COMM_LIB_NAME}-config.cmake")
 
+# lib alias to makes it possible to always use the namespace version consistently
+add_library(${COMM_LIB_NAME}::${COMM_LIB_NAME} ALIAS ${COMM_LIB_NAME})
+
 # install bin and libs.
 install(TARGETS ${COMM_EXECUTE_BIN_NAME} ${COMM_LIB_NAME}
         EXPORT ${TARGETS_EXPORT_NAME}
