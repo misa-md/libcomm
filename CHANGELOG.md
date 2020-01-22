@@ -2,6 +2,24 @@
 ## [Unreleased]
 
 
+<a name="v0.3.3"></a>
+## [v0.3.3] - 2020-01-22
+### Docs
+- **changelog:** update changelog for v0.3.3
+
+### Fix
+- **forward-comm:** correct receive regions of sector 7 at dim x in single side forward communication
+- **forward-comm:** fix region of sector 5 at dim z when getting regions of single side forward comm
+- **forward-comm:** fix region of sector 1 at dim z when getting regions of single side forward comm
+
+### Refactor
+- **forward-comm:** move reversed dimension order option from func param to template param
+
+### BREAKING CHANGE
+
+function parameter `bool reversed` was moved to template parameter `bool F`
+
+
 <a name="v0.3.2"></a>
 ## [v0.3.2] - 2019-10-25
 ### Docs
@@ -174,7 +192,8 @@ change domain param in comm ::fwCommLocalRegion from comm::Domain to comm::BccDo
 - **domain:** add tests for domain decomposition.
 
 
-[Unreleased]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.3.2...HEAD
+[Unreleased]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.3.3...HEAD
+[v0.3.3]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.3.2...v0.3.3
 [v0.3.2]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.3.1...v0.3.2
 [v0.3.1]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.3.0...v0.3.1
 [v0.3.0]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.2.0...v0.3.0
