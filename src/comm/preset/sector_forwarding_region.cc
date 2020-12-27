@@ -3,6 +3,7 @@
 //
 
 #include <cassert>
+#include <stdexcept>
 #include "sector_forwarding_region.h"
 
 // table of sending regions of each sectors in each dimension.
