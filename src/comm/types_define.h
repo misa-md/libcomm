@@ -9,16 +9,16 @@
 
 // some constant value definition here.
 namespace comm {
-    const static int COMM_MASTER = 0;
+    constexpr static int COMM_MASTER = 0;
 
-    const unsigned int DIMENSION_SIZE = 3;
+    constexpr unsigned int DIMENSION_SIZE = 3;
 
-    const unsigned int DIM_X = 0;
-    const unsigned int DIM_Y = 1;
-    const unsigned int DIM_Z = 2;
+    constexpr unsigned int DIM_X = 0;
+    constexpr unsigned int DIM_Y = 1;
+    constexpr unsigned int DIM_Z = 2;
 
-    const unsigned int DIR_LOWER = 0;
-    const unsigned int DIR_HIGHER = 1;
+    constexpr unsigned int DIR_LOWER = 0;
+    constexpr unsigned int DIR_HIGHER = 1;
 
     typedef int _type_lattice_size;
     typedef _type_lattice_size _type_lattice_coord;
