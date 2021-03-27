@@ -6,13 +6,13 @@
 #ifndef COMM_DOMAIN_H
 #define COMM_DOMAIN_H
 
+#include <array>
 #include <mpi.h>
 #include <vector>
-#include <array>
 
+#include "builder.h"
 #include "comm/types_define.h"
 #include "region.hpp"
-#include "builder.h"
 
 /**
  * If N can be decomposed as N = N_x * N_y * N_z, where N, N_x, N_y, N_z are all integer bigger than or equal to 1,
@@ -37,148 +37,147 @@
  */
 
 namespace comm {
-    class Domain {
-    public:
-        class Builder;
+  class Domain {
+  public:
+    class Builder;
 
-        template<typename, typename>
-        friend
-        class comm::Builder;
+    template <typename, typename> friend class comm::Builder;
 
-    public:
-        const double lattice_const;
-        const double cutoff_radius_factor;
-        // cut off lattice size.
-        const _type_lattice_size cut_lattice;
-        const std::array<uint64_t, DIMENSION_SIZE> phase_space;
-        /**
-         * global measured length of the simulation box at each dimension.
-         */
-        const double (&meas_global_length)[DIMENSION_SIZE] = _meas_global_length;
+  public:
+    const double lattice_const;
+    const double cutoff_radius_factor;
+    // cut off lattice size.
+    const _type_lattice_size cut_lattice;
+    const std::array<uint64_t, DIMENSION_SIZE> phase_space;
+    /**
+     * global measured length of the simulation box at each dimension.
+     */
+    const double (&meas_global_length)[DIMENSION_SIZE] = _meas_global_length;
 
-        /**
-         * the count of processors at each dimension.
-         * Or we can say the decomposed grid size at each dimension.
-         */
-        const int (&grid_size)[DIMENSION_SIZE] = _grid_size;
+    /**
+     * the count of processors at each dimension.
+     * Or we can say the decomposed grid size at each dimension.
+     */
+    const int (&grid_size)[DIMENSION_SIZE] = _grid_size;
 
-        /**
-         * the measured coordinate of lower and upper boundary of global simulation box.
-         */
-        const Region<double> &meas_global_region = _meas_global_region;
+    /**
+     * the measured coordinate of lower and upper boundary of global simulation box.
+     */
+    const Region<double> &meas_global_region = _meas_global_region;
 
-        /** local information for current simulation sub-box. **/
-        /**
-         * The cartesian coordinate of the sub-box bound to this processor after running grid decomposition.
-         */
-        const int (&grid_coord)[DIMENSION_SIZE] = _grid_coord;
+    /** local information for current simulation sub-box. **/
+    /**
+     * The cartesian coordinate of the sub-box bound to this processor after running grid decomposition.
+     */
+    const int (&grid_coord)[DIMENSION_SIZE] = _grid_coord;
 
-        /**
-         * the rank ids of contiguous processors in space.
-         */
-        const _MPI_Rank (&rank_id_neighbours)[DIMENSION_SIZE][2] = _rank_id_neighbours;
+    /**
+     * the rank ids of contiguous processors in space.
+     */
+    const _MPI_Rank (&rank_id_neighbours)[DIMENSION_SIZE][2] = _rank_id_neighbours;
 
-        /** boundary of local sub-box  **/
-        /**
-         * the global measured lower and upper boundary of current sub-box at each dimension in global box Coordinate System.
-         */
-        const Region<double> &meas_sub_box_region = _meas_sub_box_region;
+    /** boundary of local sub-box  **/
+    /**
+     * the global measured lower and upper boundary of current sub-box at each dimension in global box Coordinate
+     * System.
+     */
+    const Region<double> &meas_sub_box_region = _meas_sub_box_region;
 
-        /**boundary of ghost of local sub-box**/
-        /**
-         * measured ghost length at each dimension, which equals to the cutoff radius.
-         */
-        const double (&meas_ghost_length)[DIMENSION_SIZE] = _meas_ghost_length;
-        /**
-         * the global measured ghost lower and upper bound of current sub-box.
-         */
-        const Region<double> &meas_ghost_ext_region = _meas_ghost_ext_region;
+    /**boundary of ghost of local sub-box**/
+    /**
+     * measured ghost length at each dimension, which equals to the cutoff radius.
+     */
+    const double (&meas_ghost_length)[DIMENSION_SIZE] = _meas_ghost_length;
+    /**
+     * the global measured ghost lower and upper bound of current sub-box.
+     */
+    const Region<double> &meas_ghost_ext_region = _meas_ghost_ext_region;
 
-        /*lattice count in local sub-box*/
-        /**
-         * lattice count in local sub-box area at each dimension (upper boundary - lower boundary).
-         */
-        const _type_lattice_size (&sub_box_lattice_size)[DIMENSION_SIZE] = _sub_box_lattice_size;
+    /*lattice count in local sub-box*/
+    /**
+     * lattice count in local sub-box area at each dimension (upper boundary - lower boundary).
+     */
+    const _type_lattice_size (&sub_box_lattice_size)[DIMENSION_SIZE] = _sub_box_lattice_size;
 
-        /**
-         * lattice count in ghost area plus sub-box area at each dimension (upper boundary - lower boundary).
-         * which  @var _lattice_size_ghost_extended[d] = @var _lattice_size_sub_box[d] + 2 * @var_ lattice_size_ghost[d];
-         * and also equals to _lattice_coord_ghost_region.high[d] - _lattice_coord_ghost_region.low[d]
-         */
-        const _type_lattice_size (&ghost_extended_lattice_size)[DIMENSION_SIZE] = _ghost_extended_lattice_size;
+    /**
+     * lattice count in ghost area plus sub-box area at each dimension (upper boundary - lower boundary).
+     * which  @var _lattice_size_ghost_extended[d] = @var _lattice_size_sub_box[d] + 2 * @var_ lattice_size_ghost[d];
+     * and also equals to _lattice_coord_ghost_region.high[d] - _lattice_coord_ghost_region.low[d]
+     */
+    const _type_lattice_size (&ghost_extended_lattice_size)[DIMENSION_SIZE] = _ghost_extended_lattice_size;
 
-        /**
-         * purge ghost size, just lattice count in ghost area.
-         */
-        const _type_lattice_size (&lattice_size_ghost)[DIMENSION_SIZE] = _lattice_size_ghost;
+    /**
+     * purge ghost size, just lattice count in ghost area.
+     */
+    const _type_lattice_size (&lattice_size_ghost)[DIMENSION_SIZE] = _lattice_size_ghost;
 
-        /*lattice boundary of local sub-box and ghost, but, the Coordinate System is still the global box.*/
-        /**
-         * lower and upper boundary(not included) of lattice coordinate of current local sub-box at each dimension
-         * in global coordinate system(GCY).
-         *
-         */
-        const Region<_type_lattice_coord> &sub_box_lattice_region = _sub_box_lattice_region;
+    /*lattice boundary of local sub-box and ghost, but, the Coordinate System is still the global box.*/
+    /**
+     * lower and upper boundary(not included) of lattice coordinate of current local sub-box at each dimension
+     * in global coordinate system(GCY).
+     *
+     */
+    const Region<_type_lattice_coord> &sub_box_lattice_region = _sub_box_lattice_region;
 
-        /**
-         * lower and upper boundary(not included) of lattice coordinate with ghost area of current sub-box area
-         * at each dimension in global coordinate system(GCY)
-         */
-        const Region<_type_lattice_coord> &ghost_ext_lattice_region = _ghost_ext_lattice_region;
+    /**
+     * lower and upper boundary(not included) of lattice coordinate with ghost area of current sub-box area
+     * at each dimension in global coordinate system(GCY)
+     */
+    const Region<_type_lattice_coord> &ghost_ext_lattice_region = _ghost_ext_lattice_region;
 
-        /*
-         * lattice boundary of local sub-box and ghost, this is in local box Coordinate System(not global box.).
-         * For convenience usage for atom index in local sub-box.
-         *  | 0:ghost_lower                 | sub_box_lower                   | sub_box_upper               | ghost_upper
-         *  |-------------------------------|---------...---------------------|-----------------------------|
-         */
-        /**
-         * lower and upper boundary(not included) of lattice coordinate of local sub-box
-         * at each dimension in local coordinate system(LCY).
-         */
-        const Region<_type_lattice_coord> &local_sub_box_lattice_region = _local_sub_box_lattice_region;
+    /*
+     * lattice boundary of local sub-box and ghost, this is in local box Coordinate System(not global box.).
+     * For convenience usage for atom index in local sub-box.
+     *  | 0:ghost_lower                 | sub_box_lower                   | sub_box_upper               | ghost_upper
+     *  |-------------------------------|---------...---------------------|-----------------------------|
+     */
+    /**
+     * lower and upper boundary(not included) of lattice coordinate of local sub-box
+     * at each dimension in local coordinate system(LCY).
+     */
+    const Region<_type_lattice_coord> &local_sub_box_lattice_region = _local_sub_box_lattice_region;
 
-        /**
-         * lower and upper boundary(not included) of lattice coordinate in ghost area of current sub-box area
-         * at each dimension in local coordinate system(LCY).
-         */
-        const Region<_type_lattice_coord> &local_ghost_ext_lattice_region = _local_ghost_ext_lattice_region;
+    /**
+     * lower and upper boundary(not included) of lattice coordinate in ghost area of current sub-box area
+     * at each dimension in local coordinate system(LCY).
+     */
+    const Region<_type_lattice_coord> &local_ghost_ext_lattice_region = _local_ghost_ext_lattice_region;
 
-    protected:
-        Domain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space,
-               const double _lattice_const, const double _cutoff_radius_factor);
+  protected:
+    Domain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space, const double _lattice_const,
+           const double _cutoff_radius_factor);
 
-        /** the private variables are referenced in preview public filed.*/
-        double _meas_global_length[DIMENSION_SIZE];
-        int _grid_size[DIMENSION_SIZE] = {0};
+    /** the private variables are referenced in preview public filed.*/
+    double _meas_global_length[DIMENSION_SIZE];
+    int _grid_size[DIMENSION_SIZE] = {0};
 
-        Region<double> _meas_global_region;
+    Region<double> _meas_global_region;
 
-        int _grid_coord[DIMENSION_SIZE];
-        _MPI_Rank _rank_id_neighbours[DIMENSION_SIZE][2];
+    int _grid_coord[DIMENSION_SIZE];
+    _MPI_Rank _rank_id_neighbours[DIMENSION_SIZE][2];
 
-        /**
-         * the measured lower bound of current sub-box at a dimension
-         */
-        Region<double> _meas_sub_box_region;
-        double _meas_ghost_length[DIMENSION_SIZE];  // measured ghost length, which equals to the cutoff radius.
-        Region<double> _meas_ghost_ext_region; // measured sub box region plus measured ghost length.
+    /**
+     * the measured lower bound of current sub-box at a dimension
+     */
+    Region<double> _meas_sub_box_region;
+    double _meas_ghost_length[DIMENSION_SIZE]; // measured ghost length, which equals to the cutoff radius.
+    Region<double> _meas_ghost_ext_region;     // measured sub box region plus measured ghost length.
 
-        _type_lattice_size _sub_box_lattice_size[DIMENSION_SIZE];
-        _type_lattice_size _ghost_extended_lattice_size[DIMENSION_SIZE];
-        _type_lattice_size _lattice_size_ghost[DIMENSION_SIZE];
-        Region<_type_lattice_coord> _sub_box_lattice_region;
-        Region<_type_lattice_coord> _ghost_ext_lattice_region;
-        Region<_type_lattice_coord> _local_sub_box_lattice_region;
-        Region<_type_lattice_coord> _local_ghost_ext_lattice_region;
-    };
+    _type_lattice_size _sub_box_lattice_size[DIMENSION_SIZE];
+    _type_lattice_size _ghost_extended_lattice_size[DIMENSION_SIZE];
+    _type_lattice_size _lattice_size_ghost[DIMENSION_SIZE];
+    Region<_type_lattice_coord> _sub_box_lattice_region;
+    Region<_type_lattice_coord> _ghost_ext_lattice_region;
+    Region<_type_lattice_coord> _local_sub_box_lattice_region;
+    Region<_type_lattice_coord> _local_ghost_ext_lattice_region;
+  };
 
-    class Domain::Builder : public comm::Builder<Domain::Builder, Domain> {
-    public:
-        Domain *build() override;
+  class Domain::Builder : public comm::Builder<Domain::Builder, Domain> {
+  public:
+    Domain *build() override;
 
-        Domain *localBuild(const int _grid_size[DIMENSION_SIZE], const int _grid_coord[DIMENSION_SIZE]) override;
-    };
-}
+    Domain *localBuild(const int _grid_size[DIMENSION_SIZE], const int _grid_coord[DIMENSION_SIZE]) override;
+  };
+} // namespace comm
 
 #endif // COMM_DOMAIN_H
