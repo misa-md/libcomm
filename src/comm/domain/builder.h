@@ -5,6 +5,7 @@
 #ifndef COMM_BUILDER_H
 #define COMM_BUILDER_H
 
+#include <cstdint>
 #include <array>
 #include <cmath>
 #include <mpi.h>
