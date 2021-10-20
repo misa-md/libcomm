@@ -39,9 +39,9 @@
 namespace comm {
   class Domain {
   public:
-    class Builder;
-
     template <typename, typename> friend class comm::Builder;
+
+    class Builder;
 
   public:
     const double lattice_const;
