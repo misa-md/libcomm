@@ -37,6 +37,8 @@ namespace comm {
 
     Region &operator=(const Region &arr);
 
+    inline T *data() { return &x_low; }
+
     bool operator==(const Region &x) const {
       return x_low == x.x_low && y_low == x.y_low && z_low == x.z_low && x_high == x.x_high && y_high == x.y_high &&
              z_high == x.z_high;
