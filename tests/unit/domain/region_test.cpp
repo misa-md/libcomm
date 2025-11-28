@@ -5,6 +5,17 @@
 #include <comm/domain/region.hpp>
 #include <gtest/gtest.h>
 
+TEST(region_data_test, region_test) {
+  comm::Region<int> region(-1, -2, -3, 1, 2, 3);
+  int *data = region.data();
+  EXPECT_EQ(data[0], -1);
+  EXPECT_EQ(data[1], -2);
+  EXPECT_EQ(data[2], -3);
+  EXPECT_EQ(data[3], 1);
+  EXPECT_EQ(data[4], 2);
+  EXPECT_EQ(data[5], 3);
+}
+
 TEST(region_ref_test, region_test) {
   comm::Region<double> region(-1, -2, -3, 1, 2, 3);
   EXPECT_EQ(region.low[0], -1);
