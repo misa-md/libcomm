@@ -2,6 +2,36 @@
 ## [Unreleased]
 
 
+<a name="v0.4.0"></a>
+## [v0.4.0] - 2025-11-28
+### Build
+- **cmake:** add `COMM` prefix to cmake options
+- **pkg:** bump googletest to release-1.12.1
+
+### Docs
+- **changelog:** add changelog for v0.4.0
+
+### Feat
+- **region:** allow to access the region's range data directly via `data()`
+
+### BREAKING CHANGE
+
+The prefix `COMM` have been added to some building options in config.cmake. When
+building this lib, please remember to change the option names (for example in building script) to
+use `COMM` prefix.
+
+
+<a name="v0.3.4"></a>
+## [v0.3.4] - 2021-10-20
+### Fix
+- **compile:** fix compiling error of `unknown type name 'uint64_t'` in "src/comm/domain/builder.h"
+- **compile:** fix compiling error of "comm::Domain::Builder is not a template type" in hipclang env
+- **compile:** fix compiling error due to missing header <stdexcept> when using std::invalid_argument
+
+### Refactor
+- try to use `constexpr`, instead of `const`, in file src/comm/types_define.h
+
+
 <a name="v0.3.3"></a>
 ## [v0.3.3] - 2020-01-22
 ### Docs
