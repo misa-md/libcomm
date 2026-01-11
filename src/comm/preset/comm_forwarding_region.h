@@ -25,6 +25,7 @@ namespace comm {
    * \param p_domain pointer to the domain.
    * \param dimension dimension for communication, 0 for x dimension, 1 for y dimension, 2 for z dimension
    * \param direction direction for communication, values: DIR_LOWER or DIR_HIGHER.
+   *  In fact, it is the direction of sending processes to receiving processes.
    * \return region for communication forwarding, unit: lattice size.
    * \note: the region in x dimension in return value is double due to BCC lattice structure.
    */
@@ -43,7 +44,7 @@ namespace comm {
    * \param ghost_size ghost size in each dimension
    * \param local_box_region local box region
    * \param dimension dimension for communication
-   * \param direction direction for communication
+   * \param direction direction for communication. the direction of sending processes to receiving processes.
    * \return the region to be sent in the specific dimension and direction.
    */
   template <typename GHOST_SIZE_UNIT, typename BOX_COORD_UNIT>
@@ -62,7 +63,7 @@ namespace comm {
    * \param ghost_size ghost size in each dimension
    * \param local_box_region local box region
    * \param dimension dimension for communication
-   * \param direction direction for communication
+   * \param direction direction for communication. the direction of sending processes to receiving processes.
    * \return the receiving region from the specific dimension and direction.
    */
   template <typename GHOST_SIZE_UNIT, typename BOX_COORD_UNIT>
@@ -77,6 +78,7 @@ namespace comm {
    * \param p_domain pointer to the domain.
    * \param dimension dimension for communication, 0 for x dimension, 1 for y dimension, 2 for z dimension
    * \param direction direction for communication, values: DIR_LOWER or DIR_HIGHER.
+   *  In fact, it is the direction of sending processes to receiving processes.
    * \return region for communication forwarding, unit: measured length, which is double.
    */
   Region<double> fwCommLocalMeaRegion(const Domain *p_domain, const unsigned int dimension,
