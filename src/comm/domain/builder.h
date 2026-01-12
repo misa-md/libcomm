@@ -44,6 +44,8 @@ namespace comm {
 
     B &setCutoffRadius(const double cutoff_radius_factor);
 
+    B &setMPIMap3dSubDim(const int mpi_map_3d_sub_dim[DIMENSION_SIZE]);
+
     /**
      * remember to delete it when it is used
      * @return pointer to domain.
@@ -73,6 +75,7 @@ namespace comm {
      * And each processor will be bound to a sub-box, and tagged with a cartesian coordinate(x,y,z).
      */
     virtual void decomposition(D &domain);
+    virtual void decomposition2(D &domain);
 
     /**
      * set length of global simulation box.
@@ -101,6 +104,11 @@ namespace comm {
      * set lattice coordinate boundary of current sub-box in local coordinate system(LCY).
      */
     virtual void buildMeasuredDomain(D &domain); // todo test.
+
+    /*
+     * the 3D mapping of MPI process in node, default: 1*1*1
+     */
+    int _mpi_map_3d_sub_dim[DIMENSION_SIZE] = {1, 1, 1};
   };
 } // namespace comm
 
