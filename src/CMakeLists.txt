@@ -11,6 +11,7 @@ set(HEADER_FILES
         comm/packer.h
         comm/region_packer.h
         comm/types_define.h
+        comm/topology/cart_3d_node_affinity.h
         )
 
 set(SOURCE_FILES
@@ -22,6 +23,7 @@ set(SOURCE_FILES
         comm/preset/comm_forwarding_region.cc
         comm/preset/sector_forwarding_region.cc
         comm/comm.inl
+        comm/topology/cart_3d_node_affinity.cc
         )
 
 # set(MAIN_FILE main.cpp)

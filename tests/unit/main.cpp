@@ -5,7 +5,7 @@
 #include "test_config.h"
 #include <gtest/gtest.h>
 
-#ifdef TEST_MPI_ENABLE_FLAG
+#ifdef COMM_TEST_MPI_ENABLE_FLAG
 
 #include "mpi.h"
 
@@ -26,14 +26,14 @@ public:
   virtual ~MPIEnvironment() {}
 };
 
-#endif // end TEST_MPI_ENABLE_FLAG
+#endif // end COMM_TEST_MPI_ENABLE_FLAG
 
 // see https://github.com/google/googletest/issues/822 for more information.
 // main function for adapt mpi environment
 int main(int argc, char *argv[]) {
   ::testing::InitGoogleTest(&argc, argv);
-#ifdef TEST_MPI_ENABLE_FLAG
+#ifdef COMM_TEST_MPI_ENABLE_FLAG
   ::testing::AddGlobalTestEnvironment(new MPIEnvironment);
-#endif // end TEST_MPI_ENABLE_FLAG
+#endif // end COMM_TEST_MPI_ENABLE_FLAG
   return RUN_ALL_TESTS();
 }

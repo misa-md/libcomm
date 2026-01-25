@@ -2,6 +2,6 @@
 #ifndef COMM_TEST_CONFIG_H
 #define COMM_TEST_CONFIG_H
 
-#cmakedefine TEST_MPI_ENABLE_FLAG
+#cmakedefine COMM_TEST_MPI_ENABLE_FLAG
 
 #endif // COMM_TEST_CONFIG_H

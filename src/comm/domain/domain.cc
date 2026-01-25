@@ -13,6 +13,28 @@ comm::Domain::Domain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space, co
 //  todo _grid_size(0),
 //  todo _meas_global_length(0.0),
 
+void comm::Domain::rescale(const double scale_factor) {
+  this->lattice_const *= scale_factor;
+  // rescale global box
+  for (int d = 0; d < DIMENSION_SIZE; d++) {
+    this->_meas_global_length[d] *= scale_factor;
+    this->_meas_global_region.low[d] *= scale_factor; // lower bounding is set to 0 by default.
+    this->_meas_global_region.high[d] *= scale_factor;
+  }
+
+  // calculate measured length in each dimension.
+  for (int d = 0; d < DIMENSION_SIZE; d++) {
+    // the lower and upper bounding of current sub-box.
+    this->_meas_sub_box_region.low[d] *= scale_factor;
+    this->_meas_sub_box_region.high[d] *= scale_factor;
+
+    this->_meas_ghost_length[d] *= scale_factor;
+
+    this->_meas_ghost_ext_region.low[d] *= scale_factor;
+    this->_meas_ghost_ext_region.high[d] *= scale_factor;
+  }
+}
+
 comm::Domain *comm::Domain::Builder::build() {
   Domain *p_domain = new Domain(_phase_space, _lattice_const, _cutoff_radius_factor);
   decomposition(*p_domain);
