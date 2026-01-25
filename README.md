@@ -12,9 +12,9 @@ $ pkg install
 ## Build lib
 ```bash
 $ cmake -B./build -H./ \
- -DOpenMP_ENABLE_FLAG=ON \
- -DMPI_ENABLE_FLAG=ON \
- -DTEST_ENABLE_FLAG=ON \
- -DTEST_MPI_ENABLE_FLAG=ON
+ -DCOMM_OpenMP_ENABLE_FLAG=ON \
+ -DCOMM_MPI_ENABLE_FLAG=ON \
+ -DCOMM_TEST_ENABLE_FLAG=ON \
+ -DCOMM_TEST_MPI_ENABLE_FLAG=ON
 $ cmake --build ./build -j 4
 ```

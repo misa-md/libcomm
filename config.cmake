@@ -12,7 +12,7 @@ set(ProjectName comm)
 option(COMM_OpenMP_ENABLE_FLAG "Use OpenMP" OFF) #change this flag to OFF to disable OpenMP
 option(COMM_MPI_ENABLE_FLAG "Use MPI library" ON) #change this flag to false to disable mpi
 option(COMM_TEST_BUILD_ENABLE_FLAG "Enable building test" ON) # enable test
-option(COMM_TEST_MPI_ENABLE_FLAG "Enable MPI in test" ON) # enable mpi in test, its value depends on option MPI_ENABLE_FLAG.
+option(COMM_TEST_MPI_ENABLE_FLAG "Enable MPI in test" ON) # enable mpi in test, its value depends on option COMM_MPI_ENABLE_FLAG.
 
 ## architecture ralated values.
 # option(ARCH_SW "Enable sunway athread" OFF) # enable sunway athread if its running on sunway system.
