@@ -2,6 +2,25 @@
 ## [Unreleased]
 
 
+<a name="v0.5.0"></a>
+## [v0.5.0] - 2026-01-25
+### Docs
+- **changelog:** update changelog for v0.5.0
+
+### Feat
+- **domain:** support to rescale the simulation region/box by a factor
+- **topology:** support to map 1D MPI rank to 3D cartesian at both inter-node and inner-node level
+
+### Fix
+- **cmake:** rename marco `TEST_MPI_ENABLE_FLAG` to `COMM_TEST_MPI_ENABLE_FLAG` in unit-test
+
+### Refactor
+- **topology:** code refactor and place code into namespace `comm::topology`
+
+### Test
+- **domain:** add unit tests for api `comm::Domain::rescale(factor)`
+
+
 <a name="v0.4.0"></a>
 ## [v0.4.0] - 2025-11-28
 ### Build
