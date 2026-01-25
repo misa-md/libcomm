@@ -44,7 +44,8 @@ namespace comm {
     class Builder;
 
   public:
-    const double lattice_const;
+    double lattice_const; // the lattice constant
+
     const double cutoff_radius_factor;
     // cut off lattice size.
     const _type_lattice_size cut_lattice;
@@ -142,6 +143,15 @@ namespace comm {
      * at each dimension in local coordinate system(LCY).
      */
     const Region<_type_lattice_coord> &local_ghost_ext_lattice_region = _local_ghost_ext_lattice_region;
+
+    /**
+     * rescale the domain with given scale factor.
+     * make the coordinates and lengths multiplied by the scale factor,
+     * which is useful for NPT ensemble in the MD simulation.
+     * @param scale_factor the scale factor to rescale the domain.
+     * @return the rescaled new domain.
+     */
+    void rescale(const double scale_factor);
 
   protected:
     Domain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space, const double _lattice_const,
