@@ -15,7 +15,7 @@ options:
         - ci
         - test
         - revert
-#        - style
+        - build 
 
   commit_groups:
     # title_maps:
