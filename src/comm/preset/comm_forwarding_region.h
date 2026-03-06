@@ -36,28 +36,38 @@ namespace comm {
    * when performing communication forwarding.
    * The region is the area belongs to current process,
    * but has contribution to its corresponding neighbour processes.
+   *
+   * @tparam GHOST_SIZE_UNIT the unit type for ghost size, which can be lattice size or measured length.
+   * @tparam BOX_COORD_UNIT the unit type for box coordinate, which can be lattice coordinate or measured length.
+   *
    * \param ghost_size ghost size in each dimension
    * \param local_box_region local box region
    * \param dimension dimension for communication
    * \param direction direction for communication
    * \return the region to be sent in the specific dimension and direction.
    */
-  Region<_type_lattice_size> fwCommLocalSendRegion(const _type_lattice_size ghost_size[DIMENSION_SIZE],
-                                                   const Region<_type_lattice_coord> local_box_region,
+  template<typename GHOST_SIZE_UNIT, typename BOX_COORD_UNIT>
+  Region<BOX_COORD_UNIT> fwCommLocalSendRegion(const GHOST_SIZE_UNIT ghost_size[DIMENSION_SIZE],
+                                                   const Region<BOX_COORD_UNIT> local_box_region,
                                                    const unsigned int dimension, const unsigned int direction);
 
   /**
    * \breaf This function returns communication region for receiving processes
    * when performing communication forwarding.
    * The region is the ghost area from corresponding neighbour processes.
+   *
+   * @tparam GHOST_SIZE_UNIT the unit type for ghost size, which can be lattice size or measured length.
+   * @tparam BOX_COORD_UNIT the unit type for box coordinate, which can be lattice coordinate or measured length.
+   *
    * \param ghost_size ghost size in each dimension
    * \param local_box_region local box region
    * \param dimension dimension for communication
    * \param direction direction for communication
    * \return the receiving region from the specific dimension and direction.
    */
-  Region<_type_lattice_size> fwCommLocalRecvRegion(const _type_lattice_size ghost_size[DIMENSION_SIZE],
-                                                   const Region<_type_lattice_coord> local_box_region,
+  template<typename GHOST_SIZE_UNIT, typename BOX_COORD_UNIT>
+  Region<BOX_COORD_UNIT> fwCommLocalRecvRegion(const GHOST_SIZE_UNIT ghost_size[DIMENSION_SIZE],
+                                                   const Region<BOX_COORD_UNIT> local_box_region,
                                                    const unsigned int dimension, const unsigned int direction);
 
   /**
