@@ -30,7 +30,7 @@ namespace comm {
      * @param direction the sending direction: lower or higher.
      * @return
      */
-    virtual const std::size_t pack(std::vector<T> data, const int dimension, const int direction) = 0;
+    virtual const std::size_t pack(std::vector<T> &data, const int dimension, const int direction) = 0;
 
     /**
      * unpack data after performing MPI_Recv (e.g. save to another temp buffer).
@@ -41,7 +41,7 @@ namespace comm {
      * @param dimension the dimension of x(0) ,y (1) , z(2).
      * @param direction the sending direction: lower or higher.
      */
-    virtual const void unpack(const std::vector<T> data, const std::size_t data_len, const int dimension,
+    virtual const void unpack(const std::vector<T> &data, const std::size_t data_len, const int dimension,
                               const int direction) = 0;
 
     /**
@@ -61,14 +61,14 @@ namespace comm {
   protected:
     void initialize() override {}
 
-    inline const std::size_t pack(std::vector<T> data, const int dimension, const int direction) override {
+    inline const std::size_t pack(std::vector<T> &data, const int dimension, const int direction) override {
       std::size_t send_len = sendLength(dimension, direction);
       data.resize(send_len); // malloc storage
       onSend(data.data(), send_len, dimension, direction);
       return send_len;
     }
 
-    inline const void unpack(const std::vector<T> data, const std::size_t data_len, const int dimension,
+    inline const void unpack(const std::vector<T> &data, const std::size_t data_len, const int dimension,
                              const int direction) override {
       onReceive(data.data(), data_len, dimension, direction);
     }
