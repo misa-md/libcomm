@@ -37,7 +37,7 @@ void comm::neiSendReceive(Packer<T> *packer, const mpi_process processes, const 
     for (int direction = DIR_LOWER; direction <= DIR_HIGHER; direction++) {
       send_buff[direction].clear();
       // pack data into buffer
-      auto send_data_len = packer->pack(send_buff[direction], num_send[dimension][direction], dimension, direction);
+      auto send_data_len = packer->pack(send_buff[direction], dimension, direction);
       assert(send_data_len >= 0); // todo remove
       num_send[dimension][direction] = send_data_len;
     }
