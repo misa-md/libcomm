@@ -30,4 +30,4 @@ endif ()
 set(COMM_LIB_NAME ${ProjectName}) # todo use PARENT_SCOPE to modify globle variable.
 
 # test
-set(COMM_UINT_TEST_NAME "unit-test")
+set(COMM_UNIT_TEST_NAME "comm-unit-test")
