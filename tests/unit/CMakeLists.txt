@@ -26,30 +26,30 @@ set(TEST_SOURCE_FILES
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 
-add_executable(${COMM_UINT_TEST_NAME} ${TEST_SOURCE_FILES} ${TEST_HEADER_FILES})
+add_executable(${COMM_UNIT_TEST_NAME} ${TEST_SOURCE_FILES} ${TEST_HEADER_FILES})
 
 # Extra linking for the project.
 if (TARGET GTest::gtest AND TARGET GTest::gtest_main)
     # googletest is added by `find_package(GTest)`
-    target_link_libraries(${COMM_UINT_TEST_NAME}
+    target_link_libraries(${COMM_UNIT_TEST_NAME}
             PRIVATE GTest::gtest GTest::gtest_main ${COMM_LIB_NAME} ${EXTRA_LIBS}
             )
 else ()
     # googletest is added by `add_subdirectory`
-    target_link_libraries(${COMM_UINT_TEST_NAME}
+    target_link_libraries(${COMM_UNIT_TEST_NAME}
             PRIVATE gtest gtest_main ${COMM_LIB_NAME} ${EXTRA_LIBS}
             )
 endif ()
 
 # This is so you can do 'make test' to see all your tests run, instead of
 # manually running the executable runUnitTests to see those specific tests.
-add_test(NAME unit-test COMMAND ${COMM_UINT_TEST_NAME})
+add_test(NAME unit-test COMMAND ${COMM_UNIT_TEST_NAME})
 
 
 ##########################
 ##### install files
 ##########################
-install(TARGETS ${COMM_UINT_TEST_NAME}
+install(TARGETS ${COMM_UNIT_TEST_NAME}
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib

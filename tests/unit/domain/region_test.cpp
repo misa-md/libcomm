@@ -63,7 +63,9 @@ TEST(region_assign_test, region_test) {
 
 TEST(region_assign_scope_test, region_test) {
   comm::Region<int> region;
-  { region = comm::Region<int>{-1, -2, -3, 1, 2, 3}; }
+  {
+    region = comm::Region<int>{-1, -2, -3, 1, 2, 3};
+  }
 
   EXPECT_EQ(region.low[0], -1);
   EXPECT_EQ(region.low[1], -2);

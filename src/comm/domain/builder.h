@@ -5,11 +5,11 @@
 #ifndef COMM_BUILDER_H
 #define COMM_BUILDER_H
 
-#include <cstdint>
 #include <array>
 #include <cmath>
+#include <cstdint>
 #include <mpi.h>
-//#include <utils/mpi_utils.h>
+// #include <utils/mpi_utils.h>
 
 #include "comm/types_define.h"
 
