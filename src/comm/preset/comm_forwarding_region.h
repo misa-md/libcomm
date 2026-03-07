@@ -46,10 +46,10 @@ namespace comm {
    * \param direction direction for communication
    * \return the region to be sent in the specific dimension and direction.
    */
-  template<typename GHOST_SIZE_UNIT, typename BOX_COORD_UNIT>
+  template <typename GHOST_SIZE_UNIT, typename BOX_COORD_UNIT>
   Region<BOX_COORD_UNIT> fwCommLocalSendRegion(const GHOST_SIZE_UNIT ghost_size[DIMENSION_SIZE],
-                                                   const Region<BOX_COORD_UNIT> local_box_region,
-                                                   const unsigned int dimension, const unsigned int direction);
+                                               const Region<BOX_COORD_UNIT> local_box_region,
+                                               const unsigned int dimension, const unsigned int direction);
 
   /**
    * \breaf This function returns communication region for receiving processes
@@ -65,10 +65,10 @@ namespace comm {
    * \param direction direction for communication
    * \return the receiving region from the specific dimension and direction.
    */
-  template<typename GHOST_SIZE_UNIT, typename BOX_COORD_UNIT>
+  template <typename GHOST_SIZE_UNIT, typename BOX_COORD_UNIT>
   Region<BOX_COORD_UNIT> fwCommLocalRecvRegion(const GHOST_SIZE_UNIT ghost_size[DIMENSION_SIZE],
-                                                   const Region<BOX_COORD_UNIT> local_box_region,
-                                                   const unsigned int dimension, const unsigned int direction);
+                                               const Region<BOX_COORD_UNIT> local_box_region,
+                                               const unsigned int dimension, const unsigned int direction);
 
   /**
    * This function returns communication region when performing communication forwarding.

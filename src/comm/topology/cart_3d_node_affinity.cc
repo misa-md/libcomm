@@ -68,8 +68,8 @@ void comm::topology::LibComm_shared_Cart_3d_coords(comm::topology::Comm3dCart *c
 
   // local coordinate inside the node
   const int local_coord[comm::DIMENSION_SIZE] = {rank_in_node % inner_node_dim[0],
-                                           (rank_in_node / inner_node_dim[0]) % inner_node_dim[1],
-                                           rank_in_node / (inner_node_dim[0] * inner_node_dim[1])};
+                                                 (rank_in_node / inner_node_dim[0]) % inner_node_dim[1],
+                                                 rank_in_node / (inner_node_dim[0] * inner_node_dim[1])};
 
   // global coord of each MPI rank
   for (int d = 0; d < 3; d++) {

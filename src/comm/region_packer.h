@@ -56,7 +56,7 @@ namespace comm {
     /**
      * \brief this function will be called after all communication finished.
      */
-    virtual void onFinish(){};
+    virtual void onFinish() {};
   };
 } // namespace comm
 
