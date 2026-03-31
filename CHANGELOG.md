@@ -53,6 +53,11 @@ use `COMM` prefix.
 
 <a name="v0.3.3"></a>
 ## [v0.3.3] - 2020-01-22
+### Build
+- **cmake:** add support for googletest lib linking if it is added by add_subdirectory
+- **cmake:** add alias lib to make sure it can be always be linked by namespace version
+- **pkg:** upgrade pkg.yaml file to version 2
+
 ### Docs
 - **changelog:** update changelog for v0.3.3
 
@@ -98,6 +103,9 @@ deprecated.
 
 <a name="v0.3.1"></a>
 ## [v0.3.1] - 2019-10-13
+### Build
+- **pkg:** update googletest to version release-1.10.0.
+
 ### Docs
 - **changelog:** add changelog for v0.3.1
 
@@ -219,6 +227,9 @@ change domain param in comm ::fwCommLocalRegion from comm::Domain to comm::BccDo
 
 <a name="v0.1.0-alpha"></a>
 ## v0.1.0-alpha - 2019-04-14
+### Build
+- **cmake:** add cmake build srcipts to build lib and tests.
+
 ### Docs
 - **readme:** add document for lib dependencies building in README.md.
 

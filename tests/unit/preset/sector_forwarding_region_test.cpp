@@ -26,10 +26,10 @@ TEST(sector_fw_region_area_test, sector_fw_region_test) {
   const comm::_type_lattice_size g[comm::DIMENSION_SIZE] = {ghost_size, ghost_size, ghost_size};
   for (int s = 0; s < 8; s++) {
     for (int dim = 0; dim < 3; dim++) {
-      comm::type_region_array regions_send =
-          comm::fwCommSectorSendRegion(s, dim, g, p_domain->local_split_coord, p_domain->local_sub_box_lattice_region);
-      comm::type_region_array regions_recv =
-          comm::fwCommSectorRecvRegion(s, dim, g, p_domain->local_split_coord, p_domain->local_sub_box_lattice_region);
+      comm::type_region_array regions_send = comm::fwCommSectorSendRegion(s, dim, g, p_domain->local_split_coord.data(),
+                                                                          p_domain->local_sub_box_lattice_region);
+      comm::type_region_array regions_recv = comm::fwCommSectorRecvRegion(s, dim, g, p_domain->local_split_coord.data(),
+                                                                          p_domain->local_sub_box_lattice_region);
 
       EXPECT_EQ(regions_send.size(), regions_recv.size());
       comm::_type_lattice_size region_vol_total = 0;

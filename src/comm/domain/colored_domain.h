@@ -53,7 +53,7 @@ namespace comm {
      * @note the start index(zero index) is started from lower ghost boundary of local sub box.
      * The center coordinate to split 8 sectors.
      */
-    _type_lattice_coord local_split_coord[DIMENSION_SIZE];
+    std::array<_type_lattice_coord, DIMENSION_SIZE> local_split_coord;
 
     /**
      * construct colored domain.
