@@ -2,6 +2,36 @@
 ## [Unreleased]
 
 
+<a name="v0.6.0"></a>
+## [v0.6.0] - 2026-03-31
+### Build
+- **cmake:** change the unit test binary name to `comm-unit-test` and fix a cmake typo
+
+### Docs
+- add documents for libcomm Domain and forward-communication API
+- **changelog:** update changelog for v0.5.0
+- **changelog:** add changelog of the `build` scope into CHANGELOG.md
+
+### Feat
+- **forward-comm:** add more comment to apis of the forwarding communication
+- **forward-comm:** measured region for forward-comm api fwCommLocalSendRegion/fwCommLocalRecvRegion
+- **forward-comm:** support to pack data into std::vector when using double-side forwarding comm
+
+### Fix
+- **forward-comm:** fix building errors when using the new Packer/NativePacker for data pack/unpack
+- **packer:** fix `Null buffer pointer` in forward-comm due to empty std::vector passed to MPI_Isend
+
+### Refactor
+- **domain:** make the type of `local_split_coord` from raw array to std::array
+
+### BREAKING CHANGE
+
+the data buffer parameter in api `comm::Packer::onReceive` is now const.
+
+The old `comm::Packer` api (with C-array as the data buffer type and `sendLength`
+api) is renamed to `comm::NativePacker` and can still work.
+
+
 <a name="v0.5.0"></a>
 ## [v0.5.0] - 2026-01-25
 ### Docs
@@ -252,7 +282,11 @@ change domain param in comm ::fwCommLocalRegion from comm::Domain to comm::BccDo
 - **domain:** add tests for domain decomposition.
 
 
-[Unreleased]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.3.3...HEAD
+[Unreleased]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.6.0...HEAD
+[v0.6.0]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.5.0...v0.6.0
+[v0.5.0]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.4.0...v0.5.0
+[v0.4.0]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.3.4...v0.4.0
+[v0.3.4]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.3.3...v0.3.4
 [v0.3.3]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.3.2...v0.3.3
 [v0.3.2]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.3.1...v0.3.2
 [v0.3.1]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.3.0...v0.3.1
