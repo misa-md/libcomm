@@ -30,15 +30,35 @@ B &comm::Builder<B, D>::setLatticeConst(const std::array<double, DIMENSION_SIZE>
 }
 
 template <typename B, typename D> B &comm::Builder<B, D>::setGhostSize(const unsigned int ghost_size) {
-  _ghost_size = ghost_size;
+  return setGhostSize({ghost_size, ghost_size, ghost_size});
+}
+
+template <typename B, typename D>
+B &comm::Builder<B, D>::setGhostSize(const std::array<unsigned int, DIMENSION_SIZE> ghost_size) {
+  for (int d = 0; d < DIMENSION_SIZE; d++) {
+    _ghost_lat_size[d] = ghost_size[d];
+    // also set the measured ghost region length. Note: it can be overwritten by `ghost_measured_length`
+    _ghost_meas_length[d] = _lattice_const[d] * ghost_size[d];
+  }
+  return *static_cast<B *>(this);
+}
+
+template <typename B, typename D>
+B &comm::Builder<B, D>::setGhostMeasLength(const std::array<double, DIMENSION_SIZE> ghost_measured_length) {
+  // overwrite
+  for (int d = 0; d < DIMENSION_SIZE; d++) {
+    _ghost_meas_length[d] = _lattice_const[d] * ghost_measured_length[d];
+  }
   return *static_cast<B *>(this);
 }
 
 template <typename B, typename D> B &comm::Builder<B, D>::setCutoffRadius(const double cutoff_radius_factor) {
   _cutoff_radius_factor = cutoff_radius_factor;
-  if (_ghost_size == 0) {
-    // if ghost size not set, we set it as cut_lattice
-    _ghost_size = static_cast<int>(ceil(_cutoff_radius_factor));
+  for (int d = 0; d < DIMENSION_SIZE; d++) {
+    if (_ghost_lat_size[d] == 0) {
+      // if ghost size not set, we set it as cut_lattice
+      _ghost_lat_size[d] = static_cast<int>(ceil(_cutoff_radius_factor));
+    }
   }
   return *static_cast<B *>(this);
 }
@@ -81,7 +101,7 @@ template <typename B, typename D> void comm::Builder<B, D>::buildLatticeDomain(D
   for (int d = 0; d < DIMENSION_SIZE; d++) {
     // i * ceil(x) >= ceil(i*x) for all x ∈ R and i ∈ Z
     // add additional one lattice to make all neighbours can be fount in ghost area.
-    domain._lattice_size_ghost[d] = _ghost_size;
+    domain._lattice_size_ghost[d] = _ghost_lat_size[d];
     domain._ghost_extended_lattice_size[d] = domain._sub_box_lattice_size[d] + 2 * domain._lattice_size_ghost[d];
   }
 
@@ -120,7 +140,7 @@ template <typename B, typename D> void comm::Builder<B, D>::buildMeasuredDomain(
     domain._meas_sub_box_region.high[d] =
         domain._meas_global_region.low[d] + domain._sub_box_lattice_region.high[d] * _lattice_const[d];
 
-    domain._meas_ghost_length[d] = domain._lattice_size_ghost[d] * _lattice_const[d]; // ghost length fixme
+    domain._meas_ghost_length[d] = _ghost_meas_length[d];
 
     domain._meas_ghost_ext_region.low[d] = domain._meas_sub_box_region.low[d] - domain._meas_ghost_length[d];
     domain._meas_ghost_ext_region.high[d] = domain._meas_sub_box_region.high[d] + domain._meas_ghost_length[d];

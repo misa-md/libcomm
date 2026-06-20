@@ -48,6 +48,15 @@ namespace comm {
      * \return reference of Builder.
      */
     B &setGhostSize(const unsigned int ghost_size);
+    B &setGhostSize(const std::array<unsigned int, DIMENSION_SIZE> ghost_size);
+
+    /**
+     * set the measured ghost length.
+     * This api can overwrite the measure ghost size set by @memberof setGhostSize
+     * @param ghost_measured_length the measured length of the ghost region at x,y,z dimension.
+     * @return the reference of the Builder.
+     */
+    B &setGhostMeasLength(const std::array<double, DIMENSION_SIZE> ghost_measured_length);
 
     B &setCutoffRadius(const double cutoff_radius_factor);
 
@@ -72,7 +81,8 @@ namespace comm {
     MPI_Comm *_p_comm;
     double _cutoff_radius_factor;
     std::array<double, DIMENSION_SIZE> _lattice_const = {0.0};
-    int _ghost_size;
+    std::array<int, DIMENSION_SIZE> _ghost_lat_size = {0, 0, 0};
+    std::array<double, DIMENSION_SIZE> _ghost_meas_length = {0, 0, 0};
     std::array<uint64_t, DIMENSION_SIZE> _phase_space;
 
     /**
