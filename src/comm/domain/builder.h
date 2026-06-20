@@ -35,6 +35,13 @@ namespace comm {
     B &setLatticeConst(const double latticeConst);
 
     /**
+     * the lattice const at each dimension may be not the same.
+     * @param lattice_const lattice const at each dimension.
+     * @return the builder.
+     */
+    B &setLatticeConst(const std::array<double, DIMENSION_SIZE> lattice_const);
+
+    /**
      * set ghost size
      * \param ghost_size the size of ghost size, unit: lattice, default cut_lattice
      * (should set cut_lattice before setting ghost size).
@@ -64,7 +71,7 @@ namespace comm {
     mpi_process _mpi_pro;
     MPI_Comm *_p_comm;
     double _cutoff_radius_factor;
-    double _lattice_const;
+    std::array<double, DIMENSION_SIZE> _lattice_const = {0.0};
     int _ghost_size;
     std::array<uint64_t, DIMENSION_SIZE> _phase_space;
 

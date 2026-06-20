@@ -265,7 +265,9 @@ TEST(domain_rescale_box_test, domain_test) {
   constexpr double scale_factor = 1.5;
   p_domain->rescale(scale_factor);
 
-  EXPECT_DOUBLE_EQ(p_domain->lattice_const, scale_factor * old_lattice_const);
+  EXPECT_DOUBLE_EQ(p_domain->lattice_const[0], scale_factor * old_lattice_const);
+  EXPECT_DOUBLE_EQ(p_domain->lattice_const[1], scale_factor * old_lattice_const);
+  EXPECT_DOUBLE_EQ(p_domain->lattice_const[2], scale_factor * old_lattice_const);
 
   EXPECT_DOUBLE_EQ(p_domain->meas_global_length[0], scale_factor * space[0] * old_lattice_const);
   EXPECT_DOUBLE_EQ(p_domain->meas_global_length[1], scale_factor * space[1] * old_lattice_const);

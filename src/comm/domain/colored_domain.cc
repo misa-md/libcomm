@@ -137,7 +137,8 @@ void comm::ColoredDomain::splitSector(const comm::Domain &domain) {
   local_split_coord[2] = sector_lattice_size[X_LOW | Y_LOW | Z_LOW][2] + lattice_size_ghost[2];
 }
 
-comm::ColoredDomain::ColoredDomain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space, const double _lattice_const,
+comm::ColoredDomain::ColoredDomain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space,
+                                   const std::array<double, DIMENSION_SIZE> _lattice_const,
                                    const double _cutoff_radius_factor)
     : Domain(_phase_space, _lattice_const, _cutoff_radius_factor) {}
 

@@ -4,8 +4,8 @@
 
 #include "bcc_domain.h"
 
-comm::BccDomain::BccDomain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space, const double _lattice_const,
-                           const double _cutoff_radius_factor)
+comm::BccDomain::BccDomain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space,
+                           const std::array<double, DIMENSION_SIZE> _lattice_const, const double _cutoff_radius_factor)
     : Domain(_phase_space, _lattice_const, _cutoff_radius_factor) {}
 
 comm::BccDomain::BccDomain(const comm::Domain &domain) : Domain(domain) { rescale(domain); }

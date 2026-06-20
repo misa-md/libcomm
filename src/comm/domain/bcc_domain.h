@@ -40,8 +40,8 @@ namespace comm {
      * \param _cutoff_radius_factor cutoff for building ghost area:
      *  _cutoff_radius_factor = measured ghost length /_lattice_const
      */
-    BccDomain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space, const double _lattice_const,
-              const double _cutoff_radius_factor);
+    BccDomain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space,
+              const std::array<double, DIMENSION_SIZE> _lattice_const, const double _cutoff_radius_factor);
 
     /**
      * create bcc domain from existed normal domain.
