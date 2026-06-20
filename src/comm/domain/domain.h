@@ -7,22 +7,14 @@
 #define COMM_DOMAIN_H
 
 #include <array>
-#include <mpi.h>
 #include <vector>
 
 #include "builder.h"
+#include "cartesian_context.h"
 #include "comm/types_define.h"
 #include "region.hpp"
 
 /**
- * If N can be decomposed as N = N_x * N_y * N_z, where N, N_x, N_y, N_z are all integer bigger than or equal to 1,
- * then the whole simulation box will be divided into N sub-box with N_z levels in z axis,
- * and in each level, it has  N_x * N_y sub-boxes.
- * Then, we can bind each processor to a cartesian coordinate (x,y,z) due to the boxes partition,
- * where 0 <= x < N_x, 0 <= z < N_z, 0 <= z < N_z.
- * Last, based on the cartesian coordinate (x,y,z),
- * each processor can get the cartesian coordinate of its contiguous sub-boxes.
- *
  *
  * variable naming:
  * 1.variables for real length(measured length) and real boundary(measured boundary) of sub-box or global box
@@ -37,45 +29,17 @@
  */
 
 namespace comm {
-  class Domain {
+  class MeasuredDomain {
   public:
-    template <typename, typename> friend class comm::Builder;
-
-    class Builder;
-
-  public:
-    std::array<double, DIMENSION_SIZE> lattice_const; // the lattice constant
-
-    const double cutoff_radius_factor;
-    // cut off lattice size.
-    const _type_lattice_size cut_lattice;
-    const std::array<uint64_t, DIMENSION_SIZE> phase_space;
     /**
      * global measured length of the simulation box at each dimension.
      */
     const double (&meas_global_length)[DIMENSION_SIZE] = _meas_global_length;
 
     /**
-     * the count of processors at each dimension.
-     * Or we can say the decomposed grid size at each dimension.
-     */
-    const int (&grid_size)[DIMENSION_SIZE] = _grid_size;
-
-    /**
      * the measured coordinate of lower and upper boundary of global simulation box.
      */
     const Region<double> &meas_global_region = _meas_global_region;
-
-    /** local information for current simulation sub-box. **/
-    /**
-     * The cartesian coordinate of the sub-box bound to this processor after running grid decomposition.
-     */
-    const int (&grid_coord)[DIMENSION_SIZE] = _grid_coord;
-
-    /**
-     * the rank ids of contiguous processors in space.
-     */
-    const _MPI_Rank (&rank_id_neighbours)[DIMENSION_SIZE][2] = _rank_id_neighbours;
 
     /** boundary of local sub-box  **/
     /**
@@ -93,6 +57,38 @@ namespace comm {
      * the global measured ghost lower and upper bound of current sub-box.
      */
     const Region<double> &meas_ghost_ext_region = _meas_ghost_ext_region;
+
+  protected:
+    /** the private variables are referenced in preview public filed.*/
+    double _meas_global_length[DIMENSION_SIZE] = {0.0, 0.0, 0.0};
+    Region<double> _meas_global_region; // the start and stop position of the global simulation box.
+
+    /**
+     * the measured lower bound of current sub-box at a dimension
+     */
+    Region<double> _meas_sub_box_region;
+    /**
+     * measured ghost length, which equals to the cutoff radius.
+     */
+    double _meas_ghost_length[DIMENSION_SIZE] = {0.0, 0.0, 0.0};
+    Region<double> _meas_ghost_ext_region; // measured sub box region plus measured ghost length.
+  };
+
+  class LatticeDomain : public MeasuredDomain, public CartesianContext {
+  public:
+    template <typename, typename> friend class comm::Builder;
+
+    class Builder;
+
+  public:
+    std::array<double, DIMENSION_SIZE> lattice_const; // the lattice constant
+
+    const double cutoff_radius_factor;
+    /**
+     * cut off lattice size.
+     */
+    const _type_lattice_size cut_lattice;
+    const std::array<uint64_t, DIMENSION_SIZE> phase_space;
 
     /*lattice count in local sub-box*/
     /**
@@ -154,25 +150,10 @@ namespace comm {
     void rescale(const double scale_factor);
 
   protected:
-    Domain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space,
-           const std::array<double, DIMENSION_SIZE> _lattice_const, const double _cutoff_radius_factor);
+    LatticeDomain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space,
+                  const std::array<double, DIMENSION_SIZE> _lattice_const, const double _cutoff_radius_factor);
 
     /** the private variables are referenced in preview public filed.*/
-    double _meas_global_length[DIMENSION_SIZE];
-    int _grid_size[DIMENSION_SIZE] = {0};
-
-    Region<double> _meas_global_region;
-
-    int _grid_coord[DIMENSION_SIZE];
-    _MPI_Rank _rank_id_neighbours[DIMENSION_SIZE][2];
-
-    /**
-     * the measured lower bound of current sub-box at a dimension
-     */
-    Region<double> _meas_sub_box_region;
-    double _meas_ghost_length[DIMENSION_SIZE]; // measured ghost length, which equals to the cutoff radius.
-    Region<double> _meas_ghost_ext_region;     // measured sub box region plus measured ghost length.
-
     _type_lattice_size _sub_box_lattice_size[DIMENSION_SIZE];
     _type_lattice_size _ghost_extended_lattice_size[DIMENSION_SIZE];
     _type_lattice_size _lattice_size_ghost[DIMENSION_SIZE];
@@ -181,6 +162,8 @@ namespace comm {
     Region<_type_lattice_coord> _local_sub_box_lattice_region;
     Region<_type_lattice_coord> _local_ghost_ext_lattice_region;
   };
+
+  using Domain = LatticeDomain;
 
   class Domain::Builder : public comm::Builder<Domain::Builder, Domain> {
   public:

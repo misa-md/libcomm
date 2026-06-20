@@ -82,8 +82,6 @@ namespace comm {
      * And each processor will be bound to a sub-box, and tagged with a cartesian coordinate(x,y,z).
      */
     virtual void decomposition(D &domain);
-    void decomposition_imp_v1(D &domain);
-    void decomposition_imp_v2(D &domain);
 
     /**
      * set length of global simulation box.
