@@ -5,8 +5,8 @@
 #include "bcc_domain.h"
 
 comm::BccDomain::BccDomain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space,
-                           const std::array<double, DIMENSION_SIZE> _lattice_const, const double _cutoff_radius_factor)
-    : Domain(_phase_space, _lattice_const, _cutoff_radius_factor) {}
+                           const std::array<double, DIMENSION_SIZE> _lattice_const, const double _cutoff_radius)
+    : Domain(_phase_space, _lattice_const, _cutoff_radius) {}
 
 comm::BccDomain::BccDomain(const comm::Domain &domain) : Domain(domain) { rescale(domain); }
 
@@ -53,7 +53,7 @@ void comm::BccDomain::rescale(const comm::Domain &domain) {
 }
 
 comm::BccDomain *comm::BccDomain::Builder::build() {
-  BccDomain *p_domain = new BccDomain(_phase_space, _lattice_const, _cutoff_radius_factor);
+  BccDomain *p_domain = new BccDomain(_phase_space, _lattice_const, _cutoff_radius);
   decomposition(*p_domain);
   createGlobalDomain(*p_domain);
   buildLatticeDomain(*p_domain);
@@ -63,7 +63,7 @@ comm::BccDomain *comm::BccDomain::Builder::build() {
 }
 
 comm::BccDomain *comm::BccDomain::Builder::localBuild(const int *_grid_size, const int *_grid_coord) {
-  BccDomain *p_domain = new BccDomain(_phase_space, _lattice_const, _cutoff_radius_factor);
+  BccDomain *p_domain = new BccDomain(_phase_space, _lattice_const, _cutoff_radius);
   for (int i = 0; i < 3; i++) {
     p_domain->_grid_size[i] = _grid_size[i];
     p_domain->_grid_coord[i] = _grid_coord[i];

@@ -83,12 +83,20 @@ namespace comm {
   public:
     std::array<double, DIMENSION_SIZE> lattice_const; // the lattice constant
 
-    const double cutoff_radius_factor;
+    const double cutoff_radius;
     /**
      * cut off lattice size.
      */
     const _type_lattice_size cut_lattice;
     const std::array<uint64_t, DIMENSION_SIZE> phase_space;
+
+    inline double lattice_const_1d() const { return lattice_const[0]; }
+
+    /**
+     * @deprecated
+     * _cutoff_radius_factor = measured ghost length /_lattice_const
+     */
+    inline double cutoff_radius_factor() const { return cutoff_radius / lattice_const_1d(); }
 
     /*lattice count in local sub-box*/
     /**

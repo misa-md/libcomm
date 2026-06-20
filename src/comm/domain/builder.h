@@ -58,7 +58,16 @@ namespace comm {
      */
     B &setGhostMeasLength(const std::array<double, DIMENSION_SIZE> ghost_measured_length);
 
-    B &setCutoffRadius(const double cutoff_radius_factor);
+    /**
+     * @deprecated use setCutoffRadius_v2 instead.
+     */
+    B &setCutoffRadius(const double cutoff_radius_factor, const double default_lat_const);
+
+    /**
+     * @param cutoff_radius the cutoff radius. Force is 0 for atoms whose distance is out of the range.
+     * @note: this api can be called before or after @memberof setLatticeConst. any order is ok.
+     */
+    B &setCutoffRadius_v2(const double cutoff_radius, const double default_lat_const);
 
     B &setMPIMap3dSubDim(const int mpi_map_3d_sub_dim[DIMENSION_SIZE]);
 
@@ -79,7 +88,7 @@ namespace comm {
   protected:
     mpi_process _mpi_pro;
     MPI_Comm *_p_comm;
-    double _cutoff_radius_factor;
+    double _cutoff_radius = 0.0;
     std::array<double, DIMENSION_SIZE> _lattice_const = {0.0};
     std::array<int, DIMENSION_SIZE> _ghost_lat_size = {0, 0, 0};
     std::array<double, DIMENSION_SIZE> _ghost_meas_length = {0, 0, 0};

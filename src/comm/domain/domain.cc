@@ -7,9 +7,9 @@
 #include "domain.h"
 
 comm::LatticeDomain::LatticeDomain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space,
-                     const std::array<double, DIMENSION_SIZE> _lattice_const, const double _cutoff_radius_factor)
-    : lattice_const(_lattice_const), cutoff_radius_factor(_cutoff_radius_factor),
-      cut_lattice(static_cast<int>(ceil(_cutoff_radius_factor))), phase_space(_phase_space) {}
+                                   const std::array<double, DIMENSION_SIZE> _lattice_const, const double _cutoff_radius)
+    : lattice_const(_lattice_const), cutoff_radius(_cutoff_radius),
+      cut_lattice(static_cast<int>(ceil(cutoff_radius_factor()))), phase_space(_phase_space) {}
 //  todo _grid_size(0),
 //  todo _meas_global_length(0.0),
 
@@ -36,7 +36,7 @@ void comm::LatticeDomain::rescale(const double scale_factor) {
 }
 
 comm::LatticeDomain *comm::LatticeDomain::Builder::build() {
-  LatticeDomain *p_domain = new LatticeDomain(_phase_space, _lattice_const, _cutoff_radius_factor);
+  LatticeDomain *p_domain = new LatticeDomain(_phase_space, _lattice_const, _cutoff_radius);
   decomposition(*p_domain);
   createGlobalDomain(*p_domain);
   buildLatticeDomain(*p_domain);
@@ -46,7 +46,7 @@ comm::LatticeDomain *comm::LatticeDomain::Builder::build() {
 
 comm::LatticeDomain *comm::LatticeDomain::Builder::localBuild(const int _grid_size[DIMENSION_SIZE],
                                                 const int _grid_coord[DIMENSION_SIZE]) {
-  LatticeDomain *p_domain = new LatticeDomain(_phase_space, _lattice_const, _cutoff_radius_factor);
+  LatticeDomain *p_domain = new LatticeDomain(_phase_space, _lattice_const, _cutoff_radius);
   for (int i = 0; i < 3; i++) {
     p_domain->_grid_size[i] = _grid_size[i];
     p_domain->_grid_coord[i] = _grid_coord[i];
