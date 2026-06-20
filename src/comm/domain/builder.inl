@@ -18,7 +18,17 @@ template <typename B, typename D> B &comm::Builder<B, D>::setPhaseSpace(const in
 }
 
 template <typename B, typename D> B &comm::Builder<B, D>::setLatticeConst(const double latticeConst) {
-  _lattice_const = latticeConst;
+  _lattice_const[0] = latticeConst;
+  _lattice_const[1] = latticeConst;
+  _lattice_const[2] = latticeConst;
+  return *static_cast<B *>(this);
+}
+
+template <typename B, typename D>
+B &comm::Builder<B, D>::setLatticeConst(const std::array<double, DIMENSION_SIZE> lat_const) {
+  _lattice_const[0] = lat_const[0];
+  _lattice_const[1] = lat_const[1];
+  _lattice_const[2] = lat_const[2];
   return *static_cast<B *>(this);
 }
 
@@ -171,7 +181,7 @@ template <typename B, typename D> void comm::Builder<B, D>::decomposition_imp_v2
 template <typename B, typename D> void comm::Builder<B, D>::createGlobalDomain(D &domain) {
   for (int d = 0; d < DIMENSION_SIZE; d++) {
     // phaseSpace个单位长度(单位长度即latticeconst)
-    domain._meas_global_length[d] = _phase_space[d] * _lattice_const;
+    domain._meas_global_length[d] = _phase_space[d] * _lattice_const[d];
     domain._meas_global_region.low[d] = 0; // lower bounding is set to 0 by default.
     domain._meas_global_region.high[d] = domain._meas_global_length[d];
   }
@@ -223,11 +233,11 @@ template <typename B, typename D> void comm::Builder<B, D>::buildMeasuredDomain(
   for (int d = 0; d < DIMENSION_SIZE; d++) {
     // the lower and upper bounding of current sub-box.
     domain._meas_sub_box_region.low[d] =
-        domain._meas_global_region.low[d] + domain._sub_box_lattice_region.low[d] * _lattice_const;
+        domain._meas_global_region.low[d] + domain._sub_box_lattice_region.low[d] * _lattice_const[d];
     domain._meas_sub_box_region.high[d] =
-        domain._meas_global_region.low[d] + domain._sub_box_lattice_region.high[d] * _lattice_const;
+        domain._meas_global_region.low[d] + domain._sub_box_lattice_region.high[d] * _lattice_const[d];
 
-    domain._meas_ghost_length[d] = domain._lattice_size_ghost[d] * _lattice_const; // ghost length fixme
+    domain._meas_ghost_length[d] = domain._lattice_size_ghost[d] * _lattice_const[d]; // ghost length fixme
 
     domain._meas_ghost_ext_region.low[d] = domain._meas_sub_box_region.low[d] - domain._meas_ghost_length[d];
     domain._meas_ghost_ext_region.high[d] = domain._meas_sub_box_region.high[d] + domain._meas_ghost_length[d];

@@ -6,17 +6,17 @@
 
 #include "domain.h"
 
-comm::Domain::Domain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space, const double _lattice_const,
-                     const double _cutoff_radius_factor)
+comm::Domain::Domain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space,
+                     const std::array<double, DIMENSION_SIZE> _lattice_const, const double _cutoff_radius_factor)
     : lattice_const(_lattice_const), cutoff_radius_factor(_cutoff_radius_factor),
       cut_lattice(static_cast<int>(ceil(_cutoff_radius_factor))), phase_space(_phase_space) {}
 //  todo _grid_size(0),
 //  todo _meas_global_length(0.0),
 
 void comm::Domain::rescale(const double scale_factor) {
-  this->lattice_const *= scale_factor;
   // rescale global box
   for (int d = 0; d < DIMENSION_SIZE; d++) {
+    this->lattice_const[d] *= scale_factor;
     this->_meas_global_length[d] *= scale_factor;
     this->_meas_global_region.low[d] *= scale_factor; // lower bounding is set to 0 by default.
     this->_meas_global_region.high[d] *= scale_factor;

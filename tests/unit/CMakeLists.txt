@@ -11,6 +11,7 @@ set(TEST_HEADER_FILES
 
 set(TEST_SOURCE_FILES
         main.cpp
+        domain/build_domain_3d_const.cpp
         domain/domain_test.cpp
         domain/domain_test_utils.cpp
         domain/region_test.cpp

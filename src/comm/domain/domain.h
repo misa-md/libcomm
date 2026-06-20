@@ -44,7 +44,7 @@ namespace comm {
     class Builder;
 
   public:
-    double lattice_const; // the lattice constant
+    std::array<double, DIMENSION_SIZE> lattice_const; // the lattice constant
 
     const double cutoff_radius_factor;
     // cut off lattice size.
@@ -154,8 +154,8 @@ namespace comm {
     void rescale(const double scale_factor);
 
   protected:
-    Domain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space, const double _lattice_const,
-           const double _cutoff_radius_factor);
+    Domain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space,
+           const std::array<double, DIMENSION_SIZE> _lattice_const, const double _cutoff_radius_factor);
 
     /** the private variables are referenced in preview public filed.*/
     double _meas_global_length[DIMENSION_SIZE];
