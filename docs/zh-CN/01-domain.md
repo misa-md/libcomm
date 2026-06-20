@@ -40,7 +40,10 @@ comm::Domain* domain =
 |`setPhaseSpace`     |`const int64_t lattice_num[3]` | 设置三个维度的格点数量，构建阶段依据此进行格点划分 |全局的、xyz三个维度的格点数| Y |
 |`setCutoffRadius`   |`const double cutoff_radius`| 设置相互作业的截断半径。如果没有显示设置ghost size，则用截断半径向上取整作为ghost size| 截断半径大小 | Y |
 |`setLatticeConst`   |`const double latticeConst`| 设置格点间常数（即：格点阵列之间的最小距离） | 格点阵列之间的最小距离（如材料中的晶格常数） | Y |
+|`setLatticeConst`   |`const std::array<double, DIMENSION_SIZE> lattice_const`| 同上。但是可以在x、y、z三个维度设置不同的格点间常数。 | 同上 | Y (和上一个API二选一) |
 |`setGhostSize`      |`const unsigned int ghost_size` | 设置xyz三个维度的 ghost 区域的大小 | ghost 区域大小（单位：格点间常数。）| N |
+|`setGhostSize`      |`const std::array<unsigned int, DIMENSION_SIZE>` | 同上。但是允许在xyz三个维度设置不同的 ghost 区域的大小 | 同上 ）| N |
+|`setGhostMeasLength`|`const std::array<double, DIMENSION_SIZE> ghost_measured_length` | 以实际测量长度（而不是晶格长度），设置ghost区域大小。注意：如果此API之后调用setGhostSize，相关结果会被setGhostSize覆盖。 | xyz三个方向的ghost区域大小 | N |
 |`setMPIMap3dSubDim` |`const int mpi_map_3d_sub_dim[3]` | 设置三维MPI进程映射的子维度（如计算节点内的若干进程如何进行三维映射） | 三维MPI进程映射的子维度 | N |
 
 ### 1.2 BccDomain 的构建
