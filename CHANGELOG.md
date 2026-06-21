@@ -2,6 +2,30 @@
 ## [Unreleased]
 
 
+<a name="v0.7.0"></a>
+## [v0.7.0] - 2026-06-21
+### Docs
+- **changelog:** update changelog for v0.7.0
+- **domain:** add docs for the new added api `setGhostMeasLength` and `setLatticeConst`
+
+### Feat
+- **domain:** store `cutoff_radius`, instead of `cutoff_radius_factor`, in class `Domain`
+- **domain:** ability of overwriting the measured ghost region length set by setGhostSize(lat_size)
+- **domain:** ability of setting different lattice const at x,y,z dimension for the domain
+
+### Refactor
+- **domain:** mv measured data to `MeasuredDomain` and mpi cart split data to `CartesianContext`
+
+### Test
+- **domain:** add unit test for setting different lattice const at xyz dimensio
+
+### BREAKING CHANGE
+
+rename member of `Domain::cutoff_radius_factor` -> member function
+`Domain::cutoff_radius_factor()`; store `cutoff_radius`, instead of `cutoff_radius_factor`,
+in class `domain`.
+
+
 <a name="v0.6.0"></a>
 ## [v0.6.0] - 2026-03-31
 ### Build
@@ -100,6 +124,8 @@ use `COMM` prefix.
 - **forward-comm:** move reversed dimension order option from func param to template param
 
 ### BREAKING CHANGE
+
+we need pkg tool v0.4.0 or upper version to build this project
 
 function parameter `bool reversed` was moved to template parameter `bool F`
 
@@ -282,7 +308,8 @@ change domain param in comm ::fwCommLocalRegion from comm::Domain to comm::BccDo
 - **domain:** add tests for domain decomposition.
 
 
-[Unreleased]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.6.0...HEAD
+[Unreleased]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.7.0...HEAD
+[v0.7.0]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.6.0...v0.7.0
 [v0.6.0]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.5.0...v0.6.0
 [v0.5.0]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.4.0...v0.5.0
 [v0.4.0]: https://git.hpcer.dev/HPCer/CrystalMD/CrystalMD/compare/v0.3.4...v0.4.0
