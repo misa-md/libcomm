@@ -18,7 +18,7 @@ TEST(domain_3d_lat_const_measured_test, domain_local_build_test) {
 
   comm::Domain *p_domain = comm::Domain::Builder()
                                .setPhaseSpace(space)
-                               .setCutoffRadius(cutoff_radius_factor)
+                               .setCutoffRadius(cutoff_radius_factor, lattice_const[0])
                                .setLatticeConst(lattice_const)
                                .setGhostSize(ghost_size)
                                .localBuild(grid_size, grid_coord);

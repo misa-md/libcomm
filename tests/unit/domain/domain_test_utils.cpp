@@ -16,7 +16,7 @@ comm::Domain *getDomainInstance(int64_t space[3], double lattice_const, double c
   comm::Domain *p_domain = comm::Domain::Builder()
                                .setComm(m_process, &mpi_comm)
                                .setPhaseSpace(space)
-                               .setCutoffRadius(cutoff_radius)
+                               .setCutoffRadius(cutoff_radius, lattice_const)
                                .setLatticeConst(lattice_const)
                                .build();
   return p_domain;
@@ -33,7 +33,7 @@ comm::Domain *getDomainInstance(int64_t space[3], const int ghost_size, double l
                                .setComm(m_process, &mpi_comm)
                                .setPhaseSpace(space)
                                .setGhostSize(ghost_size)
-                               .setCutoffRadius(cutoff_radius)
+                               .setCutoffRadius(cutoff_radius, lattice_const)
                                .setLatticeConst(lattice_const)
                                .build();
   return p_domain;
@@ -50,7 +50,7 @@ comm::BccDomain *getBccDomainInstance(int64_t space[3], double lattice_const, do
   comm::BccDomain *p_domain = comm::BccDomain::Builder()
                                   .setComm(m_process, &mpi_comm)
                                   .setPhaseSpace(space)
-                                  .setCutoffRadius(cutoff_radius)
+                                  .setCutoffRadius(cutoff_radius, lattice_const)
                                   .setLatticeConst(lattice_const)
                                   .build();
   return p_domain;

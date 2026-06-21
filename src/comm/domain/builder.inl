@@ -52,12 +52,30 @@ B &comm::Builder<B, D>::setGhostMeasLength(const std::array<double, DIMENSION_SI
   return *static_cast<B *>(this);
 }
 
-template <typename B, typename D> B &comm::Builder<B, D>::setCutoffRadius(const double cutoff_radius_factor) {
-  _cutoff_radius_factor = cutoff_radius_factor;
+template <typename B, typename D>
+B &comm::Builder<B, D>::setCutoffRadius(const double cutoff_radius_factor, const double default_lat_const) {
+  _cutoff_radius = cutoff_radius_factor * default_lat_const;
   for (int d = 0; d < DIMENSION_SIZE; d++) {
     if (_ghost_lat_size[d] == 0) {
       // if ghost size not set, we set it as cut_lattice
-      _ghost_lat_size[d] = static_cast<int>(ceil(_cutoff_radius_factor));
+      _ghost_lat_size[d] = static_cast<int>(ceil(cutoff_radius_factor));
+    }
+  }
+  return *static_cast<B *>(this);
+}
+
+template <typename B, typename D>
+B &comm::Builder<B, D>::setCutoffRadius_v2(const double cutoff_radius, const double default_lat_const) {
+  _cutoff_radius = cutoff_radius;
+  const double cutoff_radius_factor = cutoff_radius / default_lat_const;
+
+  for (int d = 0; d < DIMENSION_SIZE; d++) {
+    if (_ghost_lat_size[d] == 0) {
+      // if ghost size not set, we set it as cut_lattice
+      _ghost_lat_size[d] = static_cast<int>(ceil(cutoff_radius_factor));
+    }
+    if (_ghost_meas_length[d] == 0.0) {
+      _ghost_meas_length[d] = _cutoff_radius;
     }
   }
   return *static_cast<B *>(this);
