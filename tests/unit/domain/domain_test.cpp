@@ -10,6 +10,38 @@
 
 #include "domain_test_utils.h"
 
+TEST(domain_test_set_cutoff, domain_test) {
+  const int grid_size[3] = {2, 2, 2};
+  const int grid_coord[3] = {0, 0, 0};
+  const int64_t space[3] = {50 * grid_size[0], 60 * grid_size[1], 72 * grid_size[2]};
+  const std::array<double, 3> lattice_const = {0.86, 1.2, 3.2};
+  const double cutoff_radius_factor = 1.1421;
+  comm::Domain *p_domain = comm::Domain::Builder()
+                               .setPhaseSpace(space)
+                               .setLatticeConst(lattice_const)
+                               .setCutoffRadius(cutoff_radius_factor, lattice_const[0])
+                               .localBuild(grid_size, grid_coord);
+  EXPECT_EQ(p_domain->cutoff_radius_factor(), cutoff_radius_factor);
+  EXPECT_EQ(p_domain->cutoff_radius, cutoff_radius_factor * lattice_const[0]);
+  EXPECT_EQ(p_domain->cut_lattice, 2); // ceil(1.1421)
+}
+
+TEST(domain_test_set_cutoff_v2, domain_test) {
+  const int grid_size[3] = {2, 2, 2};
+  const int grid_coord[3] = {0, 0, 0};
+  const int64_t space[3] = {50 * grid_size[0], 60 * grid_size[1], 72 * grid_size[2]};
+  const std::array<double, 3> lattice_const = {0.86, 1.2, 3.2};
+  const double cutoff_radius = 1.1421;
+  comm::Domain *p_domain = comm::Domain::Builder()
+                               .setPhaseSpace(space)
+                               .setLatticeConst(lattice_const)
+                               .setCutoffRadius_v2(cutoff_radius, lattice_const[0])
+                               .localBuild(grid_size, grid_coord);
+  EXPECT_EQ(p_domain->cutoff_radius_factor(), cutoff_radius / lattice_const[0]);
+  EXPECT_EQ(p_domain->cutoff_radius, cutoff_radius);
+  EXPECT_EQ(p_domain->cut_lattice, 2); // ceil(1.1421 / 0.86)
+}
+
 // @MPI
 TEST(domain_test_decomposition, domain_test) {
   int64_t space[3] = {50, 60, 72};
@@ -240,7 +272,7 @@ TEST(domain_local_build_test, domain_test) {
   const double cutoff_radius_factor = 1.1421;
   comm::Domain *p_domain = comm::Domain::Builder()
                                .setPhaseSpace(space)
-                               .setCutoffRadius(cutoff_radius_factor)
+                               .setCutoffRadius(cutoff_radius_factor, lattice_const)
                                .setLatticeConst(lattice_const)
                                .localBuild(grid_size, grid_coord);
 
@@ -258,14 +290,16 @@ TEST(domain_rescale_box_test, domain_test) {
   const double cutoff_radius_factor = 1.1421;
   comm::Domain *p_domain = comm::Domain::Builder()
                                .setPhaseSpace(space)
-                               .setCutoffRadius(cutoff_radius_factor)
+                               .setCutoffRadius(cutoff_radius_factor, old_lattice_const)
                                .setLatticeConst(old_lattice_const)
                                .localBuild(grid_size, grid_coord);
 
   constexpr double scale_factor = 1.5;
   p_domain->rescale(scale_factor);
 
-  EXPECT_DOUBLE_EQ(p_domain->lattice_const, scale_factor * old_lattice_const);
+  EXPECT_DOUBLE_EQ(p_domain->lattice_const[0], scale_factor * old_lattice_const);
+  EXPECT_DOUBLE_EQ(p_domain->lattice_const[1], scale_factor * old_lattice_const);
+  EXPECT_DOUBLE_EQ(p_domain->lattice_const[2], scale_factor * old_lattice_const);
 
   EXPECT_DOUBLE_EQ(p_domain->meas_global_length[0], scale_factor * space[0] * old_lattice_const);
   EXPECT_DOUBLE_EQ(p_domain->meas_global_length[1], scale_factor * space[1] * old_lattice_const);

@@ -3,6 +3,7 @@ set(HEADER_FILES
         comm/domain/bcc_domain.h
         comm/domain/colored_domain.h
         comm/domain/builder.h
+        comm/domain/cartesian_context.h
         comm/domain/region.hpp
         comm/preset/comm_forwarding_region.h
         comm/preset/sector_forwarding_direction.h
@@ -17,6 +18,7 @@ set(HEADER_FILES
 set(SOURCE_FILES
         comm/domain/domain.cc
         comm/domain/bcc_domain.cc
+        comm/domain/cartesian_context.cc
         comm/domain/colored_domain.cc
         comm/domain/builder.inl
         comm/domain/region.inl

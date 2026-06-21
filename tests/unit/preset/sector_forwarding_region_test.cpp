@@ -19,7 +19,7 @@ TEST(sector_fw_region_area_test, sector_fw_region_test) {
   comm::ColoredDomain *p_domain = comm::ColoredDomain::Builder()
                                       .setPhaseSpace(space)
                                       .setGhostSize(ghost_size)
-                                      .setCutoffRadius(cutoff_radius_factor)
+                                      .setCutoffRadius(cutoff_radius_factor, lattice_const)
                                       .setLatticeConst(lattice_const)
                                       .localBuild(grid_size, grid_coord);
 

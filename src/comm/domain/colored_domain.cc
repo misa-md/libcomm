@@ -137,14 +137,14 @@ void comm::ColoredDomain::splitSector(const comm::Domain &domain) {
   local_split_coord[2] = sector_lattice_size[X_LOW | Y_LOW | Z_LOW][2] + lattice_size_ghost[2];
 }
 
-comm::ColoredDomain::ColoredDomain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space, const double _lattice_const,
-                                   const double _cutoff_radius_factor)
-    : Domain(_phase_space, _lattice_const, _cutoff_radius_factor) {}
+comm::ColoredDomain::ColoredDomain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space,
+                                   const std::array<double, DIMENSION_SIZE> _lattice_const, const double _cutoff_radius)
+    : Domain(_phase_space, _lattice_const, _cutoff_radius) {}
 
 comm::ColoredDomain::ColoredDomain(const comm::Domain &domain) : Domain(domain) { splitSector(domain); }
 
 comm::ColoredDomain *comm::ColoredDomain::Builder::build() {
-  ColoredDomain *p_domain = new ColoredDomain(_phase_space, _lattice_const, _cutoff_radius_factor);
+  ColoredDomain *p_domain = new ColoredDomain(_phase_space, _lattice_const, _cutoff_radius);
   decomposition(*p_domain);
   createGlobalDomain(*p_domain);
   buildLatticeDomain(*p_domain);
@@ -154,7 +154,7 @@ comm::ColoredDomain *comm::ColoredDomain::Builder::build() {
 }
 
 comm::ColoredDomain *comm::ColoredDomain::Builder::localBuild(const int *_grid_size, const int *_grid_coord) {
-  ColoredDomain *p_domain = new ColoredDomain(_phase_space, _lattice_const, _cutoff_radius_factor);
+  ColoredDomain *p_domain = new ColoredDomain(_phase_space, _lattice_const, _cutoff_radius);
   for (int i = 0; i < 3; i++) {
     p_domain->_grid_size[i] = _grid_size[i];
     p_domain->_grid_coord[i] = _grid_coord[i];

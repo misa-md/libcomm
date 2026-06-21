@@ -59,11 +59,11 @@ namespace comm {
      * construct colored domain.
      * \param _phase_space the space size in each dimension.
      * \param _lattice_const the measured length of between two lattice(grid)
-     * \param _cutoff_radius_factor cutoff for building ghost area:
+     * \param _cutoff_radius cutoff for building ghost area.
      *  _cutoff_radius_factor = measured ghost length /_lattice_const
      */
-    ColoredDomain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space, const double _lattice_const,
-                  const double _cutoff_radius_factor);
+    ColoredDomain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space,
+                  const std::array<double, DIMENSION_SIZE> _lattice_const, const double _cutoff_radius);
 
     /**
      * create colored domain from existed parent domain.

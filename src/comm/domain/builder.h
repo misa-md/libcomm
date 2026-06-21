@@ -35,14 +35,39 @@ namespace comm {
     B &setLatticeConst(const double latticeConst);
 
     /**
+     * the lattice const at each dimension may be not the same.
+     * @param lattice_const lattice const at each dimension.
+     * @return the builder.
+     */
+    B &setLatticeConst(const std::array<double, DIMENSION_SIZE> lattice_const);
+
+    /**
      * set ghost size
      * \param ghost_size the size of ghost size, unit: lattice, default cut_lattice
      * (should set cut_lattice before setting ghost size).
      * \return reference of Builder.
      */
     B &setGhostSize(const unsigned int ghost_size);
+    B &setGhostSize(const std::array<unsigned int, DIMENSION_SIZE> ghost_size);
 
-    B &setCutoffRadius(const double cutoff_radius_factor);
+    /**
+     * set the measured ghost length.
+     * This api can overwrite the measure ghost size set by @memberof setGhostSize
+     * @param ghost_measured_length the measured length of the ghost region at x,y,z dimension.
+     * @return the reference of the Builder.
+     */
+    B &setGhostMeasLength(const std::array<double, DIMENSION_SIZE> ghost_measured_length);
+
+    /**
+     * @deprecated use setCutoffRadius_v2 instead.
+     */
+    B &setCutoffRadius(const double cutoff_radius_factor, const double default_lat_const);
+
+    /**
+     * @param cutoff_radius the cutoff radius. Force is 0 for atoms whose distance is out of the range.
+     * @note: this api can be called before or after @memberof setLatticeConst. any order is ok.
+     */
+    B &setCutoffRadius_v2(const double cutoff_radius, const double default_lat_const);
 
     B &setMPIMap3dSubDim(const int mpi_map_3d_sub_dim[DIMENSION_SIZE]);
 
@@ -63,9 +88,10 @@ namespace comm {
   protected:
     mpi_process _mpi_pro;
     MPI_Comm *_p_comm;
-    double _cutoff_radius_factor;
-    double _lattice_const;
-    int _ghost_size;
+    double _cutoff_radius = 0.0;
+    std::array<double, DIMENSION_SIZE> _lattice_const = {0.0};
+    std::array<int, DIMENSION_SIZE> _ghost_lat_size = {0, 0, 0};
+    std::array<double, DIMENSION_SIZE> _ghost_meas_length = {0, 0, 0};
     std::array<uint64_t, DIMENSION_SIZE> _phase_space;
 
     /**
@@ -75,8 +101,6 @@ namespace comm {
      * And each processor will be bound to a sub-box, and tagged with a cartesian coordinate(x,y,z).
      */
     virtual void decomposition(D &domain);
-    void decomposition_imp_v1(D &domain);
-    void decomposition_imp_v2(D &domain);
 
     /**
      * set length of global simulation box.

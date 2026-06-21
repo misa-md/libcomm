@@ -5,6 +5,38 @@
 #include <comm/domain/colored_domain.h>
 #include <gtest/gtest.h>
 
+TEST(colored_domain_test_set_cutoff, colored_domain_test) {
+  const int grid_size[3] = {2, 2, 2};
+  const int grid_coord[3] = {0, 0, 0};
+  const int64_t space[3] = {50 * grid_size[0], 60 * grid_size[1], 72 * grid_size[2]};
+  const std::array<double, 3> lattice_const = {0.86, 1.2, 3.2};
+  const double cutoff_radius_factor = 1.1421;
+  comm::ColoredDomain *p_domain = comm::ColoredDomain::Builder()
+                                      .setPhaseSpace(space)
+                                      .setLatticeConst(lattice_const)
+                                      .setCutoffRadius(cutoff_radius_factor, lattice_const[0])
+                                      .localBuild(grid_size, grid_coord);
+  EXPECT_EQ(p_domain->cutoff_radius_factor(), cutoff_radius_factor);
+  EXPECT_EQ(p_domain->cutoff_radius, cutoff_radius_factor * lattice_const[0]);
+  EXPECT_EQ(p_domain->cut_lattice, 2); // ceil(1.1421)
+}
+
+TEST(colored_domain_test_set_cutoff_v2, colored_domain_test) {
+  const int grid_size[3] = {2, 2, 2};
+  const int grid_coord[3] = {0, 0, 0};
+  const int64_t space[3] = {50 * grid_size[0], 60 * grid_size[1], 72 * grid_size[2]};
+  const std::array<double, 3> lattice_const = {0.86, 1.2, 3.2};
+  const double cutoff_radius = 1.1421;
+  comm::ColoredDomain *p_domain = comm::ColoredDomain::Builder()
+                                      .setPhaseSpace(space)
+                                      .setLatticeConst(lattice_const)
+                                      .setCutoffRadius_v2(cutoff_radius, lattice_const[0])
+                                      .localBuild(grid_size, grid_coord);
+  EXPECT_EQ(p_domain->cutoff_radius_factor(), cutoff_radius / lattice_const[0]);
+  EXPECT_EQ(p_domain->cutoff_radius, cutoff_radius);
+  EXPECT_EQ(p_domain->cut_lattice, 2); // ceil(1.1421 / 0.86)
+}
+
 TEST(sector_size_test, colored_domain_test) {
   const int grid_size[3] = {2, 2, 2};
   const int grid_coord[3] = {0, 0, 0};
@@ -15,7 +47,7 @@ TEST(sector_size_test, colored_domain_test) {
   comm::ColoredDomain *p_domain = comm::ColoredDomain::Builder()
                                       .setPhaseSpace(space)
                                       .setGhostSize(5)
-                                      .setCutoffRadius(cutoff_radius_factor)
+                                      .setCutoffRadius(cutoff_radius_factor, lattice_const)
                                       .setLatticeConst(lattice_const)
                                       .localBuild(grid_size, grid_coord);
 
@@ -49,7 +81,7 @@ TEST(local_sector_region_test, colored_domain_test) {
   comm::ColoredDomain *p_domain = comm::ColoredDomain::Builder()
                                       .setPhaseSpace(space)
                                       .setGhostSize(ghost_size)
-                                      .setCutoffRadius(cutoff_radius_factor)
+                                      .setCutoffRadius(cutoff_radius_factor, lattice_const)
                                       .setLatticeConst(lattice_const)
                                       .localBuild(grid_size, grid_coord);
 
