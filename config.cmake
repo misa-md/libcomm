@@ -1,5 +1,5 @@
 set(CMAKE_CXX_STANDARD 11)
-set(COMM_VERSION "0.6.0")
+set(COMM_VERSION "0.7.0")
 set(ProjectName comm)
 
 #############
