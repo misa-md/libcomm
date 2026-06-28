@@ -6,6 +6,25 @@
 
 #include "domain.h"
 
+void comm::MeasuredDomain::rescale_measured(const std::array<double, DIMENSION_SIZE> scale_factors) {
+  for (int d = 0; d < DIMENSION_SIZE; d++) {
+    this->_meas_global_length[d] *= scale_factors[d];
+    this->_meas_global_region.low[d] *= scale_factors[d]; // lower bounding is set to 0 by default.
+    this->_meas_global_region.high[d] *= scale_factors[d];
+  }
+
+  // calculate measured length in each dimension.
+  for (int d = 0; d < DIMENSION_SIZE; d++) {
+    // the lower and upper bounding of current sub-box.
+    this->_meas_sub_box_region.low[d] *= scale_factors[d];
+    this->_meas_sub_box_region.high[d] *= scale_factors[d];
+
+    // ghost size is not scaled
+    this->_meas_ghost_ext_region.low[d] = this->_meas_sub_box_region.low[d] - this->_meas_ghost_length[d];
+    this->_meas_ghost_ext_region.high[d] = this->_meas_sub_box_region.high[d] + this->_meas_ghost_length[d];
+  }
+}
+
 comm::LatticeDomain::LatticeDomain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space,
                                    const std::array<double, DIMENSION_SIZE> _lattice_const, const double _cutoff_radius)
     : lattice_const(_lattice_const), cutoff_radius(_cutoff_radius),
@@ -14,25 +33,17 @@ comm::LatticeDomain::LatticeDomain(const std::array<uint64_t, DIMENSION_SIZE> _p
 //  todo _meas_global_length(0.0),
 
 void comm::LatticeDomain::rescale(const double scale_factor) {
+  const std::array<double, DIMENSION_SIZE> scale_factor_3d = {scale_factor, scale_factor, scale_factor};
+  rescale(scale_factor_3d);
+}
+
+void comm::LatticeDomain::rescale(const std::array<double, DIMENSION_SIZE> scale_factors) {
+  // rescale lattice const
+  for (int d = 0; d < DIMENSION_SIZE; d++) {
+    this->lattice_const[d] *= scale_factors[d];
+  }
   // rescale global box
-  for (int d = 0; d < DIMENSION_SIZE; d++) {
-    this->lattice_const[d] *= scale_factor;
-    this->_meas_global_length[d] *= scale_factor;
-    this->_meas_global_region.low[d] *= scale_factor; // lower bounding is set to 0 by default.
-    this->_meas_global_region.high[d] *= scale_factor;
-  }
-
-  // calculate measured length in each dimension.
-  for (int d = 0; d < DIMENSION_SIZE; d++) {
-    // the lower and upper bounding of current sub-box.
-    this->_meas_sub_box_region.low[d] *= scale_factor;
-    this->_meas_sub_box_region.high[d] *= scale_factor;
-
-    this->_meas_ghost_length[d] *= scale_factor;
-
-    this->_meas_ghost_ext_region.low[d] *= scale_factor;
-    this->_meas_ghost_ext_region.high[d] *= scale_factor;
-  }
+  this->rescale_measured(scale_factors);
 }
 
 comm::LatticeDomain *comm::LatticeDomain::Builder::build() {

@@ -77,6 +77,8 @@ namespace comm {
      */
     double _meas_ghost_length[DIMENSION_SIZE] = {0.0, 0.0, 0.0};
     Region<double> _meas_ghost_ext_region; // measured sub box region plus measured ghost length.
+
+    void rescale_measured(const std::array<double, DIMENSION_SIZE>);
   };
 
   class LatticeDomain : public MeasuredDomain, public CartesianContext {
@@ -159,8 +161,12 @@ namespace comm {
      * which is useful for NPT ensemble in the MD simulation.
      * @param scale_factor the scale factor to rescale the domain.
      * @return the rescaled new domain.
+     * @note rescale only rescale the measured length and regions.
+     * the lattice size/region and ghost size/region (including the measured ghost size/region) will remain unchanged.
      */
     void rescale(const double scale_factor);
+
+    void rescale(const std::array<double, DIMENSION_SIZE> scale_factors);
 
   protected:
     LatticeDomain(const std::array<uint64_t, DIMENSION_SIZE> _phase_space,

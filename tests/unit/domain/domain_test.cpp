@@ -282,6 +282,7 @@ TEST(domain_local_build_test, domain_test) {
   delete p_domain;
 }
 
+// call p_domain->rescale(double)
 TEST(domain_rescale_box_test, domain_test) {
   const int grid_size[3] = {2, 2, 2};
   const int grid_coord[3] = {1, 0, 1};
@@ -322,9 +323,10 @@ TEST(domain_rescale_box_test, domain_test) {
   EXPECT_DOUBLE_EQ(p_domain->meas_sub_box_region.high[1], (grid_coord[1] + 1) * 60 * old_lattice_const * scale_factor);
   EXPECT_DOUBLE_EQ(p_domain->meas_sub_box_region.high[2], (grid_coord[2] + 1) * 72 * old_lattice_const * scale_factor);
 
-  EXPECT_DOUBLE_EQ(p_domain->meas_ghost_length[0], scale_factor * old_lattice_const * p_domain->lattice_size_ghost[0]);
-  EXPECT_DOUBLE_EQ(p_domain->meas_ghost_length[1], scale_factor * old_lattice_const * p_domain->lattice_size_ghost[1]);
-  EXPECT_DOUBLE_EQ(p_domain->meas_ghost_length[2], scale_factor * old_lattice_const * p_domain->lattice_size_ghost[2]);
+  // the measured ghost length will not get changed. It is related to the cutoff
+  EXPECT_DOUBLE_EQ(p_domain->meas_ghost_length[0], old_lattice_const * cutoff_radius_factor);
+  EXPECT_DOUBLE_EQ(p_domain->meas_ghost_length[1], old_lattice_const * cutoff_radius_factor);
+  EXPECT_DOUBLE_EQ(p_domain->meas_ghost_length[2], old_lattice_const * cutoff_radius_factor);
 
   EXPECT_DOUBLE_EQ(p_domain->meas_ghost_ext_region.low[0],
                    p_domain->meas_sub_box_region.low[0] - p_domain->meas_ghost_length[0]);
@@ -339,5 +341,73 @@ TEST(domain_rescale_box_test, domain_test) {
                    p_domain->meas_sub_box_region.high[1] + p_domain->meas_ghost_length[1]);
   EXPECT_DOUBLE_EQ(p_domain->meas_ghost_ext_region.high[2],
                    p_domain->meas_sub_box_region.high[2] + p_domain->meas_ghost_length[2]);
+  delete p_domain;
+}
+
+// call p_domain->rescale(std::array)
+TEST(domain_rescale_box_3d_test, domain_test) {
+  const int grid_size[3] = {2, 2, 2};
+  const int grid_coord[3] = {1, 0, 1};
+  const int64_t space[3] = {50 * grid_size[0], 60 * grid_size[1], 72 * grid_size[2]};
+  const double old_lattice_const = 0.86;
+  const double cutoff_radius_factor = 1.1421;
+  comm::Domain *p_domain = comm::Domain::Builder()
+                               .setPhaseSpace(space)
+                               .setCutoffRadius(cutoff_radius_factor, old_lattice_const)
+                               .setLatticeConst(old_lattice_const)
+                               .localBuild(grid_size, grid_coord);
+
+  constexpr std::array<double, 3> scale_factors = {1.5, 1.8, 2.5};
+  p_domain->rescale(scale_factors);
+
+  EXPECT_DOUBLE_EQ(p_domain->lattice_const[0], scale_factors[0] * old_lattice_const);
+  EXPECT_DOUBLE_EQ(p_domain->lattice_const[1], scale_factors[1] * old_lattice_const);
+  EXPECT_DOUBLE_EQ(p_domain->lattice_const[2], scale_factors[2] * old_lattice_const);
+
+  EXPECT_DOUBLE_EQ(p_domain->meas_global_length[0], scale_factors[0] * space[0] * old_lattice_const);
+  EXPECT_DOUBLE_EQ(p_domain->meas_global_length[1], scale_factors[1] * space[1] * old_lattice_const);
+  EXPECT_DOUBLE_EQ(p_domain->meas_global_length[2], scale_factors[2] * space[2] * old_lattice_const);
+
+  // region start from 0.0
+  EXPECT_DOUBLE_EQ(p_domain->meas_global_region.low[0], 0.0);
+  EXPECT_DOUBLE_EQ(p_domain->meas_global_region.low[1], 0.0);
+  EXPECT_DOUBLE_EQ(p_domain->meas_global_region.low[2], 0.0);
+
+  EXPECT_DOUBLE_EQ(p_domain->meas_global_region.high[0], scale_factors[0] * space[0] * old_lattice_const);
+  EXPECT_DOUBLE_EQ(p_domain->meas_global_region.high[1], scale_factors[1] * space[1] * old_lattice_const);
+  EXPECT_DOUBLE_EQ(p_domain->meas_global_region.high[2], scale_factors[2] * space[2] * old_lattice_const);
+
+  EXPECT_DOUBLE_EQ(p_domain->meas_sub_box_region.low[0], grid_coord[0] * 50 * old_lattice_const * scale_factors[0]);
+  EXPECT_DOUBLE_EQ(p_domain->meas_sub_box_region.low[1], grid_coord[1] * 60 * old_lattice_const * scale_factors[1]);
+  EXPECT_DOUBLE_EQ(p_domain->meas_sub_box_region.low[2], grid_coord[2] * 72 * old_lattice_const * scale_factors[2]);
+
+  EXPECT_DOUBLE_EQ(p_domain->meas_sub_box_region.high[0],
+                   (grid_coord[0] + 1) * 50 * old_lattice_const * scale_factors[0]);
+  EXPECT_DOUBLE_EQ(p_domain->meas_sub_box_region.high[1],
+                   (grid_coord[1] + 1) * 60 * old_lattice_const * scale_factors[1]);
+  EXPECT_DOUBLE_EQ(p_domain->meas_sub_box_region.high[2],
+                   (grid_coord[2] + 1) * 72 * old_lattice_const * scale_factors[2]);
+
+  // the measured ghost length will not get changed. It is related to the cutoff
+  EXPECT_DOUBLE_EQ(p_domain->meas_ghost_length[0], old_lattice_const * cutoff_radius_factor);
+  EXPECT_DOUBLE_EQ(p_domain->meas_ghost_length[1], old_lattice_const * cutoff_radius_factor);
+  EXPECT_DOUBLE_EQ(p_domain->meas_ghost_length[2], old_lattice_const * cutoff_radius_factor);
+
+  EXPECT_DOUBLE_EQ(p_domain->meas_ghost_ext_region.low[0],
+                   p_domain->meas_sub_box_region.low[0] - p_domain->meas_ghost_length[0]);
+  EXPECT_DOUBLE_EQ(p_domain->meas_ghost_ext_region.low[1],
+                   p_domain->meas_sub_box_region.low[1] - p_domain->meas_ghost_length[1]);
+  EXPECT_DOUBLE_EQ(p_domain->meas_ghost_ext_region.low[2],
+                   p_domain->meas_sub_box_region.low[2] - p_domain->meas_ghost_length[2]);
+
+  EXPECT_DOUBLE_EQ(p_domain->meas_ghost_ext_region.high[0],
+                   p_domain->meas_sub_box_region.high[0] + p_domain->meas_ghost_length[0]);
+  EXPECT_DOUBLE_EQ(p_domain->meas_ghost_ext_region.high[1],
+                   p_domain->meas_sub_box_region.high[1] + p_domain->meas_ghost_length[1]);
+  EXPECT_DOUBLE_EQ(p_domain->meas_ghost_ext_region.high[2],
+                   p_domain->meas_sub_box_region.high[2] + p_domain->meas_ghost_length[2]);
+
+  EXPECT_DOUBLE_EQ(p_domain->volume(), space[0] * space[1] * space[2] * p_domain->lattice_const[0] *
+                                           p_domain->lattice_const[1] * p_domain->lattice_const[2]);
   delete p_domain;
 }
