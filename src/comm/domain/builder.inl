@@ -47,7 +47,7 @@ template <typename B, typename D>
 B &comm::Builder<B, D>::setGhostMeasLength(const std::array<double, DIMENSION_SIZE> ghost_measured_length) {
   // overwrite
   for (int d = 0; d < DIMENSION_SIZE; d++) {
-    _ghost_meas_length[d] = _lattice_const[d] * ghost_measured_length[d];
+    _ghost_meas_length[d] = ghost_measured_length[d];
   }
   return *static_cast<B *>(this);
 }
