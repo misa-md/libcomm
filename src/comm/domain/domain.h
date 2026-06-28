@@ -58,6 +58,11 @@ namespace comm {
      */
     const Region<double> &meas_ghost_ext_region = _meas_ghost_ext_region;
 
+    inline double volume() const { return _meas_global_length[0] * _meas_global_length[1] * _meas_global_length[2]; }
+    inline double Lx() const { return _meas_global_length[0]; }
+    inline double Ly() const { return _meas_global_length[1]; }
+    inline double Lz() const { return _meas_global_length[2]; }
+
   protected:
     /** the private variables are referenced in preview public filed.*/
     double _meas_global_length[DIMENSION_SIZE] = {0.0, 0.0, 0.0};
